@@ -19,19 +19,6 @@ const DatePicker = React.createClass({
         formGroup: React.PropTypes.object
     },
 
-    getFormGroup() {
-        return this.context.formGroup || {};
-    },
-
-    getValue() {
-        const { value } = this.getFormGroup();
-
-        if(value && !/Invalid|NaN/.test(new Date(value))){
-            return new Date(value);
-        }
-        return this.state.selected || undefined;
-    },
-
     getDefaultProps() {
         return {
             dateFormat:'YYYY-MM-DD'
@@ -44,11 +31,80 @@ const DatePicker = React.createClass({
         return {
             selected: selected,
             pageDate: selected
-                        ? new Date(selected.getFullYear(), selected.getMonth())
-                        : this.getDefaultPageDate(),
+                ? new Date(selected.getFullYear(), selected.getMonth())
+                : this.getDefaultPageDate(),
             calendarState: 'HIDE',
             transitionSupport: ret
         };
+    },
+
+    componentDidMount() {
+
+        let yearScrollAmount = 0;
+        let monthScrollAmount = 0;
+
+        const { transitionSupport } = this.state;
+        let el = findDOMNode(this.refs.calendar);
+        if(transitionSupport.supported) {
+            el.addEventListener(transitionSupport.event, e => {
+                if(e.target.className === 'monthView-weeksWrapper'
+                && e.propertyName === 'left') {
+                    this.onMoveDone();
+                }
+            });
+        }
+    },
+
+    render() {
+        const {
+            minDate,
+            maxDate
+        } = this.props;
+
+        const {
+            calendarState,
+            pageDate
+        } = this.state;
+
+        const selected = this.getValue();
+
+        return (
+            <RootCloseWrapper onRootClose={this.hide}>
+            <div className="DatePicker">
+                <DateContainer
+                    placeholder={this.getDateString()}
+                    onClick={this.toggle}
+                    onClean={selected && this.reset}
+                />
+                <Calendar
+                    calendarState={calendarState}
+                    selectedDate={selected}
+                    pageDate={pageDate}
+                    minDate={minDate}
+                    maxDate={maxDate}
+                    onMoveForword={this.onMoveForword}
+                    onMoveBackward={this.onMoveBackward}
+                    onSelect={this.onSelect}
+                    onClickTitle={this.toggleEditPanel}
+                    onChangePageDate={this.onChangePageDate}
+                    ref="calendar"
+                />
+            </div>
+            </RootCloseWrapper>
+        );
+    },
+
+    getFormGroup() {
+        return this.context.formGroup || {};
+    },
+
+    getValue() {
+        const { value } = this.getFormGroup();
+
+        if(value && !/Invalid|NaN/.test(new Date(value))){
+            return new Date(value);
+        }
+        return this.state.selected || undefined;
     },
 
     reset() {
@@ -172,61 +228,6 @@ const DatePicker = React.createClass({
         onChange && onChange(day);
     },
 
-    componentDidMount() {
-
-        let yearScrollAmount = 0;
-        let monthScrollAmount = 0;
-
-        const { transitionSupport } = this.state;
-        let el = findDOMNode(this.refs.calendar);
-        if(transitionSupport.supported) {
-            el.addEventListener(transitionSupport.event, e => {
-                if(e.target.className === 'monthView-weeksWrapper'
-                && e.propertyName === 'left') {
-                    this.onMoveDone();
-                }
-            });
-        }
-    },
-
-    render() {
-        const {
-            minDate,
-            maxDate
-        } = this.props;
-
-        const {
-            calendarState,
-            pageDate
-        } = this.state;
-
-        const selected = this.getValue();
-
-        return (
-            <RootCloseWrapper onRootClose={this.hide}>
-            <div className="DatePicker">
-                <DateContainer
-                    placeholder={this.getDateString()}
-                    onClick={this.toggle}
-                    onClean={selected && this.reset}
-                />
-                <Calendar
-                    calendarState={calendarState}
-                    selectedDate={selected}
-                    pageDate={pageDate}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    onMoveForword={this.onMoveForword}
-                    onMoveBackward={this.onMoveBackward}
-                    onSelect={this.onSelect}
-                    onClickTitle={this.toggleEditPanel}
-                    onChangePageDate={this.onChangePageDate}
-                    ref="calendar"
-                />
-            </div>
-            </RootCloseWrapper>
-        );
-    },
 });
 
 export default DatePicker;
