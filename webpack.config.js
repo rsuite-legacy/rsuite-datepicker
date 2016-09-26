@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     entry: './demo/app.js',
     output: {
-        path: path.resolve(__dirname, './demo/bundle.js'),
+        path: path.resolve(__dirname, './demo'),
         filename: 'bundle.js'
     },
     module: {
@@ -12,5 +12,10 @@ module.exports = {
             { test: /\.less$/, loader: 'style!css!less' }
         ]
     },
-    devtool: 'source-map'
+    devtool: 'source-map',
+    externals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+        'moment': 'moment'
+    }
 };
