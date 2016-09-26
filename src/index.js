@@ -76,22 +76,42 @@ const DatePicker = React.createClass({
                     onClick={this.toggle}
                     onClean={selected && this.reset}
                 />
-                <Calendar
-                    calendarState={calendarState}
-                    selectedDate={selected}
-                    pageDate={pageDate}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    onMoveForword={this.onMoveForword}
-                    onMoveBackward={this.onMoveBackward}
-                    onSelect={this.onSelect}
-                    onClickTitle={this.toggleEditPanel}
-                    onChangePageDate={this.onChangePageDate}
-                    ref="calendar"
-                />
+                <div className="DatePicker-pane">
+                    {
+                        this.shouldMountCalendar() &&
+                        <Calendar
+                            calendarState={calendarState}
+                            selectedDate={selected}
+                            pageDate={pageDate}
+                            minDate={minDate}
+                            maxDate={maxDate}
+                            onMoveForword={this.onMoveForword}
+                            onMoveBackward={this.onMoveBackward}
+                            onSelect={this.onSelect}
+                            onClickTitle={this.toggleEditPanel}
+                            onChangePageDate={this.onChangePageDate}
+                            ref="calendar"
+                        />
+                    }
+                    {
+                        this.shouldMountClock() &&
+                        <Clock
+                        />
+                    }
+                </div>
             </div>
             </RootCloseWrapper>
         );
+    },
+
+    shouldMountClock() {
+        const { dateFormat } = this.props;
+        return /(Y|M|D)/.test(dateFormat);
+    },
+
+    shouldMountCalendar() {
+        const { dateFormat } = this.props;
+        return /(H|h|m|s)/.test(dateFormat);
     },
 
     getFormGroup() {
