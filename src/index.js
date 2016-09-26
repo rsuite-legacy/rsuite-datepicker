@@ -11,7 +11,7 @@ const DatePicker = React.createClass({
         selected: PropTypes.instanceOf(Date),
         minDate: PropTypes.instanceOf(Date),
         maxDate: PropTypes.instanceOf(Date),
-        format: PropTypes.string,
+        dateFormat: PropTypes.string,
         onSelect: PropTypes.func
     },
 
@@ -34,7 +34,7 @@ const DatePicker = React.createClass({
 
     getDefaultProps() {
         return {
-            format:'YYYY-MM-DD'
+            dateFormat:'YYYY-MM-DD'
         };
     },
 
@@ -71,7 +71,7 @@ const DatePicker = React.createClass({
 
     getDateString() {
         const selected = this.getValue();
-        return selected ? moment(selected).format(this.props.format) : '';
+        return selected ? moment(selected).format(this.props.dateFormat) : '';
     },
 
     resetPageDate() {
