@@ -6,7 +6,7 @@ import './app.less';
 
 const App = (props) => (
     <div>
-        <DatePicker />
+        <DatePicker dateFormat="YYYY-MM-DD HH:mm:ss" />
     </div>
 );
 

@@ -3,6 +3,7 @@ import moment from 'moment';
 import { findDOMNode } from 'react-dom';
 import DateContainer from './DateContainer.js';
 import Calendar from './Calendar.js';
+import Clock from './Clock.js';
 import { transitionEndDetect } from './utils/eventDetect.js';
 import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper.js';
 
@@ -45,7 +46,7 @@ const DatePicker = React.createClass({
 
         const { transitionSupport } = this.state;
         let el = findDOMNode(this.refs.calendar);
-        if(transitionSupport.supported) {
+        if(transitionSupport.supported && el) {
             el.addEventListener(transitionSupport.event, e => {
                 if(e.target.className === 'monthView-weeksWrapper'
                 && e.propertyName === 'left') {
@@ -76,7 +77,12 @@ const DatePicker = React.createClass({
                     onClick={this.toggle}
                     onClean={selected && this.reset}
                 />
-                <div className="DatePicker-pane">
+                <div
+                    className={
+                        "DatePicker-pane" +
+                        (calendarState === 'HIDE' ? ' DatePicker-pane--hide': '')
+                    }
+                >
                     {
                         this.shouldMountCalendar() &&
                         <Calendar
@@ -96,6 +102,8 @@ const DatePicker = React.createClass({
                     {
                         this.shouldMountClock() &&
                         <Clock
+                            time={ this.getTime() }
+                            onChange={ this.handleTimeChange }
                         />
                     }
                 </div>
@@ -104,12 +112,43 @@ const DatePicker = React.createClass({
         );
     },
 
-    shouldMountClock() {
+    handleTimeChange(value) {
+        const { onChange } = this.getFormGroup();
+        const { onSelect } = this.props;
+        const { selected } = this.state;
+        const { hours, minutes, seconds } = value;
+        let nextSelected = selected
+                            ? new Date(selected)
+                            : new Date();
+        hours && nextSelected.setHours(hours);
+        minutes && nextSelected.setMinutes(minutes);
+        seconds && nextSelected.setSeconds(seconds);
+        this.setState({ selected: nextSelected });
+        onSelect && onSelect(nextSelected);
+        onChange && onChange(nextSelected);
+    },
+
+    getTime() {
+        const { dateFormat } = this.props;
+        const { selected } = this.state;
+        let timeDate = selected || new Date();
+        let time = {};
+        if(/(H|h)/.test(dateFormat))
+            time.hours = timeDate.getHours();
+        if(/m/.test(dateFormat))
+            time.minutes = timeDate.getMinutes();
+        if(/s/.test(dateFormat))
+            time.seconds = timeDate.getSeconds();
+        console.log(time);
+        return time;
+    },
+
+    shouldMountCalendar() {
         const { dateFormat } = this.props;
         return /(Y|M|D)/.test(dateFormat);
     },
 
-    shouldMountCalendar() {
+    shouldMountClock() {
         const { dateFormat } = this.props;
         return /(H|h|m|s)/.test(dateFormat);
     },
@@ -241,9 +280,18 @@ const DatePicker = React.createClass({
 
     onSelect(day) {
         const { onSelect } = this.props;
+        const { selected } = this.state;
         const { onChange } = this.getFormGroup();
-        this.hide();
-        this.setState({ selected: day });
+        // this.hide();
+        let time = selected || (new Date());
+        let nextSelected = new Date(day);
+
+        // merge time into nextSelected
+        nextSelected.setHours(time.getHours());
+        nextSelected.setMinutes(time.getMinutes());
+        nextSelected.setSeconds(time.getSeconds());
+
+        this.setState({ selected: nextSelected });
         onSelect && onSelect(day);
         onChange && onChange(day);
     },

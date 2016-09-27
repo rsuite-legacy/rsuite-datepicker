@@ -241,12 +241,10 @@ const Calendar = React.createClass({
             onChangePageDate
         } = this.props;
         const stateClassname = {
-            'SHOW': '',
-            'HIDE': ' is-hide',
             'SLIDING_L': ' sliding-left',
             'SLIDING_R': ' sliding-right',
             'EDITING': ' is-editing'
-        }[calendarState];
+        }[calendarState] || '';
         let dateFilter = (date) => {
             if(minDate && date.getTime() < minDate.getTime()) return false;
             if(maxDate && date.getTime() > maxDate.getTime()) return false;
