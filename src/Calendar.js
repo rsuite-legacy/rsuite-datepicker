@@ -266,11 +266,7 @@ const Calendar = React.createClass({
             'SLIDING_R': ' sliding-right',
             'EDITING': ' is-editing'
         }[calendarState] || '';
-        let dateFilter = (date) => {
-            if(minDate && date.getTime() < minDate.getTime()) return false;
-            if(maxDate && date.getTime() > maxDate.getTime()) return false;
-            return true;
-        };
+
         let isEditingPageDate = calendarState === 'EDITING';
         return (
             <div className={'calendar' + stateClassname}>
@@ -290,11 +286,19 @@ const Calendar = React.createClass({
                     date={pageDate}
                     selected={selectedDate}
                     onClick={onSelect}
-                    dateFilter={dateFilter}
+                    dateFilter={this.dateFilter}
                 />
             </div>
         );
     },
+
+    dateFilter(date) {
+        const { minDate, maxDate, dateFilter } = this.props;
+        if(minDate && date.getTime() < minDate.getTime()) return false;
+        if(maxDate && date.getTime() > maxDate.getTime()) return false;
+        if(dateFilter && !dateFilter(date)) return false;
+        return true;
+    }
 });
 
 export default Calendar;
