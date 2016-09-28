@@ -120,9 +120,9 @@ const DatePicker = React.createClass({
         let nextSelected = selected
                             ? new Date(selected)
                             : new Date();
-        hours && nextSelected.setHours(hours);
-        minutes && nextSelected.setMinutes(minutes);
-        seconds && nextSelected.setSeconds(seconds);
+        hours !== undefined && nextSelected.setHours(hours);
+        minutes !== undefined && nextSelected.setMinutes(minutes);
+        seconds !== undefined && nextSelected.setSeconds(seconds);
         this.setState({ selected: nextSelected });
         onSelect && onSelect(nextSelected);
         onChange && onChange(nextSelected);
@@ -139,7 +139,6 @@ const DatePicker = React.createClass({
             time.minutes = timeDate.getMinutes();
         if(/s/.test(dateFormat))
             time.seconds = timeDate.getSeconds();
-        console.log(time);
         return time;
     },
 

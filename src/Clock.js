@@ -100,10 +100,11 @@ const Slider = React.createClass({
         e.stopPropagation();
         e.preventDefault();
 
-        const { onChange } = this.props;
+        const { onChange, value } = this.props;
         const position = this.positionFromEvent(e);
-        const value = this.valueFromPosition(position);
-        onChange && onChange( value );
+        const nextValue = this.valueFromPosition(position);
+        console.log(nextValue);
+        if(value !== nextValue && onChange) onChange( nextValue );
     },
 
     positionFromEvent(e) {
