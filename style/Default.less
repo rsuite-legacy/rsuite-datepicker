@@ -19,6 +19,8 @@
     user-select: none;
 
     &-pane {
+        position: absolute;
+        z-index: 999;
 
         &--hide {
             visibility: hidden;
@@ -52,7 +54,7 @@
     .calendar {
         background-color: @container-bg;
         border: @container-border;
-        position: absolute;
+        float: left;
         visibility: visible;
         opacity: 1;
         transition: visibility .1s, opacity .1s ease-in;
@@ -309,7 +311,7 @@
         background-color: @container-bg;
         border: @container-border;
         border-left: none;
-        position: absolute;
+        float: left;
         visibility: visible;
         opacity: 1;
         transition: visibility .1s, opacity .1s ease-in;
@@ -318,7 +320,6 @@
         box-shadow: 0 6px 12px rgba(0,0,0,.175);
         height: 280px;
         width: @clock-width;
-        left: @monthView-width + 2px; // add border width
     }
 
     .digits {
