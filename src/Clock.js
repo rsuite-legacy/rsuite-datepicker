@@ -103,7 +103,6 @@ const Slider = React.createClass({
         const { onChange, value } = this.props;
         const position = this.positionFromEvent(e);
         const nextValue = this.valueFromPosition(position);
-        console.log(nextValue);
         if(value !== nextValue && onChange) onChange( nextValue );
     },
 

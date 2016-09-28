@@ -216,6 +216,26 @@ const Calendar = React.createClass({
         onChangePageDate: PropTypes.func
     },
 
+    shouldComponentUpdate( nextProps, nextState  ) {
+        return (
+            nextProps.calendarState !== this.props.calendarState ||
+            this.isDayChanged(nextProps.selectedDate, this.props.selectedDate) ||
+            this.isDayChanged(nextProps.pageDate, this.props.pageDate) ||
+            this.isDayChanged(nextProps.minDate, this.props.minDate) ||
+            this.isDayChanged(nextProps.maxDate, this.props.maxDate)
+        );
+    },
+
+    isDayChanged(dateA, dateB) {
+        if(dateA && dateB) {
+            return dateA.toDateString() !== dateB.toDateString();
+        } else if(!dateA && !dateB) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+
     onMoveForword() {
         const { onMoveForword, pageDate } = this.props;
         let nextPageDate = new Date(pageDate.getFullYear(), pageDate.getMonth() + 1);
