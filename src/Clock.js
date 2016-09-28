@@ -54,6 +54,13 @@ const Slider = React.createClass({
         };
     },
 
+    shouldComponentUpdate( nextProps, nextState  ) {
+        const props = this.props;
+        return (
+            nextProps.value !== props.value
+        );
+    },
+
     render () {
         const { range, value } = this.props;
         return (

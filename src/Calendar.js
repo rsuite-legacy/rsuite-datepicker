@@ -217,12 +217,13 @@ const Calendar = React.createClass({
     },
 
     shouldComponentUpdate( nextProps, nextState  ) {
+        const props = this.props;
         return (
-            nextProps.calendarState !== this.props.calendarState ||
-            this.isDayChanged(nextProps.selectedDate, this.props.selectedDate) ||
-            this.isDayChanged(nextProps.pageDate, this.props.pageDate) ||
-            this.isDayChanged(nextProps.minDate, this.props.minDate) ||
-            this.isDayChanged(nextProps.maxDate, this.props.maxDate)
+            nextProps.calendarState !== props.calendarState ||
+            this.isDayChanged(nextProps.selectedDate, props.selectedDate) ||
+            this.isDayChanged(nextProps.pageDate, props.pageDate) ||
+            this.isDayChanged(nextProps.minDate, props.minDate) ||
+            this.isDayChanged(nextProps.maxDate, props.maxDate)
         );
     },
 
