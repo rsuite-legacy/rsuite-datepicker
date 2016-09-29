@@ -12,6 +12,7 @@ const DatePicker = React.createClass({
         selected: PropTypes.instanceOf(Date),
         minDate: PropTypes.instanceOf(Date),
         maxDate: PropTypes.instanceOf(Date),
+        autoClose: PropTypes.bool,
         dateFormat: PropTypes.string,
         onSelect: PropTypes.func,
         dateFilter: PropTypes.func
@@ -23,7 +24,8 @@ const DatePicker = React.createClass({
 
     getDefaultProps() {
         return {
-            dateFormat:'YYYY-MM-DD'
+            dateFormat:'YYYY-MM-DD',
+            autoClose: false
         };
     },
 
@@ -281,10 +283,12 @@ const DatePicker = React.createClass({
     },
 
     onSelect(day) {
-        const { onSelect } = this.props;
+        const { onSelect, autoClose } = this.props;
         const { selected } = this.state;
         const { onChange } = this.getFormGroup();
-        // this.hide();
+
+        if(autoClose) this.hide();
+
         let time = selected || (new Date());
         let nextSelected = new Date(day);
 
