@@ -13,6 +13,7 @@ const DatePicker = React.createClass({
         minDate: PropTypes.instanceOf(Date),
         maxDate: PropTypes.instanceOf(Date),
         autoClose: PropTypes.bool,
+        placeholder: PropTypes.string,
         dateFormat: PropTypes.string,
         onSelect: PropTypes.func,
         dateFilter: PropTypes.func
@@ -25,7 +26,8 @@ const DatePicker = React.createClass({
     getDefaultProps() {
         return {
             dateFormat:'YYYY-MM-DD',
-            autoClose: false
+            autoClose: false,
+            placeholder: ''
         };
     },
 
@@ -189,8 +191,9 @@ const DatePicker = React.createClass({
     },
 
     getDateString() {
+        const { placeholder } = this.props;
         const selected = this.getValue();
-        return selected ? moment(selected).format(this.props.dateFormat) : '';
+        return selected ? moment(selected).format(this.props.dateFormat) : placeholder;
     },
 
     resetPageDate() {
