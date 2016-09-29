@@ -213,7 +213,8 @@ const Calendar = React.createClass({
         onMoveBackward: PropTypes.func,
         onSelect: PropTypes.func,
         onClickTitle: PropTypes.func,
-        onChangePageDate: PropTypes.func
+        onChangePageDate: PropTypes.func,
+        dateFilter: PropTypes.func
     },
 
     shouldComponentUpdate( nextProps, nextState  ) {

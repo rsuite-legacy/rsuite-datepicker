@@ -13,7 +13,8 @@ const DatePicker = React.createClass({
         minDate: PropTypes.instanceOf(Date),
         maxDate: PropTypes.instanceOf(Date),
         dateFormat: PropTypes.string,
-        onSelect: PropTypes.func
+        onSelect: PropTypes.func,
+        dateFilter: PropTypes.func
     },
 
     contextTypes: {
@@ -59,7 +60,8 @@ const DatePicker = React.createClass({
     render() {
         const {
             minDate,
-            maxDate
+            maxDate,
+            dateFilter
         } = this.props;
 
         const {
@@ -96,6 +98,7 @@ const DatePicker = React.createClass({
                             onSelect={this.onSelect}
                             onClickTitle={this.toggleEditPanel}
                             onChangePageDate={this.onChangePageDate}
+                            dateFilter={dateFilter}
                             ref="calendar"
                         />
                     }
