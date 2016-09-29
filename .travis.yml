@@ -3,7 +3,6 @@ node_js:
     - "6"
     - "node"
 install:
-    - npm install -g babel-cli
     - npm install
 script:
     - npm run test
