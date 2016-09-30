@@ -1,18 +1,7 @@
 import React, { PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import MonthHeader from './MonthHeader.js';
-
-const WeekHeader = ({}) => (
-    <div className="weekHeader">
-        <span className="weekHeader-day">Sun</span>
-        <span className="weekHeader-day">Mon</span>
-        <span className="weekHeader-day">Tue</span>
-        <span className="weekHeader-day">Wed</span>
-        <span className="weekHeader-day">Thu</span>
-        <span className="weekHeader-day">Fri</span>
-        <span className="weekHeader-day">Sat</span>
-    </div>
-);
+import WeekHeader from './WeekHeader.js';
 
 const Week = ({ weekendDate, selected = new Date(), onClick, dateFilter } = props) => (
     <div className="week">

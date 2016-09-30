@@ -1,21 +1,20 @@
 import React from 'react';
-import TestUtils, {
+import {
     renderIntoDocument,
     findRenderedDOMComponentWithClass
 } from 'react-addons-test-utils';
 import MonthHeader from '../src/MonthHeader.js';
 import { expect } from 'chai';
+import { shallow } from './helpers.js';
 
 describe('MonthHeader', () => {
-    let shallowRenderer = TestUtils.createRenderer();
 
     it('should render a div with "monthHeader" class', () => {
-        shallowRenderer.render(
+        let result = shallow(
             <MonthHeader
-            date={ new Date() }
-                />
+                date={ new Date() }
+            />
         );
-        let result = shallowRenderer.getRenderOutput();
         expect(result.type).to.equal('div');
         expect(result.props.className).to.equal('monthHeader');
     });
