@@ -82,6 +82,7 @@ const Slider = React.createClass({
                         <a
                             className="slider-slider"
                             onMouseDown={this.handleStart}
+                            onTouchStart={this.handleStart}
                         >
                         </a>
                     </span>
@@ -93,12 +94,16 @@ const Slider = React.createClass({
 
     handleStart() {
         document.addEventListener('mousemove', this.handleDrag);
+        document.addEventListener('touchmove', this.handleDrag);
         document.addEventListener('mouseup', this.handleEnd);
+        document.addEventListener('touchend', this.handleEnd);
     },
 
     handleEnd() {
         document.removeEventListener('mousemove', this.handleDrag);
+        document.removeEventListener('touchmove', this.handleDrag);
         document.removeEventListener('mouseup', this.handleEnd);
+        document.removeEventListener('touchend', this.handleEnd);
     },
 
     handleDrag(e) {
@@ -119,7 +124,7 @@ const Slider = React.createClass({
             width: trackClientWidth,
             left: trackClientLeft
         } = track.getBoundingClientRect();
-        const eventClientX = e.clientX;
+        const eventClientX = e.clientX || e.touches[0].clientX;
         return clamp(eventClientX - trackClientLeft, 0, trackClientWidth);
     },
 
