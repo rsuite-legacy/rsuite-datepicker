@@ -8,7 +8,8 @@
     "prepublish": "npm run compile",
     "start": "webpack-dev-server --hot --content-base dist/",
     "deploy": "webpack && ./node_modules/gh-pages/bin/gh-pages -d dist",
-    "test": "npm run compile && mocha --compilers js:babel-core/register --colors test/*_spec.js"
+    "test": "npm run compile && mocha --compilers js:babel-core/register --colors test/*_spec.js",
+    "lint:init": "eslint --init"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "chai": "^3.5.0",
     "css-loader": "^0.25.0",
     "eslint": "^3.7.1",
+    "eslint-plugin-react": "^6.4.1",
     "gh-pages": "^0.11.0",
     "jsdom": "^9.5.0",
     "less": "^2.7.1",
