@@ -10,7 +10,7 @@
     "deploy": "webpack && ./node_modules/gh-pages/bin/gh-pages -d dist",
     "test": "npm run compile && mocha --compilers js:babel-core/register --colors test/*_spec.js",
     "lint:init": "eslint --init",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint 'src/**/*.js'"
   },
   "repository": {
     "type": "git",
