@@ -31,6 +31,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
     "css-loader": "^0.25.0",
+    "eslint": "^3.7.1",
     "gh-pages": "^0.11.0",
     "jsdom": "^9.5.0",
     "less": "^2.7.1",
@@ -38,7 +39,9 @@
     "mocha": "^3.1.0",
     "react-addons-test-utils": "^15.3.2",
     "rsuite": "0.0.20",
-    "style-loader": "^0.13.1"
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
   },
   "peerDependencies": {
     "react": ">=0.14.2",
