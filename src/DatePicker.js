@@ -46,9 +46,6 @@ const DatePicker = React.createClass({
 
     componentDidMount() {
 
-        let yearScrollAmount = 0;
-        let monthScrollAmount = 0;
-
         const { transitionSupport } = this.state;
         let el = findDOMNode(this.refs.calendar);
         if(transitionSupport.supported && el) {
@@ -85,7 +82,7 @@ const DatePicker = React.createClass({
                 />
                 <div
                     className={
-                        "DatePicker-pane" +
+                        'DatePicker-pane' +
                         (calendarState === 'HIDE' ? ' DatePicker-pane--hide': '')
                     }
                 >

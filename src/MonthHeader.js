@@ -18,4 +18,11 @@ const MonthHeader = ({ date, onMoveForword, onMoveBackward, onClickTitle }) => (
     </div>
 );
 
+MonthHeader.propTypes = {
+    date: PropTypes.instanceOf(Date),
+    onMoveForword: PropTypes.func,
+    onMoveBackward: PropTypes.func,
+    onClickTitle: PropTypes.func
+};
+
 export default MonthHeader;

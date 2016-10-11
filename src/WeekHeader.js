@@ -1,6 +1,6 @@
 import React from 'react';
 
-const WeekHeader = props => (
+const WeekHeader = () => (
     <div className="weekHeader">
         <span className="weekHeader-day">Sun</span>
         <span className="weekHeader-day">Mon</span>

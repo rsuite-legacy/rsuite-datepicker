@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 
 function leftPad(number) {
-    number = "" + number;
-    var pad = number.length < 2 ? "0" : "";
+    number = '' + number;
+    var pad = number.length < 2 ? '0' : '';
     return pad + number;
 }
 
@@ -18,6 +18,10 @@ const Digit = ({
 }) => (
     <span className="digit-number"> { leftPad(number) } </span>
 );
+
+Digit.propTypes = {
+    number: PropTypes.number
+};
 
 const Separater = () => <span className="separater">:</span>;
 
@@ -35,6 +39,14 @@ const Digits = ({ time }) => (
         }
     </div>
 );
+
+Digits.propTypes = {
+    time: PropTypes.shape({
+        hours: PropTypes.number,
+        minutes: PropTypes.number,
+        seconds: PropTypes.number
+    })
+};
 
 function getPercentage(a, b) {
     return ( a / b ) * 100 + '%';
@@ -187,6 +199,15 @@ const Sliders = ({ time, onChange }) => (
         }
     </div>
 );
+
+Sliders.propTypes = {
+    time: PropTypes.shape({
+        hours: PropTypes.number,
+        minutes: PropTypes.number,
+        seconds: PropTypes.number
+    }),
+    onChange: PropTypes.func
+};
 
 const Clock = ({
     onChange,

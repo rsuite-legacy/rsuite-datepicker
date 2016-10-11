@@ -3,20 +3,20 @@ import { findDOMNode } from 'react-dom';
 import MonthHeader from './MonthHeader.js';
 import WeekHeader from './WeekHeader.js';
 
-const Week = ({ weekendDate, selected = new Date(), onClick, dateFilter } = props) => (
+const Week = ({ weekendDate, selected = new Date(), onClick, dateFilter }) => (
     <div className="week">
     {
         (() => {
             let days = [];
             for(let i = 0; i < 7; i++) {
                 let thisDate = new Date(weekendDate);
-                    thisDate.setDate(weekendDate.getDate() + i);
-                let className = "week-day";
-                    className += dateFilter(thisDate) ? '' : ' disable';
-                    className += thisDate.toDateString() === (new Date()).toDateString()
-                                 ? ' is-today' : '';
-                    className += thisDate.toDateString() === selected.toDateString()
-                                 ? ' selected' : '';
+                thisDate.setDate(weekendDate.getDate() + i);
+                let className = 'week-day';
+                className += dateFilter(thisDate) ? '' : ' disable';
+                className += thisDate.toDateString() === (new Date()).toDateString()
+                    ? ' is-today' : '';
+                className += thisDate.toDateString() === selected.toDateString()
+                    ? ' selected' : '';
                 days.push(
                     <div
                         className={className}
@@ -33,7 +33,14 @@ const Week = ({ weekendDate, selected = new Date(), onClick, dateFilter } = prop
     </div>
 );
 
-const Weeks = ({ weeks, selected, onClick, dateFilter } = props) => (
+Week.propTypes = {
+    weekendDate: PropTypes.instanceOf(Date),
+    selected: PropTypes.instanceOf(Date),
+    onClick: PropTypes.func,
+    dateFilter: PropTypes.func
+};
+
+const Weeks = ({ weeks, selected, onClick, dateFilter }) => (
     <div className="weeks">
     {
         weeks.map( (week, i) =>
@@ -49,7 +56,14 @@ const Weeks = ({ weeks, selected, onClick, dateFilter } = props) => (
     </div>
 );
 
-const MonthView = ({ date, selected, onClick, dateFilter } = props) => {
+Weeks.propTypes = {
+    weeks: PropTypes.array,
+    selected: PropTypes.instanceOf(Date),
+    onClick: PropTypes.func,
+    dateFilter: PropTypes.func
+};
+
+const MonthView = ({ date, selected, onClick, dateFilter }) => {
     /**
      * Get all weeks of this month
      * @params date
@@ -76,13 +90,13 @@ const MonthView = ({ date, selected, onClick, dateFilter } = props) => {
     }
 
     // is two date in the same month
-    function inSameMonth(dateA, dateB) { return dateA.getMonth() === dateB.getMonth() };
+    function inSameMonth(dateA, dateB) { return dateA.getMonth() === dateB.getMonth(); }
 
     let thisMonthDate = new Date(date);
     let prevMonthDate = new Date(thisMonthDate);
-        prevMonthDate.setMonth(thisMonthDate.getMonth() - 1);
+    prevMonthDate.setMonth(thisMonthDate.getMonth() - 1);
     let nextMonthDate = new Date(thisMonthDate);
-        nextMonthDate.setMonth(thisMonthDate.getMonth() + 1);
+    nextMonthDate.setMonth(thisMonthDate.getMonth() + 1);
     return (
         <div className="monthView">
             <div className="monthView-weeksWrapper">
@@ -105,7 +119,14 @@ const MonthView = ({ date, selected, onClick, dateFilter } = props) => {
             </div>
         </div>
     );
-}
+};
+
+MonthView.propTypes = {
+    date: PropTypes.instanceOf(Date),
+    selected: PropTypes.instanceOf(Date),
+    onClick: PropTypes.func,
+    dateFilter: PropTypes.func
+};
 
 const EditPanel = React.createClass({
     propTypes: {
@@ -119,7 +140,6 @@ const EditPanel = React.createClass({
         const blockHeight = 64;
         const startYear = 1950;
         const el = findDOMNode(this.refs.content);
-        console.log(date, year - startYear);
         const scrollTop = (year - startYear) * blockHeight + topSpacing;
         el.scrollTop = scrollTop;
     },
@@ -146,12 +166,12 @@ const EditPanel = React.createClass({
                             let isSelectedYear = curYear === selectedYear;
                             let yearBlock = (
                                     <div className="editPanel-yearBlock" key={i}>
-                                    <div className={"editPanel-yearTitle" + (isSelectedYear ? ' selected' : '')}>{curYear}</div>
-                                    <div className="editPanel-monthBlock">
+                                    <div className={'editPanel-yearTitle' + (isSelectedYear ? ' selected' : '')}>{curYear}</div>
+                                    <div className='editPanel-monthBlock'>
                                     {
                                         [...Array(12).keys()].map( dateMonth =>
                                                 <div
-                                                    className={"editPanel-monthCell" + (isSelectedYear && dateMonth === selectedMonth ? ' selected' : '')}
+                                                    className={'editPanel-monthCell' + (isSelectedYear && dateMonth === selectedMonth ? ' selected' : '')}
                                                     onClick={onClick.bind(null, new Date(curYear, dateMonth))}
                                                     key={dateMonth}
                                                     >
@@ -227,9 +247,6 @@ const Calendar = React.createClass({
             calendarState,
             selectedDate,
             pageDate,
-            minDate,
-            maxDate,
-            pageNumber,
             onSelect,
             onClickTitle,
             onChangePageDate
