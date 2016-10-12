@@ -48,8 +48,8 @@
     "webpack-dev-server": "^1.16.2"
   },
   "peerDependencies": {
-    "react": ">=0.14.2",
-    "react-dom": ">=0.14.2",
+    "react": ">=15.3.2",
+    "react-dom": ">=15.3.2",
     "moment": ">=2.14.1"
   }
 }
