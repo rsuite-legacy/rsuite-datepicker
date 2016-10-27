@@ -1,3 +1,5 @@
+/*eslint-disable*/
+
 import React from 'react';
 import { render } from 'react-dom';
 import Component from './index.js';
@@ -10,7 +12,7 @@ render(
     renderTarget,
     () => {
         document.body.appendChild(renderTarget);
-        console.log('==== Everything is good! ====')
+        console.log('==== Everything is good! ====');
     }
 );
 
