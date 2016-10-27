@@ -4,7 +4,6 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "lint:init": "eslint --init",
     "lint": "eslint 'src/**/*.js'",
     "test": "npm run lint && mocha --compilers js:babel-core/register --colors test/*_spec.js",
     "compile": "npm run test&& babel -d lib src",
