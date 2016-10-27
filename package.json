@@ -2,7 +2,7 @@
   "name": "rsuite-datepicker",
   "version": "0.1.1",
   "description": "React Datepicker Component",
-  "main": "dist/index.js",
+  "main": "dist/rsuite-datepicker.js",
   "scripts": {
     "lint": "eslint 'src/**/*.js'",
     "test": "npm run lint && mocha --compilers js:babel-core/register --colors test/*_spec.js",
