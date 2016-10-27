@@ -1,15 +1,27 @@
 const path = require('path');
 
 module.exports = {
-    entry: './dist/app.js',
+    entry: path.join(__dirname, 'src'),
     output: {
-        path: path.resolve(__dirname, './dist'),
+        library: 'RsuiteDatepicker',
+        libraryTarget: 'umd',
+        path: path.join(__dirname, 'dist'),
         filename: 'bundle.js'
     },
     module: {
         loaders: [
-            { test: /\.js$/, loader: 'babel-loader' },
-            { test: /\.less$/, loader: 'style!css!less' }
+            {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['es2015', 'react']
+                }
+            },
+            {
+                test: /\.less$/,
+                loader: 'style!css!less'
+            }
         ]
     },
     devtool: 'source-map',
