@@ -5,18 +5,16 @@ module.exports = {
     output: {
         library: 'RsuiteDatepicker',
         libraryTarget: 'umd',
+        umdNamedDefine: true,
         path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'rsuite-datepicker.js'
     },
     module: {
         loaders: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015', 'react']
-                }
+                loader: 'babel-loader'
             },
             {
                 test: /\.less$/,
@@ -24,10 +22,18 @@ module.exports = {
             }
         ]
     },
-    devtool: 'source-map',
     externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-        'moment': 'moment'
+        'react': {
+            root: 'React',
+            commonjs2: 'react',
+            commonjs: 'react',
+            amd: 'react'
+        },
+        'react-dom': {
+            root: 'ReactDOM',
+            commonjs2: 'react-dom',
+            commonjs: 'react-dom',
+            amd: 'react-dom'
+        }
     }
 };
