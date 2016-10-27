@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-    - "6"
-    - "node"
+  - "6"
+  - "node"
 install:
-    - npm install
+  - npm install
 script:
-    - npm run test
+  - npm run test
