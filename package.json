@@ -8,6 +8,7 @@
     "test": "npm run lint && mocha --compilers js:babel-core/register --colors test/*_spec.js",
     "build": "npm run test && webpack --config webpack.config.js --progress --colors",
     "prepublish": "npm run build",
+    "dev": "webpack-dev-server --config webpack.dev.config.js --progress --colors",
     "start": "webpack-dev-server --hot --content-base dist/",
     "deploy": "npm run test && webpack && ./node_modules/gh-pages/bin/gh-pages -d deploy"
   },
