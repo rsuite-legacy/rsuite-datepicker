@@ -51,6 +51,6 @@
   "peerDependencies": {
     "react": ">=15.3.2",
     "react-dom": ">=15.3.2",
-    "moment": ">=2.14.1"
+    "moment": ">=2.15.2"
   }
 }
