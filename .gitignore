@@ -38,3 +38,6 @@ jspm_packages
 
 # Distributions
 dist/
+
+# Bundle
+*bundle.js*
