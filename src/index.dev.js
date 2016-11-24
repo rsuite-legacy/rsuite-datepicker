@@ -3,6 +3,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Component from './index.js';
+import style from '../style/Default.less';
 
 let renderTarget = document.createElement('div');
 renderTarget.id = 'renderTarget';
