@@ -18,6 +18,8 @@
     box-sizing: border-box;
     user-select: none;
 
+    * { box-sizing: border-box; }
+
     &-pane {
         position: absolute;
         z-index: 999;
@@ -53,6 +55,7 @@
     }
 
     .calendar {
+        position: relative;
         background-color: @container-bg;
         border: @container-border;
         float: left;
