@@ -205,6 +205,8 @@ const DatePicker = React.createClass({
     },
 
     hide() {
+        const { onBlur } = this.getFormGroup();
+        onBlur();
         this.setState({ calendarState: 'HIDE'});
     },
 
