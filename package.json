@@ -1,6 +1,6 @@
 {
   "name": "rsuite-datepicker",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "React Datepicker Component",
   "main": "dist/rsuite-datepicker.js",
   "scripts": {
