@@ -1,40 +1,112 @@
 const path = require('path');
+const webpack = require('webpack');
+const HtmlwebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const markdownLoader = require('markdownloader').renderer;
 
-module.exports = {
-    entry: path.join(__dirname, 'src'),
-    output: {
-        library: 'RsuiteDatepicker',
-        libraryTarget: 'umd',
-        umdNamedDefine: true,
-        path: path.join(__dirname, 'dist'),
-        filename: 'rsuite-datepicker.js'
+
+const extractLess = new ExtractTextPlugin({
+    filename: '[name].[contenthash].css',
+    disable: process.env.NODE_ENV === 'development'
+});
+
+
+const docsPath = process.env.NODE_ENV === 'development' ? './assets' : './';
+
+
+const common = {
+    entry: path.resolve(__dirname, 'src/'),
+    devServer: {
+        hot: true,
+        contentBase: path.resolve(__dirname, ''),
+        publicPath: '/'
     },
+    output: {
+        path: path.resolve(__dirname, 'assets'),
+        filename: 'bundle.js',
+        publicPath: './'
+    },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NamedModulesPlugin(),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
+        extractLess,
+        new HtmlwebpackPlugin({
+            title: 'RSUITE DateRangePicker',
+            filename: 'index.html',
+            template: 'docs/index.html',
+            inject: true,
+            hash: true,
+            path: docsPath
+        })
+    ],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: 'babel-loader'
+                use: [
+                    'babel-loader'
+                ],
+                exclude: /node_modules/
             },
             {
                 test: /\.less$/,
-                loader: 'style!css!less'
+                loader: extractLess.extract({
+                    use: [{
+                        loader: 'css-loader'
+                    }, {
+                        loader: 'less-loader'
+                    }],
+                    // use style-loader in development
+                    fallback: 'style-loader'
+                })
+            }, {
+                test: /\.md$/,
+                use: [
+                    {
+                        loader: 'html-loader'
+                    },
+                    {
+                        loader: 'markdown-loader',
+                        options: {
+                            pedantic: true,
+                            renderer: markdownLoader.renderer
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|svg)($|\?)/,
+                use: [{
+                    loader: 'url-loader?limit=1&hash=sha512&digest=hex&size=16&name=resources/[hash].[ext]'
+                }]
+
             }
         ]
-    },
-    externals: {
-        'react': {
-            root: 'React',
-            commonjs2: 'react',
-            commonjs: 'react',
-            amd: 'react'
-        },
-        'react-dom': {
-            root: 'ReactDOM',
-            commonjs2: 'react-dom',
-            commonjs: 'react-dom',
-            amd: 'react-dom'
-        },
-        'moment': 'moment'
     }
 };
+
+module.exports = (env = {}) => {
+
+    if (process.env.NODE_ENV === 'development') {
+        return Object.assign({}, common, {
+            entry: [
+                'react-hot-loader/patch',
+                'webpack-dev-server/client?http://127.0.0.1:3100',
+                'webpack/hot/only-dev-server',
+                path.resolve(__dirname, 'docs/index')
+            ],
+            devtool: 'source-map'
+        });
+    }
+
+    if (process.env.NODE_ENV === 'production') {
+        return Object.assign({}, common, {
+            entry: [
+                path.resolve(__dirname, 'docs/index')
+            ]
+        });
+    }
+}

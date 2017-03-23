@@ -1,4 +1,5 @@
 src/
-deploy/
-example/
+docs/
 test/
+.vscode
+assets
