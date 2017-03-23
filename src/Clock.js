@@ -32,7 +32,9 @@ const Digits = ({ time }) => (
                 .filter( k => time[k] !== undefined )
                 .map( k => <Digit key={k} number={time[k]} /> )
                 .reduce( ( prev, cur, idx ) => {
-                    if(idx) prev.push(<Separater key={idx} />);
+                    if(idx) {
+                        prev.push(<Separater key={idx} />);
+                    }
                     prev.push(cur);
                     return prev;
                 }, [] )
@@ -127,7 +129,9 @@ const Slider = React.createClass({
         const { onChange, value } = this.props;
         const position = this.positionFromEvent(e);
         const nextValue = this.valueFromPosition(position);
-        if(value !== nextValue && onChange) onChange( nextValue );
+        if(value !== nextValue && onChange) {
+            onChange( nextValue );
+        }
     },
 
     positionFromEvent(e) {

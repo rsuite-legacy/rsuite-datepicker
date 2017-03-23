@@ -69,12 +69,15 @@ const DatePicker = React.createClass({
         const { value } = this.state;
         let timeDate = value || new Date();
         let time = {};
-        if (/(H|h)/.test(dateFormat))
+        if (/(H|h)/.test(dateFormat)){
             time.hours = timeDate.getHours();
-        if (/m/.test(dateFormat))
+        }
+        if (/m/.test(dateFormat)){
             time.minutes = timeDate.getMinutes();
-        if (/s/.test(dateFormat))
+        }
+        if (/s/.test(dateFormat)){
             time.seconds = timeDate.getSeconds();
+        }
         return time;
     },
 
@@ -118,8 +121,12 @@ const DatePicker = React.createClass({
     getDefaultPageDate() {
         const { minDate, maxDate } = this.props;
         let retDate = new Date();
-        if (minDate && retDate.getTime() < minDate.getTime()) retDate = minDate;
-        if (maxDate && retDate.getTime() > maxDate.getTime()) retDate = maxDate;
+        if (minDate && retDate.getTime() < minDate.getTime()) {
+            retDate = minDate;
+        }
+        if (maxDate && retDate.getTime() > maxDate.getTime()) {
+            retDate = maxDate;
+        }
         return retDate;
     },
 
@@ -148,9 +155,15 @@ const DatePicker = React.createClass({
 
     toggle() {
         const { calendarState } = this.state;
-        if (calendarState === 'SHOW') this.hide();
-        if (calendarState === 'HIDE') this.show();
-        if (calendarState === 'EDITING') this.hide();
+        if (calendarState === 'SHOW'){
+             this.hide();
+        }
+        if (calendarState === 'HIDE') {
+            this.show();
+        }
+        if (calendarState === 'EDITING') {
+            this.hide();
+        }
     },
 
     showEditPanel() {
@@ -163,8 +176,12 @@ const DatePicker = React.createClass({
 
     toggleEditPanel() {
         const { calendarState } = this.state;
-        if (calendarState === 'EDITING') this.hideEditPanel();
-        if (calendarState === 'SHOW') this.showEditPanel();
+        if (calendarState === 'EDITING') {
+            this.hideEditPanel();
+        }
+        if (calendarState === 'SHOW') {
+            this.showEditPanel();
+        }
     },
 
     onMoveForword(nextPageDate) {
@@ -196,8 +213,12 @@ const DatePicker = React.createClass({
     onMoveDone() {
         const { calendarState, pageDate } = this.state;
         let pageChanges = 0;
-        if (calendarState === 'SLIDING_L') pageChanges = 1;
-        if (calendarState === 'SLIDING_R') pageChanges = -1;
+        if (calendarState === 'SLIDING_L'){
+             pageChanges = 1;
+        }
+        if (calendarState === 'SLIDING_R') {
+            pageChanges = -1;
+        }
         let nextPageDate = new Date(pageDate.getFullYear(), pageDate.getMonth() + pageChanges);
         this.setState({
             pageDate: nextPageDate,
@@ -225,7 +246,9 @@ const DatePicker = React.createClass({
         const { value } = this.state;
         const { onChange: onFormChange } = this.getFormGroup();
 
-        if (autoClose) this.hide();
+        if (autoClose) {
+            this.hide();
+        }
 
         let time = value || (new Date());
         let nextValue = new Date(day);

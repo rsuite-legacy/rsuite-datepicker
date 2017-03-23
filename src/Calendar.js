@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-import MonthHeader from './MonthHeader.js';
-import WeekHeader from './WeekHeader.js';
+import MonthHeader from './MonthHeader';
+import WeekHeader from './WeekHeader';
 
 const Week = ({ weekendDate, selected = new Date(), onClick, dateFilter }) => (
     <div className="week">
@@ -90,7 +90,9 @@ const MonthView = ({ date, selected, onClick, dateFilter }) => {
     }
 
     // is two date in the same month
-    function inSameMonth(dateA, dateB) { return dateA.getMonth() === dateB.getMonth(); }
+    function inSameMonth(dateA, dateB) {
+        return dateA.getMonth() === dateB.getMonth();
+    }
 
     let thisMonthDate = new Date(date);
     let prevMonthDate = new Date(thisMonthDate);
@@ -284,9 +286,15 @@ const Calendar = React.createClass({
 
     dateFilter(date) {
         const { minDate, maxDate, dateFilter } = this.props;
-        if(minDate && date.getTime() < minDate.getTime()) return false;
-        if(maxDate && date.getTime() > maxDate.getTime()) return false;
-        if(dateFilter && !dateFilter(date)) return false;
+        if(minDate && date.getTime() < minDate.getTime()) {
+            return false;
+        }
+        if(maxDate && date.getTime() > maxDate.getTime()) {
+            return false;
+        }
+        if(dateFilter && !dateFilter(date)) {
+            return false;
+        }
         return true;
     }
 });
