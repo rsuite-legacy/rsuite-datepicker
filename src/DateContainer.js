@@ -1,16 +1,14 @@
 import React, { PropTypes } from 'react';
 
-const DateContainer = ({ placeholder, onClick, onClean }) => (
+const DateContainer = ({ placeholder, onClick, onClean, showCleanButton }) => (
     <div className="dateContainer" onClick={onClick}>
         <div className="dateContainer-placeholder">{placeholder}</div>
         {
-            onClean &&
-            <div className="dateContainer-clean" onClick={
-                (e) => {
-                    e.stopPropagation();
-                    onClean();
-                }
-            }>✕</div>
+            showCleanButton &&
+            <div className="dateContainer-clean" onClick={(e) => {
+                e.stopPropagation();
+                onClean();
+            }}>✕</div>
         }
     </div>
 );

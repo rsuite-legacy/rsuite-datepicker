@@ -1,0 +1,445 @@
+@import "./themes.less";
+.DatePicker {
+    /* settings */
+    @container-bg: #FFF;
+    @header-bg:#f5f5f5;
+    @container-fg: #333;
+    @container-border: 1px solid @B400;
+    @container-padding: 6px 48px 8px 10px;
+    @monthView-width: 231px;
+    @clock-width: 210px;
+    @digits-size: 48px;
+    @digits-font-size: 24px;
+    @cell-height: 26px;
+    @cell-spacing: 2px;
+    @cell-hover-bg: #f5e9f7;
+    @color-active: @H500;
+
+    position: relative;
+    box-sizing: border-box;
+    user-select: none;
+
+    * { box-sizing: border-box; }
+
+    &-pane {
+        position: absolute;
+        z-index: 999;
+        &.datetime{
+            width: 444px;
+        }
+        &.hide {
+            visibility: hidden;
+            display: none;
+            opacity: 0;
+        }
+    }
+
+    .dateContainer {
+        position: relative;
+        overflow: hidden;
+        height: 36px;
+        background-color: @container-bg;
+        color: @container-fg;
+        border: @container-border;
+        padding: @container-padding;
+        cursor: pointer;
+        outline: none;
+
+        &-clean {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            height: 20px;
+            width: 20px;
+            line-height: 20px;
+            text-align: center;
+            margin-top: -10px;
+        }
+    }
+
+    .calendar {
+        position: relative;
+        background-color: @container-bg;
+        border: @container-border;
+        float: left;
+        visibility: visible;
+        opacity: 1;
+        transition: visibility .1s, opacity .1s ease-in;
+        margin-top: -1px;
+        z-index: 1000;
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        width: 234px;
+
+        .monthView-weeksWrapper { left: 0; }
+
+        &.sliding-left {
+
+            .monthView-weeksWrapper {
+                left: -@monthView-width;
+                transition: left .15s cubic-bezier(0.65, 0.05, 0.36, 1);
+            }
+        }
+
+        &.sliding-right {
+
+            .monthView-weeksWrapper {
+                left: @monthView-width;
+                transition: left .15s cubic-bezier(0.65, 0.05, 0.36, 1);
+            }
+        }
+
+        &.is-editing {
+
+            .monthHeader {
+
+                i {
+                    visibility: hidden;
+                    opacity: 0;
+                }
+
+                &-title {
+                    color: #EFEFEF;
+                    background-color: @color-active;
+                }
+            }
+
+            .editPanel {
+                opacity: 1;
+                height: ( @cell-height + @cell-spacing * 2) * 8;
+            }
+        }
+
+        .monthHeader {
+            width: 100%;
+            text-align: center;
+            z-index: 1002;
+            padding: 8px 4px 4px 4px;
+            background:  @header-bg;
+
+            i {
+                font-style: normal;
+                transition: visibility .1s, opacity .1s linear;
+            }
+
+            .monthHeader-forward {
+                position: relative;
+                float: right;
+                display: block;
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                color: #999;
+
+                &:hover {
+                    background-color: @cell-hover-bg;
+                    color: darken(#999, 30%)
+                }
+            }
+
+            .monthHeader-backward {
+                position: relative;
+                float: left;
+                display: block;
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                color: #999;
+
+                &:hover {
+                    background-color: @cell-hover-bg;
+                    color: darken(#999, 30%)
+                }
+            }
+
+            .monthHeader-title {
+                line-height: 20px;
+                font-size: 18px;
+                padding: 0 8px;
+                cursor: pointer;
+                transition: background-color .2s linear;
+
+                &:hover {
+                    color: @color-active;
+                    background-color: @cell-hover-bg;
+                }
+
+                &:active {
+                    background-color: @color-active;
+                }
+            }
+        }
+
+        .monthView {
+            position: relative;
+            overflow: hidden;
+            width: @monthView-width;
+            height: ( @cell-height + @cell-spacing * 2) * 7;
+            padding: 4px;
+            &-weeksWrapper { position: absolute }
+        }
+
+        .weekHeader {
+            @padding: 4px;
+            border-bottom: 1px solid #DDD;
+            padding: @padding 0;
+            background:  @header-bg;
+
+            &-day {
+                display: inline-block;
+                height: @cell-height;
+                width: @monthView-width / 7;
+                line-height: @cell-height;
+                text-align: center;
+                text-transform: uppercase;
+                font-size: .8em;
+                &:first-child, &:last-child {
+                    color: #999;
+                }
+            }
+        }
+
+        .weeks {
+            position: absolute;
+            width: @monthView-width;
+
+            &:first-child {
+                left: -@monthView-width;
+            }
+
+            &:last-child {
+                left: @monthView-width;
+            }
+
+            .week {
+
+                &-day {
+                    display: inline-block;
+                    width: @monthView-width / 7 - @cell-spacing * 2;
+                    padding: 6px;
+                    margin: @cell-spacing;
+                    text-align: center;
+                    font-size: .9em;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: @cell-hover-bg;
+                    }
+
+                    &.disable {
+                        opacity: .2;
+                        cursor: default;
+
+                        &:hover { background-color: transparent; }
+                    }
+
+                    &.is-today {
+                        border: 1px solid @color-active;
+                        color: @color-active;
+                    }
+
+                    &.selected {
+                        background: @color-active;
+                        color: #EFEFEF;
+
+                        &:hover {
+                            background-color: @color-active;
+                        }
+                    }
+                }
+            }
+        }
+
+        .editPanel {
+            @scroll-option-height: 28px;
+            position: absolute;
+            width: 100%;
+            background-color: #fff;
+            z-index: 1001;
+            overflow: hidden;
+            height: 0;
+            opacity: 0;
+            transition: height .2s ease-out, opacity .15s ease-out;
+
+            &-content {
+                width: 120%;
+                height: ( @cell-height + @cell-spacing * 2) * 8;
+                padding: 10px 0;
+                padding-right: 20%;
+                overflow: auto;
+                border-top: 1px solid #eee;
+            }
+
+            &-yearBlock {
+                @odd-bg: #f5f5f5;
+                padding: 2px 0;
+                width: @monthView-width;
+                &:nth-child(odd) {
+                    background-color: @odd-bg;
+                }
+            }
+
+            &-yearTitle {
+                display: inline-block;
+                height: 100%;
+                width: 30%;
+                float: left;
+                text-align: center;
+                font-weight: bold;
+
+                &.selected {
+                    color: @color-active;
+                }
+            }
+
+            &-monthBlock {
+                display: inline-block;
+                height: 100%;
+                width: 70%;
+            }
+
+            &-monthCell {
+                display: inline-block;
+                width: calc(100% / 4);
+                text-align: center;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: @cell-hover-bg;
+                }
+
+                &.selected {
+                    color: #EFEFEF;
+                    background-color: @color-active;
+                }
+            }
+        }
+    }
+
+    .clock {
+        background-color: @container-bg;
+        border: @container-border;
+        border-left: none;
+        float: left;
+        visibility: visible;
+        opacity: 1;
+        transition: visibility .1s, opacity .1s ease-in;
+        margin-top: -1px;
+        z-index: 1000;
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        height: 280px;
+        width: @clock-width;
+    }
+
+    .digits {
+        text-align: center;
+        padding: 36px 0;
+        background-color: @header-bg;
+        border-bottom: 1px solid #DDD;
+
+        .digit-number {
+            display: inline-block;
+            width: @digits-size;
+            line-height: @digits-size;
+            height: @digits-size;
+            font-size: @digits-font-size;
+            box-shadow: inset 0px 1px 6px 0px #999;
+            background-color: #F6F6F6;
+            border-radius: 4px;
+            font-weight: bold;
+            color: @container-fg;
+        }
+
+        .separater {
+            display: inline-block;
+            line-height: @digits-size;
+            height: @digits-size;
+            font-size: @digits-font-size;
+            width: @digits-size / 4;
+            text-align: center;
+            color: #999;
+        }
+    }
+
+    .sliders {
+        background-color: @container-bg;
+        padding: 18px 12px 0;
+
+        .slider {
+            cursor: pointer;
+            height: 1rem;
+            position: relative;
+            width: 100%;
+            margin-bottom: 32px;
+
+            &-label {
+                color: #aaa;
+                font-size: 0.8rem;
+                white-space: nowrap;
+
+                &--min {
+                    left: 0;
+                    position: absolute;
+                    bottom: -1.2rem;
+                }
+
+                &--max {
+                    right: 0;
+                    position: absolute;
+                    bottom: -1.2rem;
+                }
+
+                &--value {
+                    position: absolute;
+                    top: -1.6rem;
+                    left: -0.55rem;
+                    width: 1rem;
+                    text-align: center;
+                }
+            }
+
+            &-track {
+                background-color: #eee;
+                border-radius: 0.3rem;
+                display: block;
+                height: 0.3rem;
+                transition: left .2s ease-out, width .2s ease-out;
+
+                &--container {
+                    left: 0;
+                    margin-top: -0.15rem;
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                }
+
+                &--active {
+                    background-color: @color-active;
+                }
+            }
+
+            &-sliderContainer {
+                position: absolute;
+                transition: left .2s ease-out;
+            }
+
+            &-slider {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background: @color-active;
+                border: 1px solid @color-active;
+                border-radius: 100%;
+                cursor: pointer;
+                display: block;
+                height: 1rem;
+                margin-left: -0.5rem;
+                margin-top: -0.65rem;
+                outline: none;
+                position: absolute;
+                top: 50%;
+                transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+                width: 1rem;
+            }
+        }
+    }
+}
