@@ -1,7 +1,7 @@
+```js
 import React from 'react';
-import ReactDOM from 'react-dom';
-import DatePicker from '../src';
-import '../style/Default.less';
+import DatePicker from 'rsuite-datepicker';
+
 
 const DatePickerOnlyDate = props => (
     <div className="field only-date">
@@ -11,3 +11,4 @@ const DatePickerOnlyDate = props => (
 
 export default DatePickerOnlyDate;
 
+```

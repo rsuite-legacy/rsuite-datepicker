@@ -1,7 +1,6 @@
+```js
 import React from 'react';
-import ReactDOM from 'react-dom';
-import DatePicker from '../src';
-import '../style/Default.less';
+import DatePicker from 'rsuite-datepicker';
 
 const DatePickerOnlyTime = props => (
     <div className="field only-time">
@@ -10,4 +9,5 @@ const DatePickerOnlyTime = props => (
 );
 
 export default DatePickerOnlyTime;
+```
 

@@ -1,7 +1,6 @@
+```js
 import React from 'react';
-import ReactDOM from 'react-dom';
-import DatePicker from '../src';
-import '../style/Default.less';
+import DatePicker from 'rsuite-datepicker';
 
 const DatePickerInRange = props => (
     <div className="field in-range">
@@ -14,4 +13,5 @@ const DatePickerInRange = props => (
 );
 
 export default DatePickerInRange;
+```
 

@@ -1,0 +1,45 @@
+@import '../../node_modules/rsuite-theme/dist/less/rsuite.less';
+@import "../../node_modules/markdownloader/less/highlight.less";
+
+@base-color: #d3555a;
+
+html {
+  font-size:14px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+h3{}
+h4{
+    margin-top:40px;
+}
+
+.doc-page{
+    margin: 70px 0;
+}
+
+.sub-title{
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.doc-example{
+    padding: 46px 18px 18px;
+    border: 1px solid #eee;
+    position: relative;
+    &:after{
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        font-size: 12px;
+        font-weight: 300;
+        color: #959595;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        content: "Example";
+    }
+}
+
+.field{
+    width: 270px;
+    margin-bottom: 10px;
+}
