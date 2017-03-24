@@ -34,7 +34,7 @@ const common = {
         }),
         extractLess,
         new HtmlwebpackPlugin({
-            title: 'RSUITE DateRangePicker',
+            title: 'RSUITE DatePicker',
             filename: 'index.html',
             template: 'docs/index.html',
             inject: true,
