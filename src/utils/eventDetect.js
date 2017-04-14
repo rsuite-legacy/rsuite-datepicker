@@ -5,21 +5,21 @@
 
 export function transitionEndDetect() {
 
-    let prefixes = [
-        '',
-        'webkit',
-        'o'
-    ];
+  let prefixes = [
+    '',
+    'webkit',
+    'o'
+  ];
 
-    for(let i = 0, len = prefixes.length; i < len; i++) {
-        let vender = prefixes[i];
-        if(`on${vender}transitionend` in window) {
-            return {
-                supported: true,
-                event: (vender ? vender + 'T' : 't') + 'ransitionend'
-            };
-        }
+  for (let i = 0, len = prefixes.length; i < len; i++) {
+    let vender = prefixes[i];
+    if (`on${vender}transitionend` in window) {
+      return {
+        supported: true,
+        event: (vender ? vender + 'T' : 't') + 'ransitionend'
+      };
     }
+  }
 
-    return { supported: false };
+  return { supported: false };
 }
