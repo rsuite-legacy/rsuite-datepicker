@@ -7,6 +7,7 @@ import Clock from './Clock.js';
 import { transitionEndDetect } from './utils/eventDetect.js';
 import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper.js';
 
+
 const DatePicker = React.createClass({
     propTypes: {
         defaultValue: PropTypes.instanceOf(Date),
@@ -21,7 +22,10 @@ const DatePicker = React.createClass({
     },
 
     contextTypes: {
-        formGroup: React.PropTypes.object
+        formGroup: PropTypes.object
+    },
+    childContextTypes: {
+        messages: PropTypes.object
     },
 
     getDefaultProps() {
@@ -29,6 +33,13 @@ const DatePicker = React.createClass({
             dateFormat: 'YYYY-MM-DD',
             autoClose: true,
             placeholder: ''
+        };
+    },
+    getChildContext() {
+        return {
+            messages: {
+                week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            }
         };
     },
 
@@ -69,13 +80,13 @@ const DatePicker = React.createClass({
         const { value } = this.state;
         let timeDate = value || new Date();
         let time = {};
-        if (/(H|h)/.test(dateFormat)){
+        if (/(H|h)/.test(dateFormat)) {
             time.hours = timeDate.getHours();
         }
-        if (/m/.test(dateFormat)){
+        if (/m/.test(dateFormat)) {
             time.minutes = timeDate.getMinutes();
         }
-        if (/s/.test(dateFormat)){
+        if (/s/.test(dateFormat)) {
             time.seconds = timeDate.getSeconds();
         }
         return time;
@@ -155,8 +166,8 @@ const DatePicker = React.createClass({
 
     toggle() {
         const { calendarState } = this.state;
-        if (calendarState === 'SHOW'){
-             this.hide();
+        if (calendarState === 'SHOW') {
+            this.hide();
         }
         if (calendarState === 'HIDE') {
             this.show();
@@ -213,8 +224,8 @@ const DatePicker = React.createClass({
     onMoveDone() {
         const { calendarState, pageDate } = this.state;
         let pageChanges = 0;
-        if (calendarState === 'SLIDING_L'){
-             pageChanges = 1;
+        if (calendarState === 'SLIDING_L') {
+            pageChanges = 1;
         }
         if (calendarState === 'SLIDING_R') {
             pageChanges = -1;
@@ -290,8 +301,6 @@ const DatePicker = React.createClass({
         const value = this.getValue();
         const shouldMountCalendar = this.shouldMountCalendar();
         const shouldMountClock = this.shouldMountClock();
-
-
 
         return (
             <RootCloseWrapper onRootClose={this.hide}>
