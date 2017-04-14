@@ -310,7 +310,7 @@ const DatePicker = React.createClass({
           <DateContainer
             placeholder={this.getDateString()}
             onClick={this.toggle}
-            showCleanButton={!this.props.value && value}
+            showCleanButton={!this.props.value && !!value}
             onClean={value && this.reset}
           />
           <div
