@@ -9,3 +9,4 @@
  dateFormat | string |  `YYYY-MM-DD` | 日期显示格式化
  onChange | func|   | 值改变后的回调函数
  dateFilter | func |  | 过滤时间的回调函数
+ messages | object |  | 国际化对应的语言描述
