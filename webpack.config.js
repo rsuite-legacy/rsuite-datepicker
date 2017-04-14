@@ -40,7 +40,8 @@ const common = {
             inject: true,
             hash: true,
             path: docsPath
-        })
+        }),
+        new webpack.optimize.UglifyJsPlugin()
     ],
     module: {
         rules: [
