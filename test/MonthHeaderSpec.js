@@ -7,17 +7,17 @@ import MonthHeader from '../src/MonthHeader';
 
 describe('MonthHeader', () => {
 
-    it('should render a div with "monthHeader" class', () => {
+  it('should render a div with "monthHeader" class', () => {
 
-        let instance = ReactTestUtils.renderIntoDocument(
-            <MonthHeader
-                date={new Date()}
-            />
-        );
+    let instance = ReactTestUtils.renderIntoDocument(
+      <MonthHeader
+        date={new Date()}
+      />
+    );
 
-        assert.equal(findDOMNode(instance).nodeName, 'DIV');
-        assert.ok(findDOMNode(instance).className.match(/\bmonthHeader\b/));
+    assert.equal(findDOMNode(instance).nodeName, 'DIV');
+    assert.ok(findDOMNode(instance).className.match(/\bmonthHeader\b/));
 
-    });
+  });
 });
 

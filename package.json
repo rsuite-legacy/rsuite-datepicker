@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src  *.js",
+    "tdd": "karma start",
     "test": "npm run lint &&  karma start --single-run",
     "build": "rm -rf ./lib && babel ./src --out-dir ./lib && cp -R src/less lib",
     "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3100 --host 0.0.0.0 ",
