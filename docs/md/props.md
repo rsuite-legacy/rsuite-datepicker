@@ -1,5 +1,6 @@
  Name | Type | Default | Description |
  ---- | ---- | ------- | ----------- |
+ disabled | bool |  | 禁用
  defaultValue | Date | | 默认值 |
  value | Date |  | 值  `受控组件` |
  maxDate | Date | | 最大可选时间 |
