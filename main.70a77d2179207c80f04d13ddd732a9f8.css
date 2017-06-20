@@ -10379,7 +10379,7 @@ h4 {
   color: #999;
 }
 .DatePicker .calendar .monthHeader .monthHeader-forward:hover {
-  background-color: #f5e9f7;
+  background-color: #fbeeef;
   color: #4d4d4d;
 }
 .DatePicker .calendar .monthHeader .monthHeader-backward {
@@ -10392,7 +10392,7 @@ h4 {
   color: #999;
 }
 .DatePicker .calendar .monthHeader .monthHeader-backward:hover {
-  background-color: #f5e9f7;
+  background-color: #fbeeef;
   color: #4d4d4d;
 }
 .DatePicker .calendar .monthHeader .monthHeader-title {
@@ -10404,7 +10404,7 @@ h4 {
 }
 .DatePicker .calendar .monthHeader .monthHeader-title:hover {
   color: #d3555a;
-  background-color: #f5e9f7;
+  background-color: #fbeeef;
 }
 .DatePicker .calendar .monthHeader .monthHeader-title:active {
   background-color: #d3555a;
@@ -10457,7 +10457,7 @@ h4 {
   cursor: pointer;
 }
 .DatePicker .calendar .weeks .week-day:hover {
-  background-color: #f5e9f7;
+  background-color: #fbeeef;
 }
 .DatePicker .calendar .weeks .week-day.disable {
   opacity: .2;
@@ -10525,7 +10525,7 @@ h4 {
   cursor: pointer;
 }
 .DatePicker .calendar .editPanel-monthCell:hover {
-  background-color: #f5e9f7;
+  background-color: #fbeeef;
 }
 .DatePicker .calendar .editPanel-monthCell.selected {
   color: #EFEFEF;
