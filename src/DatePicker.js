@@ -19,14 +19,14 @@ const DatePicker = React.createClass({
     dateFormat: PropTypes.string,
     onChange: PropTypes.func,
     dateFilter: PropTypes.func,
-    messages: PropTypes.object
+    locale: PropTypes.object
   },
 
   contextTypes: {
     formGroup: PropTypes.object
   },
   childContextTypes: {
-    messages: PropTypes.object
+    locale: PropTypes.object
   },
 
   getDefaultProps() {
@@ -34,14 +34,14 @@ const DatePicker = React.createClass({
       dateFormat: 'YYYY-MM-DD',
       autoClose: true,
       placeholder: '',
-      messages: {
+      locale: {
         week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
       }
     };
   },
   getChildContext() {
     return {
-      messages: this.props.messages
+      locale: this.props.locale
     };
   },
 

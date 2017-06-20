@@ -6,7 +6,7 @@ const DatePickerIntl = props => (
   <div className="field only-date">
     <DatePicker
       dateFormat="YYYY-MM-DD"
-      messages={{
+      locale={{
         week: ['日', '一', '二', '三', '四', '五', '六']
       }}
     />

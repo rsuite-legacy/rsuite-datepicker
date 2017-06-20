@@ -3,12 +3,12 @@ import React from 'react';
 let week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const WeekHeader = React.createClass({
   contextTypes: {
-    messages: React.PropTypes.object
+    locale: React.PropTypes.object
   },
   render() {
-    const { messages } = this.context;
-    if (messages) {
-      week = messages.week;
+    const { locale } = this.context;
+    if (locale) {
+      week = locale.week;
     }
     return (
       <div className="weekHeader">
