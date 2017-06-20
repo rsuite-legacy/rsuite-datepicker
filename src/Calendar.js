@@ -246,13 +246,14 @@ const Calendar = React.createClass({
 
   render() {
     const {
-            calendarState,
+      calendarState,
       selectedDate,
       pageDate,
       onSelect,
       onClickTitle,
       onChangePageDate
-        } = this.props;
+    } = this.props;
+
     const stateClassname = {
       'SLIDING_L': ' sliding-left',
       'SLIDING_R': ' sliding-right',
@@ -260,6 +261,7 @@ const Calendar = React.createClass({
     }[calendarState] || '';
 
     let isEditingPageDate = calendarState === 'EDITING';
+
     return (
       <div className={'calendar' + stateClassname}>
         <MonthHeader
@@ -273,9 +275,7 @@ const Calendar = React.createClass({
           onClick={onChangePageDate}
         />
         }
-        <WeekHeader
-
-        />
+        <WeekHeader />
         <MonthView
           date={pageDate}
           selected={selectedDate}

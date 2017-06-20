@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import debounce from './utils/debounce';
 
 const MonthHeader = React.createClass({
   propTypes: {
@@ -12,7 +13,7 @@ const MonthHeader = React.createClass({
     return (
       <div className="monthHeader">
         <i className="monthHeader-backward"
-          onClick={onMoveBackward}
+          onClick={debounce(onMoveBackward, 200)}
         >
           {String.fromCharCode(9664)}
         </i>
@@ -20,7 +21,7 @@ const MonthHeader = React.createClass({
           {date.getFullYear() + ' - ' + (date.getMonth() + 1)}
         </span>
         <i className="monthHeader-forward"
-          onClick={onMoveForword}
+          onClick={debounce(onMoveForword, 200)}
         >
           {String.fromCharCode(9654)}
         </i>
