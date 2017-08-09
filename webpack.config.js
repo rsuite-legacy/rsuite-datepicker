@@ -12,7 +12,26 @@ const extractLess = new ExtractTextPlugin({
 
 
 const docsPath = process.env.NODE_ENV === 'development' ? './assets' : './';
+const plugins = [
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  }),
+  new webpack.HotModuleReplacementPlugin(),
+  new webpack.NamedModulesPlugin(),
+  new HtmlwebpackPlugin({
+    title: 'RSUITE DatePicker',
+    filename: 'index.html',
+    template: 'docs/index.html',
+    inject: true,
+    hash: true,
+    path: docsPath
+  }),
+  extractLess
+];
 
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(new webpack.optimize.UglifyJsPlugin());
+}
 
 const common = {
   entry: path.resolve(__dirname, 'src/'),
@@ -26,23 +45,7 @@ const common = {
     filename: 'bundle.js',
     publicPath: './'
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    }),
-    extractLess,
-    new HtmlwebpackPlugin({
-      title: 'RSUITE DatePicker',
-      filename: 'index.html',
-      template: 'docs/index.html',
-      inject: true,
-      hash: true,
-      path: docsPath
-    }),
-    new webpack.optimize.UglifyJsPlugin()
-  ],
+  plugins,
   module: {
     rules: [
       {

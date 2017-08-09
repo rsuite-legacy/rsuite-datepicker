@@ -85,7 +85,8 @@
     "prop-types": "^15.5.10"
   },
   "dependencies": {
-    "moment": ">=2.15.2",
-    "dom-lib": "^0.2.3"
+    "dom-lib": "^0.2.3",
+    "lodash": "^4.17.4",
+    "moment": ">=2.15.2"
   }
 }

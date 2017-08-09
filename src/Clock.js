@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { clockPropTypes } from './clockPropTypes';
 import {
   Digits,
   Sliders
@@ -7,13 +8,15 @@ import {
 
 const Clock = ({
   onChange,
-  time
+  time,
+  ...props
 }) => (
     <div className="clock">
       <Digits
         time={time}
       />
       <Sliders
+        {...props}
         time={time}
         onChange={onChange}
       />
@@ -21,8 +24,13 @@ const Clock = ({
   );
 
 Clock.propTypes = {
+  ...clockPropTypes,
   onChange: PropTypes.func,
-  time: PropTypes.object
+  time: PropTypes.object,
+  hourRange: PropTypes.array,
+  hourStep: PropTypes.number,
+  minuteStep: PropTypes.number,
+  secondStep: PropTypes.number
 };
 
 export default Clock;
