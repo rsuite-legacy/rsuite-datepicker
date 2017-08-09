@@ -26,7 +26,7 @@ export function checkRange(range, defaultRange) {
     throw Error(`"range[0]" must be greater than ${defaultRange[0]}`);
   }
 
-  if (range[0] >= range[1]) {
+  if (range[0] > range[1]) {
     throw Error('`range[0]` must be less than `range[1]` ');
   }
 
