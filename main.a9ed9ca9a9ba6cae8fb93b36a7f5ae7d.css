@@ -10644,3 +10644,25 @@ h4 {
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
   width: 1rem;
 }
+.DatePicker .sliders .slider-ruler {
+  display: table;
+  width: 100%;
+}
+.DatePicker .sliders .slider-ruler ul {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: table-row;
+}
+.DatePicker .sliders .slider-ruler ul li {
+  display: table-cell;
+}
+.DatePicker .sliders .slider-ruler ul li::after {
+  position: absolute;
+  height: 4px;
+  width: 1px;
+  top: 1px;
+  background: #eee;
+  content: " ";
+}
