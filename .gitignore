@@ -46,3 +46,4 @@ dist/
 
 assets
 lib
+yarn.lock
