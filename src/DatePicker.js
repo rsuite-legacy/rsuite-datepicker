@@ -1,15 +1,19 @@
 import React, { PropTypes } from 'react';
 import moment from 'moment';
 import { findDOMNode } from 'react-dom';
-import DateContainer from './DateContainer.js';
+import _ from 'lodash';
+import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper';
+import DateContainer from './DateContainer';
 import Calendar from './Calendar.js';
 import Clock from './Clock.js';
-import { transitionEndDetect } from './utils/eventDetect.js';
-import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper.js';
+import { transitionEndDetect } from './utils/eventDetect';
+
+import { clockPropTypes, clockDefaultProps, checkRange } from './clockPropTypes';
 
 
 const DatePicker = React.createClass({
   propTypes: {
+    ...clockPropTypes,
     defaultValue: PropTypes.instanceOf(Date),
     value: PropTypes.instanceOf(Date),
     minDate: PropTypes.instanceOf(Date),
@@ -31,6 +35,7 @@ const DatePicker = React.createClass({
 
   getDefaultProps() {
     return {
+      ...clockDefaultProps,
       dateFormat: 'YYYY-MM-DD',
       autoClose: true,
       placeholder: '',
@@ -304,6 +309,11 @@ const DatePicker = React.createClass({
     const shouldMountCalendar = this.shouldMountCalendar();
     const shouldMountClock = this.shouldMountClock();
 
+
+    checkRange(this.props.hourRange, clockDefaultProps.hourRange);
+    checkRange(this.props.minuteRange, clockDefaultProps.minuteRange);
+    checkRange(this.props.secondRange, clockDefaultProps.secondRange);
+
     return (
       <RootCloseWrapper onRootClose={this.hide}>
         <div className="DatePicker">
@@ -340,6 +350,7 @@ const DatePicker = React.createClass({
             {
               shouldMountClock &&
               <Clock
+                {..._.pick(this.props, Object.keys(clockPropTypes)) }
                 time={this.getTime()}
                 onChange={this.handleTimeChange}
               />

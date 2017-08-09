@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { clockPropTypes } from './clockPropTypes';
 
 function leftPad(number) {
   number = '' + number;
@@ -58,6 +59,8 @@ const Slider = React.createClass({
   propTypes: {
     range: PropTypes.array,
     value: PropTypes.number,
+    step: PropTypes.number,
+    ruler: PropTypes.bool,
     onChange: PropTypes.func
   },
 
@@ -76,19 +79,34 @@ const Slider = React.createClass({
   },
 
   render() {
-    const { range, value } = this.props;
+    const { range, value, step, ruler } = this.props;
+
+
+
     return (
       <div className="slider">
+        {
+          ruler ? (
+            <div className="slider-ruler">
+              <ul>
+                {
+                  [...Array(Math.round((range[1] - range[0]) / step))].map((value, index) => <li key={index} />)
+                }
+              </ul>
+            </div>
+          ) : null
+        }
+
         <span className="slider-label slider-label--min">{range[0]}</span>
         <div className="slider-track slider-track--container" ref="track">
           <div
             className="slider-track slider-track--active"
-            style={{ width: getPercentage(value, range[1]) }}
+            style={{ width: getPercentage(value - range[0], range[1] - range[0]) }}
           >
           </div>
           <span
             className="slider-sliderContainer"
-            style={{ left: getPercentage(value, range[1]) }}
+            style={{ left: getPercentage(value - range[0], range[1] - range[0]) }}
           >
             <span className="slider-label slider-label--value">
               {value}
@@ -137,74 +155,93 @@ const Slider = React.createClass({
   positionFromEvent(e) {
     const track = this.refs.track;
     const {
-            width: trackClientWidth,
+      width: trackClientWidth,
       left: trackClientLeft
-        } = track.getBoundingClientRect();
+    } = track.getBoundingClientRect();
     const eventClientX = e.clientX || e.touches[0].clientX;
     return clamp(eventClientX - trackClientLeft, 0, trackClientWidth);
   },
 
   valueFromPosition(position) {
+
     const track = this.refs.track;
     const trackClientWidth = track.getBoundingClientRect().width;
-    const { range } = this.props;
+    const { range, step } = this.props;
     const rangeDiff = range[1] - range[0];
-    const value = position / trackClientWidth * rangeDiff + range[0];
-    const croppedValue = Math.round(value);
-    return croppedValue;
+    const croppedValue = Math.round(position / (trackClientWidth / (rangeDiff / step))) * step + range[0];
+
+    return croppedValue > range[1] ? croppedValue - step : croppedValue;
   }
 
 });
 
-const Sliders = ({ time, onChange }) => (
-  <div className="sliders">
-    {
-      ['hours', 'minutes', 'seconds']
-        .filter(k => time[k] !== undefined)
-        .map(k => {
-          switch (k) {
-            case 'hours':
-              return (
-                <Slider
-                  range={[0, 23]}
-                  value={time[k]}
-                  key={k}
-                  onChange={
-                    value => onChange({ ...time, hours: value })
-                  }
-                />
-              );
-            case 'minutes':
-              return (
-                <Slider
-                  range={[0, 59]}
-                  value={time[k]}
-                  key={k}
-                  onChange={
-                    value => onChange({ ...time, minutes: value })
-                  }
-                />
-              );
-            case 'seconds':
-              return (
-                <Slider
-                  range={[0, 59]}
-                  value={time[k]}
-                  key={k}
-                  onChange={
-                    value => onChange({ ...time, seconds: value })
-                  }
-                />
-              );
-            default:
-              return;
-          }
-        })
-    }
-  </div>
-);
+
+const Sliders = ({
+  time,
+  onChange,
+  hourStep,
+  minuteStep,
+  secondStep,
+  hourRange,
+  minuteRange,
+  secondRange,
+  ruler
+}) => (
+    <div className="sliders">
+      {
+        ['hours', 'minutes', 'seconds']
+          .filter(k => time[k] !== undefined)
+          .map(k => {
+            switch (k) {
+              case 'hours':
+                return (
+                  <Slider
+                    range={hourRange}
+                    value={time[k]}
+                    key={k}
+                    step={hourStep}
+                    ruler={ruler}
+                    onChange={
+                      value => onChange({ ...time, hours: value })
+                    }
+                  />
+                );
+              case 'minutes':
+                return (
+                  <Slider
+                    range={minuteRange}
+                    value={time[k]}
+                    key={k}
+                    step={minuteStep}
+                    ruler={ruler}
+                    onChange={
+                      value => onChange({ ...time, minutes: value })
+                    }
+                  />
+                );
+              case 'seconds':
+                return (
+                  <Slider
+                    range={secondRange}
+                    value={time[k]}
+                    key={k}
+                    step={secondStep}
+                    ruler={ruler}
+                    onChange={
+                      value => onChange({ ...time, seconds: value })
+                    }
+                  />
+                );
+              default:
+                return;
+            }
+          })
+      }
+    </div>
+  );
 
 Sliders.propTypes = {
+  ...clockPropTypes,
   time: PropTypes.shape({
     hours: PropTypes.number,
     minutes: PropTypes.number,
@@ -213,15 +250,19 @@ Sliders.propTypes = {
   onChange: PropTypes.func
 };
 
+
+
 const Clock = ({
-    onChange,
-  time
+  onChange,
+  time,
+  ...props
 }) => (
     <div className="clock">
       <Digits
         time={time}
       />
       <Sliders
+        {...props}
         time={time}
         onChange={onChange}
       />
@@ -229,8 +270,13 @@ const Clock = ({
   );
 
 Clock.propTypes = {
+  ...clockPropTypes,
   onChange: PropTypes.func,
-  time: PropTypes.object
+  time: PropTypes.object,
+  hourRange: PropTypes.array,
+  hourStep: PropTypes.number,
+  minuteStep: PropTypes.number,
+  secondStep: PropTypes.number
 };
 
 export default Clock;
