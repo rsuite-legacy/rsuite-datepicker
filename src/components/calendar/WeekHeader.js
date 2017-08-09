@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
+
+const contextTypes = {
+  locale: React.PropTypes.object
+};
 
 let week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const WeekHeader = React.createClass({
-  contextTypes: {
-    locale: React.PropTypes.object
-  },
+class WeekHeader extends Component {
+
   render() {
     const { locale } = this.context;
     if (locale) {
@@ -18,6 +20,7 @@ const WeekHeader = React.createClass({
       </div>
     );
   }
-});
+}
+WeekHeader.contextTypes = contextTypes;
 
 export default WeekHeader;

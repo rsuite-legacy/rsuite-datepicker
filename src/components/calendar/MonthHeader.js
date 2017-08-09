@@ -1,13 +1,15 @@
-import React, { PropTypes } from 'react';
-import debounce from './utils/debounce';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import debounce from '../../utils/debounce';
 
-const MonthHeader = React.createClass({
-  propTypes: {
-    date: PropTypes.instanceOf(Date),
-    onMoveForword: PropTypes.func,
-    onMoveBackward: PropTypes.func,
-    onClickTitle: PropTypes.func
-  },
+const propTypes = {
+  date: PropTypes.instanceOf(Date),
+  onMoveForword: PropTypes.func,
+  onMoveBackward: PropTypes.func,
+  onClickTitle: PropTypes.func
+};
+
+class MonthHeader extends Component {
   render() {
     const { date, onMoveForword, onMoveBackward, onClickTitle } = this.props;
     return (
@@ -28,6 +30,8 @@ const MonthHeader = React.createClass({
       </div>
     );
   }
-});
+}
+
+MonthHeader.propTypes = propTypes;
 
 export default MonthHeader;

@@ -23,3 +23,5 @@ export function transitionEndDetect() {
 
   return { supported: false };
 }
+
+export default transitionEndDetect;

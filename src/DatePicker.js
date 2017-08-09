@@ -1,56 +1,49 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { findDOMNode } from 'react-dom';
-import DateContainer from './DateContainer.js';
-import Calendar from './Calendar.js';
-import Clock from './Clock.js';
-import { transitionEndDetect } from './utils/eventDetect.js';
-import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper.js';
+import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper';
+import DateContainer from './DateContainer';
+import Calendar from './Calendar';
+import Clock from './Clock';
+import { transitionEndDetect } from './utils/eventDetect';
 
+const propTypes = {
+  defaultValue: PropTypes.instanceOf(Date),
+  value: PropTypes.instanceOf(Date),
+  minDate: PropTypes.instanceOf(Date),
+  maxDate: PropTypes.instanceOf(Date),
+  autoClose: PropTypes.bool,
+  placeholder: PropTypes.string,
+  dateFormat: PropTypes.string,
+  onChange: PropTypes.func,
+  dateFilter: PropTypes.func,
+  locale: PropTypes.object
+};
+const contextTypes = {
+  formGroup: PropTypes.object
+};
 
-const DatePicker = React.createClass({
-  propTypes: {
-    defaultValue: PropTypes.instanceOf(Date),
-    value: PropTypes.instanceOf(Date),
-    minDate: PropTypes.instanceOf(Date),
-    maxDate: PropTypes.instanceOf(Date),
-    autoClose: PropTypes.bool,
-    placeholder: PropTypes.string,
-    dateFormat: PropTypes.string,
-    onChange: PropTypes.func,
-    dateFilter: PropTypes.func,
-    locale: PropTypes.object
-  },
+const childContextTypes = {
+  locale: PropTypes.object
+};
 
-  contextTypes: {
-    formGroup: PropTypes.object
-  },
-  childContextTypes: {
-    locale: PropTypes.object
-  },
+const defaultProps = {
+  dateFormat: 'YYYY-MM-DD',
+  autoClose: true,
+  placeholder: '',
+  locale: {
+    week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  }
+};
 
-  getDefaultProps() {
-    return {
-      dateFormat: 'YYYY-MM-DD',
-      autoClose: true,
-      placeholder: '',
-      locale: {
-        week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-      }
-    };
-  },
-  getChildContext() {
-    return {
-      locale: this.props.locale
-    };
-  },
-
-  getInitialState() {
-    const { defaultValue, value } = this.props;
+class DatePicker extends Component {
+  constructor(props) {
+    const { defaultValue, value } = props;
     const activeValue = value || defaultValue;
     let ret = transitionEndDetect();
-
-    return {
+    super(props);
+    this.state = {
       value: activeValue,
       pageDate: activeValue
         ? new Date(activeValue.getFullYear(), activeValue.getMonth())
@@ -58,24 +51,74 @@ const DatePicker = React.createClass({
       calendarState: 'HIDE',
       transitionSupport: ret
     };
-  },
-  handleTimeChange(v) {
-    const { onChange: onFormChange } = this.getFormGroup();
-    const { onChange } = this.props;
-    const { value } = this.state;
-    const { hours, minutes, seconds } = v;
-    let nextValue = value
-      ? new Date(value)
-      : new Date();
-    hours !== undefined && nextValue.setHours(hours);
-    minutes !== undefined && nextValue.setMinutes(minutes);
-    seconds !== undefined && nextValue.setSeconds(seconds);
+  }
 
+  getChildContext() {
+    return {
+      locale: this.props.locale
+    };
+  }
 
-    this.setState({ value: nextValue });
-    onFormChange && onFormChange(nextValue);
-    onChange && onChange(nextValue);
-  },
+  componentDidMount() {
+    const { transitionSupport } = this.state;
+    let el = findDOMNode(this.calendar);
+    if (transitionSupport.supported && el) {
+      el.addEventListener(transitionSupport.event, e => {
+        if (e.target.className === 'monthView-weeksWrapper'
+          && e.propertyName === 'left') {
+          this.onMoveDone();
+        }
+      });
+    }
+  }
+  onMoveForword(nextPageDate) {
+    const { transitionSupport } = this.state;
+    if (!transitionSupport.supported) {
+      this.setState({
+        pageDate: nextPageDate
+      });
+      return;
+    }
+    this.setState({
+      calendarState: 'SLIDING_L'
+    });
+  }
+
+  onMoveBackward(nextPageDate) {
+    const { transitionSupport } = this.state;
+    if (!transitionSupport.supported) {
+      this.setState({
+        pageDate: nextPageDate
+      });
+      return;
+    }
+    this.setState({
+      calendarState: 'SLIDING_R'
+    });
+  }
+
+  onMoveDone() {
+    const { calendarState, pageDate } = this.state;
+    let pageChanges = 0;
+    if (calendarState === 'SLIDING_L') {
+      pageChanges = 1;
+    }
+    if (calendarState === 'SLIDING_R') {
+      pageChanges = -1;
+    }
+    let nextPageDate = new Date(pageDate.getFullYear(), pageDate.getMonth() + pageChanges);
+    this.setState({
+      pageDate: nextPageDate,
+      calendarState: 'SHOW'
+    });
+  }
+
+  onChangePageDate = (nextPageDate) => {
+    this.setState({
+      pageDate: nextPageDate,
+      calendarState: 'SHOW'
+    });
+  }
 
   getTime() {
     const { dateFormat } = this.props;
@@ -92,23 +135,13 @@ const DatePicker = React.createClass({
       time.seconds = timeDate.getSeconds();
     }
     return time;
-  },
-
-  shouldMountCalendar() {
-    const { dateFormat } = this.props;
-    return /(Y|M|D)/.test(dateFormat);
-  },
-
-  shouldMountClock() {
-    const { dateFormat } = this.props;
-    return /(H|h|m|s)/.test(dateFormat);
-  },
+  }
 
   getFormGroup() {
     return this.context.formGroup || {};
-  },
+  }
 
-  getValue() {
+  getValue = () => {
     const { value: fieldValue } = this.getFormGroup();
     const { value } = this.props;
 
@@ -119,17 +152,8 @@ const DatePicker = React.createClass({
     }
 
     return this.state.value || undefined;
-  },
+  }
 
-  reset() {
-    this.setState({
-      value: null,
-      pageDate: this.getDefaultPageDate(),
-      calendarState: 'HIDE'
-    });
-    const { onChange } = this.getFormGroup();
-    onChange && onChange(null);
-  },
 
   getDefaultPageDate() {
     const { minDate, maxDate } = this.props;
@@ -141,32 +165,41 @@ const DatePicker = React.createClass({
       retDate = maxDate;
     }
     return retDate;
-  },
+  }
 
   getDateString() {
     const { placeholder } = this.props;
     const value = this.getValue();
     return value ? moment(value).format(this.props.dateFormat) : placeholder;
-  },
+  }
+
+
+  setMinDate(date) {
+    this.setState({ minDate: date });
+  }
+
+  setMaxDate(date) {
+    this.setState({ maxDate: date });
+  }
 
   resetPageDate() {
     const value = this.getValue() || this.getDefaultPageDate();
     let pageDate = new Date(value.getFullYear(), value.getMonth());
     this.setState({ pageDate });
-  },
+  }
 
   show() {
     this.resetPageDate();
     this.setState({ calendarState: 'SHOW' });
-  },
+  }
 
-  hide() {
+  hide = () => {
     const { onBlur } = this.getFormGroup();
     onBlur && onBlur();
     this.setState({ calendarState: 'HIDE' });
-  },
+  }
 
-  toggle() {
+  toggle = () => {
     const { calendarState } = this.state;
     if (calendarState === 'SHOW') {
       this.hide();
@@ -177,17 +210,17 @@ const DatePicker = React.createClass({
     if (calendarState === 'EDITING') {
       this.hide();
     }
-  },
+  }
 
-  showEditPanel() {
+  showEditPanel = () => {
     this.setState({ calendarState: 'EDITING' });
-  },
+  }
 
-  hideEditPanel() {
+  hideEditPanel = () => {
     this.setState({ calendarState: 'SHOW' });
-  },
+  }
 
-  toggleEditPanel() {
+  toggleEditPanel = () => {
     const { calendarState } = this.state;
     if (calendarState === 'EDITING') {
       this.hideEditPanel();
@@ -195,66 +228,48 @@ const DatePicker = React.createClass({
     if (calendarState === 'SHOW') {
       this.showEditPanel();
     }
-  },
+  }
 
-  onMoveForword(nextPageDate) {
-    const { transitionSupport } = this.state;
-    if (!transitionSupport.supported) {
-      this.setState({
-        pageDate: nextPageDate
-      });
-      return;
-    }
+  reset = () => {
     this.setState({
-      calendarState: 'SLIDING_L'
+      value: null,
+      pageDate: this.getDefaultPageDate(),
+      calendarState: 'HIDE'
     });
-  },
+    const { onChange } = this.getFormGroup();
+    onChange && onChange(null);
+  }
 
-  onMoveBackward(nextPageDate) {
-    const { transitionSupport } = this.state;
-    if (!transitionSupport.supported) {
-      this.setState({
-        pageDate: nextPageDate
-      });
-      return;
-    }
-    this.setState({
-      calendarState: 'SLIDING_R'
-    });
-  },
 
-  onMoveDone() {
-    const { calendarState, pageDate } = this.state;
-    let pageChanges = 0;
-    if (calendarState === 'SLIDING_L') {
-      pageChanges = 1;
-    }
-    if (calendarState === 'SLIDING_R') {
-      pageChanges = -1;
-    }
-    let nextPageDate = new Date(pageDate.getFullYear(), pageDate.getMonth() + pageChanges);
-    this.setState({
-      pageDate: nextPageDate,
-      calendarState: 'SHOW'
-    });
-  },
+  shouldMountCalendar() {
+    const { dateFormat } = this.props;
+    return /(Y|M|D)/.test(dateFormat);
+  }
 
-  onChangePageDate(nextPageDate) {
-    this.setState({
-      pageDate: nextPageDate,
-      calendarState: 'SHOW'
-    });
-  },
+  shouldMountClock() {
+    const { dateFormat } = this.props;
+    return /(H|h|m|s)/.test(dateFormat);
+  }
 
-  setMinDate(date) {
-    this.setState({ minDate: date });
-  },
+  handleTimeChange = (v) => {
+    const { onChange: onFormChange } = this.getFormGroup();
+    const { onChange } = this.props;
+    const { value } = this.state;
+    const { hours, minutes, seconds } = v;
+    let nextValue = value
+      ? new Date(value)
+      : new Date();
+    hours !== undefined && nextValue.setHours(hours);
+    minutes !== undefined && nextValue.setMinutes(minutes);
+    seconds !== undefined && nextValue.setSeconds(seconds);
 
-  setMaxDate(date) {
-    this.setState({ maxDate: date });
-  },
 
-  handleSelect(day) {
+    this.setState({ value: nextValue });
+    onFormChange && onFormChange(nextValue);
+    onChange && onChange(nextValue);
+  }
+
+  handleSelect = (day) => {
     const { onChange, autoClose } = this.props;
     const { value } = this.state;
     const { onChange: onFormChange } = this.getFormGroup();
@@ -274,20 +289,8 @@ const DatePicker = React.createClass({
     this.setState({ value: nextValue });
     onChange && onChange(day);
     onFormChange && onFormChange(day);
-  },
-  componentDidMount() {
+  }
 
-    const { transitionSupport } = this.state;
-    let el = findDOMNode(this.refs.calendar);
-    if (transitionSupport.supported && el) {
-      el.addEventListener(transitionSupport.event, e => {
-        if (e.target.className === 'monthView-weeksWrapper'
-          && e.propertyName === 'left') {
-          this.onMoveDone();
-        }
-      });
-    }
-  },
   render() {
     const {
       minDate,
@@ -334,7 +337,9 @@ const DatePicker = React.createClass({
                 onClickTitle={this.toggleEditPanel}
                 onChangePageDate={this.onChangePageDate}
                 dateFilter={dateFilter}
-                ref="calendar"
+                ref={(ref) => {
+                  this.calendar = ref;
+                }}
               />
             }
             {
@@ -349,6 +354,11 @@ const DatePicker = React.createClass({
       </RootCloseWrapper>
     );
   }
-});
+}
+
+DatePicker.propTypes = propTypes;
+DatePicker.contextTypes = contextTypes;
+DatePicker.childContextTypes = childContextTypes;
+DatePicker.defaultProps = defaultProps;
 
 export default DatePicker;

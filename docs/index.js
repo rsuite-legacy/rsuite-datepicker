@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Markdown } from 'markdownloader';
-import { Header, Navbar, Nav, Row, Col } from 'rsuite';
+import { Header, Navbar, Nav } from 'rsuite';
 
 
 import './less/index.less';
@@ -15,27 +15,27 @@ import DatePickerInRange from './example/DatePickerInRange';
 import DatePickerSelectEvent from './example/DatePickerSelectEvent';
 import DatePickerIntl from './example/DatePickerIntl';
 
-const App = React.createClass({
+class App extends Component {
   render() {
     return (
-      <div className='doc-page'>
+      <div className="doc-page">
         <Header inverse>
-          <div className='container'>
+          <div className="container">
             <Navbar.Header>
               <Navbar.Brand>
-                <a href='#'><span className='prefix'>R</span>Suite  DatePicker</a>
+                <a href="#"><span className="prefix">R</span>Suite  DatePicker</a>
               </Navbar.Brand>
               <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
               <Nav pullRight>
-                <Nav.Item href='https://github.com/rsuite/rsuite-datepicker'>GitHub</Nav.Item>
+                <Nav.Item href="https://github.com/rsuite/rsuite-datepicker">GitHub</Nav.Item>
               </Nav>
             </Navbar.Collapse>
           </div>
         </Header>
 
-        <div className='container'>
+        <div className="container">
           <h3>DatePicker 日期选择框</h3>
 
           <h4>日期选择框</h4>
@@ -92,7 +92,7 @@ const App = React.createClass({
       </div>
     );
   }
-});
+}
 
 ReactDOM.render(<App />,
   document.getElementById('app')
