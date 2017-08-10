@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
+
 
 const propTypes = {
   weekendDate: PropTypes.instanceOf(Date),
@@ -14,18 +16,19 @@ const Week = ({ weekendDate, selected = new Date(), onClick, dateFilter }) => (
       (() => {
         let days = [];
         for (let i = 0; i < 7; i += 1) {
+
           let thisDate = new Date(weekendDate);
           thisDate.setDate(weekendDate.getDate() + i);
-          let className = 'week-day';
-          className += dateFilter(thisDate) ? '' : ' disable';
-          className += thisDate.toDateString() === (new Date()).toDateString()
-            ? ' is-today' : '';
-          className += thisDate.toDateString() === selected.toDateString()
-            ? ' selected' : '';
+          let classes = classNames('week-day', {
+            'non-this-month': !dateFilter(thisDate),
+            'is-today': thisDate.toDateString() === (new Date()).toDateString(),
+            selected: thisDate.toDateString() === selected.toDateString()
+          });
+
           days.push(
             <div
-              className={className}
-              onClick={onClick && dateFilter(thisDate) && onClick.bind(null, thisDate)}
+              className={classes}
+              onClick={onClick && onClick.bind(null, thisDate)}
               key={i}
             >
               {thisDate.getDate()}
@@ -37,6 +40,7 @@ const Week = ({ weekendDate, selected = new Date(), onClick, dateFilter }) => (
     }
   </div>
 );
+
 
 Week.propTypes = propTypes;
 

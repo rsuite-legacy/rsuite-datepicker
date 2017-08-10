@@ -13,16 +13,16 @@ class DateContainer extends Component {
     const { placeholder, onClick, onClean, showCleanButton } = this.props;
     return (
       <div
-        className="dateContainer"
+        className="toggle"
         role="button"
         onClick={onClick}
         tabIndex="-1"
       >
-        <div className="dateContainer-placeholder">{placeholder}</div>
+        <div className="toggle-placeholder">{placeholder}</div>
         {
           showCleanButton &&
           <div
-            className="dateContainer-clean"
+            className="toggle-clean"
             onClick={(e) => {
               e.stopPropagation();
               onClean();

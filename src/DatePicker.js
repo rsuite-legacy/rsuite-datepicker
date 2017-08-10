@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import classNames from 'classnames';
 import { findDOMNode } from 'react-dom';
-import _ from 'lodash';
 import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper';
 import DateContainer from './DateContainer';
 import Calendar from './Calendar';
-import Clock from './Clock';
 import { transitionEndDetect } from './utils/eventDetect';
-import { clockPropTypes, clockDefaultProps, checkRange } from './clockPropTypes';
 
 const propTypes = {
-  ...clockPropTypes,
   defaultValue: PropTypes.instanceOf(Date),
   value: PropTypes.instanceOf(Date),
   minDate: PropTypes.instanceOf(Date),
@@ -21,38 +18,37 @@ const propTypes = {
   dateFormat: PropTypes.string,
   onChange: PropTypes.func,
   dateFilter: PropTypes.func,
-  locale: PropTypes.object
+  locale: PropTypes.object,
+  inline: PropTypes.bool
 };
 const contextTypes = {
   formGroup: PropTypes.object
 };
 
 const childContextTypes = {
-
   locale: PropTypes.object
 };
 
 const defaultProps = {
-  ...clockDefaultProps,
   dateFormat: 'YYYY-MM-DD',
   autoClose: true,
   placeholder: '',
   locale: {
-    week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
   }
 };
 
 class DatePicker extends Component {
   constructor(props) {
-    const { defaultValue, value } = props;
-    const activeValue = value || defaultValue;
-    let ret = transitionEndDetect();
     super(props);
+
+    const { defaultValue, value } = props;
+    const activeValue = value || defaultValue || this.getDefaultPageDate();
+    const ret = transitionEndDetect();
+
     this.state = {
       value: activeValue,
-      pageDate: activeValue
-        ? new Date(activeValue.getFullYear(), activeValue.getMonth())
-        : this.getDefaultPageDate(),
+      pageDate: new Date(activeValue.getFullYear(), activeValue.getMonth()),
       calendarState: 'HIDE',
       transitionSupport: ret
     };
@@ -68,7 +64,7 @@ class DatePicker extends Component {
     const { transitionSupport } = this.state;
     let el = findDOMNode(this.calendar);
     if (transitionSupport.supported && el) {
-      el.addEventListener(transitionSupport.event, e => {
+      el.addEventListener(transitionSupport.event, (e) => {
         if (e.target.className === 'monthView-weeksWrapper'
           && e.propertyName === 'left') {
           this.onMoveDone();
@@ -76,7 +72,7 @@ class DatePicker extends Component {
       });
     }
   }
-  onMoveForword(nextPageDate) {
+  onMoveForword = (nextPageDate) => {
     const { transitionSupport } = this.state;
     if (!transitionSupport.supported) {
       this.setState({
@@ -89,7 +85,7 @@ class DatePicker extends Component {
     });
   }
 
-  onMoveBackward(nextPageDate) {
+  onMoveBackward = (nextPageDate) => {
     const { transitionSupport } = this.state;
     if (!transitionSupport.supported) {
       this.setState({
@@ -142,33 +138,22 @@ class DatePicker extends Component {
     return time;
   }
 
-  getFormGroup() {
-    return this.context.formGroup || {};
-  }
-
-  getValue = () => {
-    const { value: fieldValue } = this.getFormGroup();
-    const { value } = this.props;
-
-    if (fieldValue && !/Invalid|NaN/.test(new Date(fieldValue))) {
-      return new Date(fieldValue);
-    } else if (value) {
-      return value;
-    }
-
-    return this.state.value || undefined;
-  }
-
+  getValue = () => (
+    this.props.value || this.state.value || undefined
+  )
 
   getDefaultPageDate() {
     const { minDate, maxDate } = this.props;
     let retDate = new Date();
+
     if (minDate && retDate.getTime() < minDate.getTime()) {
       retDate = minDate;
     }
+
     if (maxDate && retDate.getTime() > maxDate.getTime()) {
       retDate = maxDate;
     }
+
     return retDate;
   }
 
@@ -199,8 +184,6 @@ class DatePicker extends Component {
   }
 
   hide = () => {
-    const { onBlur } = this.getFormGroup();
-    onBlur && onBlur();
     this.setState({ calendarState: 'HIDE' });
   }
 
@@ -212,26 +195,42 @@ class DatePicker extends Component {
     if (calendarState === 'HIDE') {
       this.show();
     }
-    if (calendarState === 'EDITING') {
+    if (calendarState === 'DROP_MONTH') {
       this.hide();
     }
   }
 
-  showEditPanel = () => {
-    this.setState({ calendarState: 'EDITING' });
+  showMonthDropdown() {
+    this.setState({ calendarState: 'DROP_MONTH' });
   }
 
-  hideEditPanel = () => {
+  hideMonthDropdown() {
     this.setState({ calendarState: 'SHOW' });
   }
 
-  toggleEditPanel = () => {
+  showTimeDropdown() {
+    this.setState({ calendarState: 'DROP_TIME' });
+  }
+
+  hideTimeDropdown() {
+    this.setState({ calendarState: 'SHOW' });
+  }
+
+  toggleMonthDropdown = () => {
     const { calendarState } = this.state;
-    if (calendarState === 'EDITING') {
-      this.hideEditPanel();
+    if (calendarState === 'DROP_MONTH') {
+      this.hideMonthDropdown();
+    } else {
+      this.showMonthDropdown();
     }
-    if (calendarState === 'SHOW') {
-      this.showEditPanel();
+  }
+
+  toggleTimeDropdown = () => {
+    const { calendarState } = this.state;
+    if (calendarState === 'DROP_TIME') {
+      this.hideTimeDropdown();
+    } else {
+      this.showTimeDropdown();
     }
   }
 
@@ -241,8 +240,6 @@ class DatePicker extends Component {
       pageDate: this.getDefaultPageDate(),
       calendarState: 'HIDE'
     });
-    const { onChange } = this.getFormGroup();
-    onChange && onChange(null);
   }
 
 
@@ -257,7 +254,6 @@ class DatePicker extends Component {
   }
 
   handleTimeChange = (v) => {
-    const { onChange: onFormChange } = this.getFormGroup();
     const { onChange } = this.props;
     const { value } = this.state;
     const { hours, minutes, seconds } = v;
@@ -268,16 +264,13 @@ class DatePicker extends Component {
     minutes !== undefined && nextValue.setMinutes(minutes);
     seconds !== undefined && nextValue.setSeconds(seconds);
 
-
     this.setState({ value: nextValue });
-    onFormChange && onFormChange(nextValue);
     onChange && onChange(nextValue);
   }
 
   handleSelect = (day) => {
     const { onChange, autoClose } = this.props;
     const { value } = this.state;
-    const { onChange: onFormChange } = this.getFormGroup();
 
     if (autoClose) {
       this.hide();
@@ -293,14 +286,15 @@ class DatePicker extends Component {
 
     this.setState({ value: nextValue });
     onChange && onChange(day);
-    onFormChange && onFormChange(day);
   }
 
   render() {
     const {
       minDate,
       maxDate,
-      dateFilter
+      dateFilter,
+      inline,
+      className
     } = this.props;
 
     const {
@@ -311,13 +305,47 @@ class DatePicker extends Component {
     const value = this.getValue();
     const shouldMountCalendar = this.shouldMountCalendar();
     const shouldMountClock = this.shouldMountClock();
-    checkRange(this.props.hourRange, clockDefaultProps.hourRange);
-    checkRange(this.props.minuteRange, clockDefaultProps.minuteRange);
-    checkRange(this.props.secondRange, clockDefaultProps.secondRange);
+
+    const paneClasses = classNames('rsuite-datepicker-pane', {
+      hide: calendarState === 'HIDE',
+      datetime: shouldMountCalendar && shouldMountClock
+    });
+
+    const calendar = (
+      <Calendar
+        calendarState={calendarState}
+        selectedDate={value}
+        pageDate={pageDate}
+        minDate={minDate}
+        maxDate={maxDate}
+        onMoveForword={this.onMoveForword}
+        onMoveBackward={this.onMoveBackward}
+        onSelect={this.handleSelect}
+        onToggleMonthDropdown={this.toggleMonthDropdown}
+        onToggleTimeDropdown={this.toggleTimeDropdown}
+        onChangePageDate={this.onChangePageDate}
+        dateFilter={dateFilter}
+        ref={(ref) => {
+          this.calendar = ref;
+        }}
+      />
+    );
+
+    if (inline) {
+      return (
+        <div className="rsuite-datepicker inline">
+          {calendar}
+        </div>
+      );
+    }
+
+    const classes = classNames('rsuite-datepicker', {
+      'date-picker-dropdown': !inline
+    }, className);
 
     return (
       <RootCloseWrapper onRootClose={this.hide}>
-        <div className="DatePicker">
+        <div className={classes}>
           <DateContainer
             placeholder={this.getDateString()}
             onClick={this.toggle}
@@ -325,40 +353,9 @@ class DatePicker extends Component {
             onClean={value && this.reset}
           />
           <div
-            className={
-              'DatePicker-pane' +
-              (calendarState === 'HIDE' ? ' hide' : '') +
-              ((shouldMountCalendar && shouldMountClock) ? ' datetime' : '')
-            }
+            className={paneClasses}
           >
-            {
-              shouldMountCalendar &&
-              <Calendar
-                calendarState={calendarState}
-                selectedDate={value}
-                pageDate={pageDate}
-                minDate={minDate}
-                maxDate={maxDate}
-                onMoveForword={this.onMoveForword}
-                onMoveBackward={this.onMoveBackward}
-                onSelect={this.handleSelect}
-                onClickTitle={this.toggleEditPanel}
-                onChangePageDate={this.onChangePageDate}
-                dateFilter={dateFilter}
-                ref={(ref) => {
-                  this.calendar = ref;
-                }}
-              />
-            }
-            {
-              shouldMountClock &&
-              <Clock
-                {..._.pick(this.props,
-                  Object.keys(clockPropTypes))}
-                time={this.getTime()}
-                onChange={this.handleTimeChange}
-              />
-            }
+            {calendar}
           </div>
         </div>
       </RootCloseWrapper>

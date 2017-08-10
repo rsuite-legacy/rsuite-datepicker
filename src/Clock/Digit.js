@@ -7,11 +7,9 @@ function leftPad(number) {
   return pad + number;
 }
 
-const Digit = ({
-    number
-}) => (
-    <span className="digit-number"> {leftPad(number)} </span>
-  );
+const Digit = ({ number }) => (
+  <span className="digit-number"> {leftPad(number)} </span>
+);
 
 Digit.propTypes = {
   number: PropTypes.number

@@ -10,28 +10,32 @@ const propTypes = {
 };
 
 const MonthView = ({ date, selected, onClick, dateFilter }) => {
+
   /**
    * Get all weeks of this month
-   * @params date
+   * @params monthDate
    * @return date[]
    */
-  function getMonthView(date) {
-    const thisMonth = date.getMonth();
-    let firstDayOfMonth = date.getDay();
+  function getMonthView(monthDate) {
+
+    let firstDayOfMonth = monthDate.getDay();
     let distance = 0 - firstDayOfMonth;
     let firstWeekendDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() + distance
+      monthDate.getFullYear(),
+      monthDate.getMonth(),
+      monthDate.getDate() + distance
     );
+
     let weeks = [firstWeekendDate];
     let nextWeekendDate = new Date(firstWeekendDate);
     nextWeekendDate.setDate(nextWeekendDate.getDate() + 7);
-    while (thisMonth === nextWeekendDate.getMonth()) {
+
+    while (weeks.length < 6) {
       weeks.push(nextWeekendDate);
       nextWeekendDate = new Date(nextWeekendDate);
       nextWeekendDate.setDate(nextWeekendDate.getDate() + 7);
     }
+
     return weeks;
   }
 

@@ -5,8 +5,6 @@ import { Header, Navbar, Nav } from 'rsuite';
 
 
 import './less/index.less';
-import '../src/less/index.less';
-
 import DatePickerOnlyDate from './example/DatePickerOnlyDate';
 import DatePickerOnlyTime from './example/DatePickerOnlyTime';
 import DatePickerWithTime from './example/DatePickerWithTime';
