@@ -1,28 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import moment from 'moment';
 
 const propTypes = {
   date: PropTypes.instanceOf(Date),
   onMoveForword: PropTypes.func,
   onMoveBackward: PropTypes.func,
   onToggleMonthDropdown: PropTypes.func,
-  onToggleTimeDropdown: PropTypes.func
+  onToggleTimeDropdown: PropTypes.func,
+  missDate: PropTypes.bool
 };
 
 class MonthHeader extends Component {
   render() {
     const {
       date,
+      missDate,
       onMoveForword,
       onMoveBackward,
       onToggleMonthDropdown,
       onToggleTimeDropdown
      } = this.props;
     return (
-      <div className="monthHeader">
+      <div className="calendar-header">
         <i
-          className="monthHeader-backward"
+          className="calendar-header-backward"
           role="button"
           tabIndex="-1"
           onClick={_.debounce(onMoveBackward, 200)}
@@ -30,18 +33,22 @@ class MonthHeader extends Component {
         <span
           role="button"
           tabIndex="-1"
-          className="monthHeader-title"
+          className="calendar-header-title title-date"
           onClick={onToggleMonthDropdown}
         >
+
           {
-            `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+            missDate ?
+              `${moment(date).format('YYYY-MM')}-??` :
+              moment(date).format('YYYY-MM-DD')
           }
+
         </span>
 
         <span
           role="button"
           tabIndex="-1"
-          className="monthHeader-title"
+          className="calendar-header-title title-time"
           onClick={onToggleTimeDropdown}
         >
           {
@@ -49,7 +56,7 @@ class MonthHeader extends Component {
           }
         </span>
         <i
-          className="monthHeader-forward"
+          className="calendar-header-forward"
           role="button"
           tabIndex="-1"
           onClick={_.debounce(onMoveForword, 200)}

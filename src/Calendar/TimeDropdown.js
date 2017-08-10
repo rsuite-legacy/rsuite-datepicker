@@ -10,6 +10,20 @@ const propTypes = {
 
 class TimeDropdown extends React.Component {
 
+  renderColumn(start, end, step = 1) {
+
+    const items = [];
+    for (let i = start; i <= end; i += 1) {
+      items.push(<li key={i}><a>{i}</a></li>);
+    }
+
+    return (
+      <div className="column">
+        <ul>{items}</ul>
+      </div>
+    );
+  }
+
   render() {
 
     return (
@@ -20,8 +34,10 @@ class TimeDropdown extends React.Component {
             this.content = ref;
           }}
         >
-          <div className="column">
-            {'111111'}
+          <div className="time-dropdown-content-row">
+            {this.renderColumn(0, 23)}
+            {this.renderColumn(0, 59)}
+            {this.renderColumn(0, 59)}
           </div>
         </div>
       </div>

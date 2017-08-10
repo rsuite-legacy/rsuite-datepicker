@@ -1,0 +1,137 @@
+.rsuite-datepicker {
+  .clock {
+    background-color: @container-bg;
+    border: @container-border;
+    border-left: none;
+    float: left;
+    visibility: visible;
+    opacity: 1;
+    transition: visibility .1s, opacity .1s ease-in;
+    margin-top: -1px;
+    z-index: 1000;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    height: 280px;
+    width: @clock-width;
+  }
+  .digits {
+    text-align: center;
+    padding: 36px 0;
+    background-color: @header-bg;
+    border-bottom: 1px solid #DDD;
+    .digit-number {
+      display: inline-block;
+      width: @digits-size;
+      line-height: @digits-size;
+      height: @digits-size;
+      font-size: @digits-font-size;
+      box-shadow: inset 0px 1px 6px 0px #999;
+      background-color: #F6F6F6;
+      border-radius: 4px;
+      font-weight: bold;
+      color: @container-fg;
+    }
+    .separater {
+      display: inline-block;
+      line-height: @digits-size;
+      height: @digits-size;
+      font-size: @digits-font-size;
+      width: @digits-size / 4;
+      text-align: center;
+      color: #999;
+    }
+  }
+  .sliders {
+    background-color: @container-bg;
+    padding: 18px 12px 0;
+    .slider {
+      cursor: pointer;
+      height: 1rem;
+      position: relative;
+      width: 100%;
+      margin-bottom: 32px;
+      &-label {
+        color: #aaa;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        &--min {
+          left: 0;
+          position: absolute;
+          bottom: -1.2rem;
+        }
+        &--max {
+          right: 0;
+          position: absolute;
+          bottom: -1.2rem;
+        }
+        &--value {
+          position: absolute;
+          top: -1.6rem;
+          left: -0.55rem;
+          width: 1rem;
+          text-align: center;
+        }
+      }
+      &-track {
+        background-color: #eee;
+        border-radius: 0.3rem;
+        display: block;
+        height: 0.3rem;
+        transition: left .2s ease-out, width .2s ease-out;
+        &--container {
+          left: 0;
+          margin-top: -0.15rem;
+          position: absolute;
+          right: 0;
+          top: 50%;
+        }
+        &--active {
+          background-color: @color-active;
+        }
+      }
+      &-sliderContainer {
+        position: absolute;
+        transition: left .2s ease-out;
+      }
+      &-slider {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: @color-active;
+        border: 1px solid @color-active;
+        border-radius: 100%;
+        cursor: pointer;
+        display: block;
+        height: 1rem;
+        margin-left: -0.5rem;
+        margin-top: -0.65rem;
+        outline: none;
+        position: absolute;
+        top: 50%;
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        width: 1rem;
+      }
+    }
+    .slider-ruler {
+      display: table;
+      width: 100%;
+      ul {
+        width: 100%;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: table-row;
+        li {
+          display: table-cell;
+          &::after {
+            position: absolute;
+            height: 4px;
+            width: 1px;
+            top: 1px;
+            background: #eee;
+            content: " ";
+          }
+        }
+      }
+    }
+  }
+}

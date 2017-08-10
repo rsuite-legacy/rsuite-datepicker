@@ -5,7 +5,7 @@ import DatePicker from '../../src';
 const DatePickerOnlyDate = props => (
   <div className="field only-date">
     <DatePicker
-      dateFormat="YYYY-MM-DD"
+      dateFormat="YYYY-MM-DD HH:mm:ss"
     />
   </div>
 );

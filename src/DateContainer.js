@@ -13,16 +13,16 @@ class DateContainer extends Component {
     const { placeholder, onClick, onClean, showCleanButton } = this.props;
     return (
       <div
-        className="toggle"
+        className="rsuite-datepicker-toggle"
         role="button"
         onClick={onClick}
         tabIndex="-1"
       >
-        <div className="toggle-placeholder">{placeholder}</div>
+        <div className="rsuite-datepicker-toggle-placeholder">{placeholder}</div>
         {
           showCleanButton &&
           <div
-            className="toggle-clean"
+            className="rsuite-datepicker-toggle-clean"
             onClick={(e) => {
               e.stopPropagation();
               onClean();

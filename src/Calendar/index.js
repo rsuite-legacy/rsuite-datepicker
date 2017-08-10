@@ -19,7 +19,13 @@ const propTypes = {
   onToggleMonthDropdown: PropTypes.func,
   onToggleTimeDropdown: PropTypes.func,
   onChangePageDate: PropTypes.func,
-  dateFilter: PropTypes.func
+  dateFilter: PropTypes.func,
+  missDate: PropTypes.bool,
+  time: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number
+  })
 };
 
 function isDayChanged(dateA, dateB) {
@@ -78,20 +84,24 @@ class Calendar extends React.Component {
       onSelect,
       onToggleMonthDropdown,
       onToggleTimeDropdown,
-      onChangePageDate
+      onChangePageDate,
+      missDate
     } = this.props;
 
     const stateClassname = {
       SLIDING_L: ' sliding-left',
       SLIDING_R: ' sliding-right',
-      DROP_MONTH: ' drop-month'
+      DROP_MONTH: ' drop-month',
+      DROP_TIME: ' drop-time'
     }[calendarState] || '';
 
 
     return (
       <div className={`calendar${stateClassname}`}>
         <MonthHeader
-          date={selectedDate}
+          date={pageDate}
+          missDate={missDate}
+          selectedDate={selectedDate}
           onMoveForword={this.handleMoveForword}
           onMoveBackward={this.handleMoveBackward}
           onToggleMonthDropdown={onToggleMonthDropdown}

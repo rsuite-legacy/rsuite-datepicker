@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import Weeks from './Weeks';
+
 
 const propTypes = {
   date: PropTypes.instanceOf(Date),
@@ -26,6 +28,7 @@ const MonthView = ({ date, selected, onClick, dateFilter }) => {
       monthDate.getDate() + distance
     );
 
+
     let weeks = [firstWeekendDate];
     let nextWeekendDate = new Date(firstWeekendDate);
     nextWeekendDate.setDate(nextWeekendDate.getDate() + 7);
@@ -41,30 +44,30 @@ const MonthView = ({ date, selected, onClick, dateFilter }) => {
 
   // is two date in the same month
   function inSameMonth(dateA, dateB) {
-    return dateA.getMonth() === dateB.getMonth();
+    return moment(dateA).month() === moment(dateB).month();
   }
 
-  let thisMonthDate = new Date(date);
-  let prevMonthDate = new Date(thisMonthDate);
-  prevMonthDate.setMonth(thisMonthDate.getMonth() - 1);
-  let nextMonthDate = new Date(thisMonthDate);
-  nextMonthDate.setMonth(thisMonthDate.getMonth() + 1);
+
+  const thisMonthDate = moment(date).date(1);
+  const prevMonthDate = moment(date).date(1).add(-1, 'month');
+  const nextMonthDate = moment(date).date(1).add(1, 'month');
+
   return (
     <div className="monthView">
       <div className="monthView-weeksWrapper">
         <Weeks
-          weeks={getMonthView(prevMonthDate)}
+          weeks={getMonthView(prevMonthDate.toDate())}
           selected={selected}
           dateFilter={date => inSameMonth(date, prevMonthDate) && dateFilter(date)}
         />
         <Weeks
-          weeks={getMonthView(thisMonthDate)}
+          weeks={getMonthView(thisMonthDate.toDate())}
           selected={selected}
           onClick={onClick}
           dateFilter={date => inSameMonth(date, thisMonthDate) && dateFilter(date)}
         />
         <Weeks
-          weeks={getMonthView(nextMonthDate)}
+          weeks={getMonthView(nextMonthDate.toDate())}
           selected={selected}
           dateFilter={date => inSameMonth(date, nextMonthDate) && dateFilter(date)}
         />

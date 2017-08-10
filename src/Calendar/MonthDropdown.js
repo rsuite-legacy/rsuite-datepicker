@@ -11,8 +11,7 @@ const propTypes = {
 };
 
 const startYear = 1950;
-const topSpacing = 10;
-const blockHeight = 64;
+const blockHeight = 44;
 
 class MonthDropdown extends React.Component {
 
@@ -21,9 +20,15 @@ class MonthDropdown extends React.Component {
     date && this.scrollTo(date);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { date } = nextProps;
+    date && this.scrollTo(date);
+  }
+
   scrollTo = (date) => {
     const year = date.getFullYear();
-    scrollTop(this.content, ((year - startYear) * blockHeight) + topSpacing);
+    const top = ((year - startYear) * blockHeight);
+    scrollTop(this.content, top);
   }
 
   renderBlock() {

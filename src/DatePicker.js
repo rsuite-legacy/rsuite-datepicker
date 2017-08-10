@@ -48,6 +48,7 @@ class DatePicker extends Component {
 
     this.state = {
       value: activeValue,
+      missDate: false,
       pageDate: new Date(activeValue.getFullYear(), activeValue.getMonth()),
       calendarState: 'HIDE',
       transitionSupport: ret
@@ -116,6 +117,7 @@ class DatePicker extends Component {
 
   onChangePageDate = (nextPageDate) => {
     this.setState({
+      missDate: true,
       pageDate: nextPageDate,
       calendarState: 'SHOW'
     });
@@ -248,7 +250,7 @@ class DatePicker extends Component {
     return /(Y|M|D)/.test(dateFormat);
   }
 
-  shouldMountClock() {
+  shouldMountTime() {
     const { dateFormat } = this.props;
     return /(H|h|m|s)/.test(dateFormat);
   }
@@ -284,7 +286,11 @@ class DatePicker extends Component {
     nextValue.setMinutes(time.getMinutes());
     nextValue.setSeconds(time.getSeconds());
 
-    this.setState({ value: nextValue });
+    this.setState({
+      missDate: false,
+      value: nextValue,
+      pageDate: nextValue
+    });
     onChange && onChange(day);
   }
 
@@ -299,20 +305,23 @@ class DatePicker extends Component {
 
     const {
       calendarState,
-      pageDate
+      pageDate,
+      missDate
     } = this.state;
 
     const value = this.getValue();
     const shouldMountCalendar = this.shouldMountCalendar();
-    const shouldMountClock = this.shouldMountClock();
+    const shouldMountTime = this.shouldMountTime();
 
     const paneClasses = classNames('rsuite-datepicker-pane', {
       hide: calendarState === 'HIDE',
-      datetime: shouldMountCalendar && shouldMountClock
+      datetime: shouldMountCalendar && shouldMountTime
     });
 
     const calendar = (
       <Calendar
+        missDate={missDate}
+        time={shouldMountTime ? this.getTime() : null}
         calendarState={calendarState}
         selectedDate={value}
         pageDate={pageDate}
