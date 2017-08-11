@@ -4,24 +4,25 @@ import moment from 'moment';
 import classNames from 'classnames';
 import { findDOMNode } from 'react-dom';
 import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper';
+import _ from 'lodash';
 import DateContainer from './DateContainer';
 import Calendar from './Calendar';
 import { transitionEndDetect } from './utils/eventDetect';
+import calendarPropTypes from './calendarPropTypes';
 
 const propTypes = {
-  defaultValue: PropTypes.instanceOf(Date),
-  value: PropTypes.instanceOf(Date),
+  ...calendarPropTypes,
+  defaultValue: PropTypes.instanceOf(moment),
+  value: PropTypes.instanceOf(moment),
   autoClose: PropTypes.bool,
   placeholder: PropTypes.string,
   format: PropTypes.string,
   onChange: PropTypes.func,
-  dateFilter: PropTypes.func,
+  disabled: PropTypes.bool,
   locale: PropTypes.object,
   inline: PropTypes.bool
 };
-const contextTypes = {
-  formGroup: PropTypes.object
-};
+
 
 const childContextTypes = {
   locale: PropTypes.object
@@ -46,7 +47,6 @@ class DatePicker extends Component {
 
     this.state = {
       value: activeValue,
-      missDate: false,
       pageDate: activeValue,
       calendarState: 'HIDE',
       transitionSupport: ret
@@ -106,26 +106,25 @@ class DatePicker extends Component {
     if (calendarState === 'SLIDING_R') {
       pageChanges = -1;
     }
-    let nextPageDate = new Date(pageDate.getFullYear(), pageDate.getMonth() + pageChanges);
     this.setState({
-      pageDate: nextPageDate,
-      missDate: true,
+      pageDate: pageDate.add(pageChanges, 'month'),
       calendarState: 'SHOW'
     });
   }
+
   getTime() {
     const { format } = this.props;
-    const { value } = this.state;
-    let timeDate = value || new Date();
+    const { pageDate } = this.state;
+    let timeDate = pageDate || moment();
     let time = {};
     if (/(H|h)/.test(format)) {
-      time.hours = timeDate.getHours();
+      time.hours = timeDate.hours();
     }
     if (/m/.test(format)) {
-      time.minutes = timeDate.getMinutes();
+      time.minutes = timeDate.minutes();
     }
     if (/s/.test(format)) {
-      time.seconds = timeDate.getSeconds();
+      time.seconds = timeDate.seconds();
     }
     return time;
   }
@@ -135,7 +134,7 @@ class DatePicker extends Component {
   )
 
   getDefaultPageDate() {
-    let retDate = new Date();
+    let retDate = moment();
     return retDate;
   }
 
@@ -147,7 +146,6 @@ class DatePicker extends Component {
 
   handleChangePageDate = (nextPageDate) => {
     this.setState({
-      missDate: true,
       pageDate: nextPageDate,
       calendarState: 'SHOW'
     });
@@ -172,8 +170,7 @@ class DatePicker extends Component {
 
   hide = () => {
     this.setState({
-      calendarState: 'HIDE',
-      missDate: false
+      calendarState: 'HIDE'
     });
   }
 
@@ -243,56 +240,38 @@ class DatePicker extends Component {
     return /(H|h|m|s)/.test(format);
   }
 
-  handleTimeChange = (v) => {
-    const { onChange } = this.props;
-    const { value } = this.state;
-    const { hours, minutes, seconds } = v;
-    let nextValue = value
-      ? new Date(value)
-      : new Date();
-    hours !== undefined && nextValue.setHours(hours);
-    minutes !== undefined && nextValue.setMinutes(minutes);
-    seconds !== undefined && nextValue.setSeconds(seconds);
-
-    this.setState({ value: nextValue });
-    onChange && onChange(nextValue);
-  }
-
-  handleSelect = (day) => {
+  handleSelect = (nextValue) => {
     const { onChange, autoClose } = this.props;
-    const { value } = this.state;
+    const { pageDate } = this.state;
 
     if (autoClose) {
       this.hide();
     }
 
-    let time = value || (new Date());
-    let nextValue = new Date(day);
+    nextValue.hours(pageDate.hours())
+      .minutes(pageDate.minutes())
+      .seconds(pageDate.seconds());
 
-    // merge time into nextSelected
-    nextValue.setHours(time.getHours());
-    nextValue.setMinutes(time.getMinutes());
-    nextValue.setSeconds(time.getSeconds());
 
     this.setState({
-      missDate: false,
       value: nextValue,
       pageDate: nextValue
     });
-    onChange && onChange(day);
+
+    onChange && onChange(nextValue);
   }
 
   render() {
     const {
-      dateFilter,
+      disabledDate,
       inline,
-      className
+      className,
+      ...props
     } = this.props;
 
     const {
       calendarState,
-      pageDate,
-      missDate
+      pageDate
     } = this.state;
 
     const value = this.getValue();
@@ -306,10 +285,9 @@ class DatePicker extends Component {
 
     const calendar = (
       <Calendar
-        missDate={missDate}
+        {..._.pick(props, Object.keys(calendarPropTypes))}
         time={shouldMountTime ? this.getTime() : null}
         calendarState={calendarState}
-        selectedDate={value}
         pageDate={pageDate}
         onMoveForword={this.onMoveForword}
         onMoveBackward={this.onMoveBackward}
@@ -318,7 +296,6 @@ class DatePicker extends Component {
         onToggleTimeDropdown={this.toggleTimeDropdown}
         onChangePageDate={this.handleChangePageDate}
         onChangePageTime={this.handleChangePageTime}
-        dateFilter={dateFilter}
         ref={(ref) => {
           this.calendar = ref;
         }}
@@ -358,7 +335,6 @@ class DatePicker extends Component {
 }
 
 DatePicker.propTypes = propTypes;
-DatePicker.contextTypes = contextTypes;
 DatePicker.childContextTypes = childContextTypes;
 DatePicker.defaultProps = defaultProps;
 

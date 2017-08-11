@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
+import moment from 'moment';
 import MonthDropdownItem from './MonthDropdownItem';
 
 
 const propTypes = {
-  date: PropTypes.instanceOf(Date),
+  date: PropTypes.instanceOf(moment),
   onClick: PropTypes.func
 };
 
 const startYear = 1950;
-const blockHeight = 44;
+const blockHeight = 84;
 
 class MonthDropdown extends React.Component {
 
@@ -26,7 +27,7 @@ class MonthDropdown extends React.Component {
   }
 
   scrollTo = (date) => {
-    const year = date.getFullYear();
+    const year = date.year();
     const top = ((year - startYear) * blockHeight);
     scrollTop(this.content, top);
   }
@@ -34,19 +35,21 @@ class MonthDropdown extends React.Component {
   renderBlock() {
     const { date, onClick } = this.props;
     let ret = [];
-    let selectedMonth = date.getMonth();
-    let selectedYear = date.getFullYear();
+    let selectedMonth = date.month();
+    let selectedYear = date.year();
+    let nextYear = 0;
 
-    for (let i = 0; i < 100; i += 1) {
-      let curYear = startYear + i;
-      let isSelectedYear = curYear === selectedYear;
+    for (let i = 0; i < 100 && nextYear < selectedYear + 5; i += 1) {
+      nextYear = startYear + i;
+
+      let isSelectedYear = nextYear === selectedYear;
       let titleClasses = classNames('month-dropdown-year-title', {
         selected: isSelectedYear
       });
 
       ret.push(
         <div className="month-dropdown-year-block" key={i}>
-          <div className={titleClasses}>{curYear}</div>
+          <div className={titleClasses}>{nextYear}</div>
           <div className="month-dropdown-month-block">
             {
               [...Array(12).keys()].map((dateMonth) => {
@@ -55,11 +58,12 @@ class MonthDropdown extends React.Component {
                 });
                 return (
                   <MonthDropdownItem
+                    date={date}
                     className={cellCalsses}
                     onClick={onClick}
                     key={dateMonth}
                     dateMonth={dateMonth}
-                    curYear={curYear}
+                    curYear={nextYear}
                   />
                 );
               })

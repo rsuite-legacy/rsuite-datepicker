@@ -15,7 +15,7 @@
   @cell-spacing: 2px;
   @cell-hover-bg: @H050;
   @color-active: @H500;
-  @font-color:@B900;
+  @font-color: @B900;
   position: relative;
   box-sizing: border-box;
   user-select: none;
@@ -74,7 +74,7 @@
     z-index: 1000;
     width: @calendar-width;
     overflow: hidden;
-    padding-top: 12px;
+    padding-top: 36px;
     .monthView-weeksWrapper {
       left: 0;
     }
@@ -90,7 +90,7 @@
         transition: left .15s cubic-bezier(0.65, 0.05, 0.36, 1);
       }
     }
-    .drop-active(){
+    .drop-active() {
       .calendar-header {
         box-shadow: 0 2px 3px rgba(0, 0, 0, 0.28);
         i {
@@ -99,7 +99,7 @@
         }
       }
     }
-    .drop-active-title(){
+    .drop-active-title() {
       box-shadow: 0px 0px 1px #999 inset;
       background: #eee;
     }
@@ -109,7 +109,7 @@
         opacity: 1;
         top: 32px;
       }
-      .title-date{
+      .title-date {
         .drop-active-title();
       }
     }
@@ -117,35 +117,37 @@
       .drop-active();
       .time-dropdown {
         opacity: 1;
-        top: 38px;
+        top: 46px;
       }
-      .title-time{
+      .title-time {
         .drop-active-title();
       }
     }
     .calendar-header {
       position: absolute;
       width: 100%;
-      text-align: center;
       z-index: 1002;
       top: 0px;
       padding: 8px 4px;
+      height: 44px;
       background: @header-bg;
+      text-align: center;
       i {
         font-style: normal;
         transition: visibility .1s, opacity .1s linear;
       }
       .icon() {
         position: relative;
-        display: block;
+        display: inline-block;
         width: 20px;
         height: 20px;
         cursor: pointer;
         color: #999;
         outline: none;
+        top: 4px;
         &:after {
           position: absolute;
-          left: 6px;
+          left: 4px;
           font-size: 20px;
           top: -6px;
         }
@@ -154,29 +156,31 @@
           color: darken(#999, 30%)
         }
       }
-      .calendar-header-forward {
-        .icon();
-        float: right;
-        &:after {
-          content: "\203A";
-        }
-      }
       .calendar-header-backward {
         .icon();
-        float: left;
         &:after {
           content: "\2039";
+        }
+      }
+      .calendar-header-forward {
+        .icon();
+        &:after {
+          content: "\203A";
         }
       }
       .calendar-header-title {
         line-height: 20px;
         font-size: 16px;
-        padding: 0 8px;
+        padding: 2px 6px;
         cursor: pointer;
         margin: 0 2px;
         transition: background-color .2s linear;
-        &:hover {}
-        &:active {}
+        &.title-time {
+          margin-left: 10px;
+        }
+        &:hover {
+          background: #eee;
+        }
       }
     }
     .monthView {
@@ -237,8 +241,15 @@
               background-color: #eee;
             }
           }
-          &.non-this-month {
+          &.un-same-month {
             opacity: .5;
+          }
+          &.disabled {
+            opacity: .4;
+            background: none;
+            color: @B500;
+            cursor: not-allowed;
+            border-left: 1px solid #eee;
           }
           &.is-today {
             border: 1px solid @color-active;
@@ -250,6 +261,9 @@
             &:hover {
               background-color: @color-active;
             }
+          }
+          &:first-child {
+            border-left: none;
           }
         }
       }
@@ -277,7 +291,7 @@
       }
       &-year-block {
         @odd-bg: #f5f5f5;
-        padding: 2px 0;
+        padding: 10px 0;
         width: @monthView-width;
         &:nth-child(odd) {
           background-color: @odd-bg;
@@ -287,7 +301,7 @@
         float: left;
         height: 100%;
         width: 20%;
-        margin-top: 10px;
+        margin-top: 22px;
         text-align: center;
         font-weight: bold;
         &.selected {
@@ -304,6 +318,7 @@
         width: calc(100% / 6.25);
         text-align: center;
         cursor: pointer;
+        padding: 6px;
         &:hover {
           background-color: @cell-hover-bg;
         }
@@ -322,24 +337,37 @@
           display: table-row;
           .column {
             display: table-cell;
-            &:last-child ul{
-                border: none;
+            &:last-child ul {
+              border: none;
             }
             ul {
               list-style: none;
               padding: 0;
               margin: 0;
-              height: ( @cell-height + @cell-spacing * 1) * 7;
+              height: ( @cell-height + @cell-spacing * 2) * 7;
               overflow: auto;
               border-right: 1px solid #eee;
-              li a{
+              padding-bottom: @cell-height * 7;
+              li a {
                 text-align: center;
                 display: block;
                 cursor: pointer;
                 text-decoration: none;
                 color: @font-color;
-                &:hover{
+                padding: 4px;
+                &:hover {
                   background: @cell-hover-bg;
+                  color: @font-color;
+                }
+                &.active {
+                  background: @color-active;
+                  color: #fff;
+                }
+                &.disabled {
+                  opacity: .4;
+                  background: none;
+                  color: @B500;
+                  cursor: not-allowed;
                 }
               }
             }
