@@ -15,6 +15,7 @@
   @cell-spacing: 2px;
   @cell-hover-bg: @H050;
   @color-active: @H500;
+  @font-color:@B900;
   position: relative;
   box-sizing: border-box;
   user-select: none;
@@ -331,9 +332,15 @@
               height: ( @cell-height + @cell-spacing * 1) * 7;
               overflow: auto;
               border-right: 1px solid #eee;
-
-              li {
+              li a{
                 text-align: center;
+                display: block;
+                cursor: pointer;
+                text-decoration: none;
+                color: @font-color;
+                &:hover{
+                  background: @cell-hover-bg;
+                }
               }
             }
           }

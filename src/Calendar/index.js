@@ -11,14 +11,13 @@ const propTypes = {
   calendarState: PropTypes.string,
   selectedDate: PropTypes.instanceOf(Date),
   pageDate: PropTypes.instanceOf(Date),
-  minDate: PropTypes.instanceOf(Date),
-  maxDate: PropTypes.instanceOf(Date),
   onMoveForword: PropTypes.func,
   onMoveBackward: PropTypes.func,
   onSelect: PropTypes.func,
   onToggleMonthDropdown: PropTypes.func,
   onToggleTimeDropdown: PropTypes.func,
   onChangePageDate: PropTypes.func,
+  onChangePageTime: PropTypes.func,
   dateFilter: PropTypes.func,
   missDate: PropTypes.bool,
   time: PropTypes.shape({
@@ -44,9 +43,7 @@ class Calendar extends React.Component {
     return (
       nextProps.calendarState !== props.calendarState ||
       isDayChanged(nextProps.selectedDate, props.selectedDate) ||
-      isDayChanged(nextProps.pageDate, props.pageDate) ||
-      isDayChanged(nextProps.minDate, props.minDate) ||
-      isDayChanged(nextProps.maxDate, props.maxDate)
+      isDayChanged(nextProps.pageDate, props.pageDate)
     );
   }
 
@@ -63,13 +60,7 @@ class Calendar extends React.Component {
   }
 
   dateFilter = (date) => {
-    const { minDate, maxDate, dateFilter } = this.props;
-    if (minDate && date.getTime() < minDate.getTime()) {
-      return false;
-    }
-    if (maxDate && date.getTime() > maxDate.getTime()) {
-      return false;
-    }
+    const { dateFilter } = this.props;
     if (dateFilter && !dateFilter(date)) {
       return false;
     }
@@ -85,6 +76,7 @@ class Calendar extends React.Component {
       onToggleMonthDropdown,
       onToggleTimeDropdown,
       onChangePageDate,
+      onChangePageTime,
       missDate
     } = this.props;
 
@@ -115,7 +107,7 @@ class Calendar extends React.Component {
         <TimeDropdown
           date={pageDate}
           show={calendarState === 'DROP_TIME'}
-          onClick={onChangePageDate}
+          onClick={onChangePageTime}
         />
         <WeekHeader />
         <MonthView

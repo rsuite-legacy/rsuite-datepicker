@@ -11,11 +11,9 @@ import { transitionEndDetect } from './utils/eventDetect';
 const propTypes = {
   defaultValue: PropTypes.instanceOf(Date),
   value: PropTypes.instanceOf(Date),
-  minDate: PropTypes.instanceOf(Date),
-  maxDate: PropTypes.instanceOf(Date),
   autoClose: PropTypes.bool,
   placeholder: PropTypes.string,
-  dateFormat: PropTypes.string,
+  format: PropTypes.string,
   onChange: PropTypes.func,
   dateFilter: PropTypes.func,
   locale: PropTypes.object,
@@ -30,7 +28,7 @@ const childContextTypes = {
 };
 
 const defaultProps = {
-  dateFormat: 'YYYY-MM-DD',
+  format: 'YYYY-MM-DD',
   autoClose: true,
   placeholder: '',
   locale: {
@@ -49,7 +47,7 @@ class DatePicker extends Component {
     this.state = {
       value: activeValue,
       missDate: false,
-      pageDate: new Date(activeValue.getFullYear(), activeValue.getMonth()),
+      pageDate: activeValue,
       calendarState: 'HIDE',
       transitionSupport: ret
     };
@@ -111,30 +109,22 @@ class DatePicker extends Component {
     let nextPageDate = new Date(pageDate.getFullYear(), pageDate.getMonth() + pageChanges);
     this.setState({
       pageDate: nextPageDate,
-      calendarState: 'SHOW'
-    });
-  }
-
-  onChangePageDate = (nextPageDate) => {
-    this.setState({
       missDate: true,
-      pageDate: nextPageDate,
       calendarState: 'SHOW'
     });
   }
-
   getTime() {
-    const { dateFormat } = this.props;
+    const { format } = this.props;
     const { value } = this.state;
     let timeDate = value || new Date();
     let time = {};
-    if (/(H|h)/.test(dateFormat)) {
+    if (/(H|h)/.test(format)) {
       time.hours = timeDate.getHours();
     }
-    if (/m/.test(dateFormat)) {
+    if (/m/.test(format)) {
       time.minutes = timeDate.getMinutes();
     }
-    if (/s/.test(dateFormat)) {
+    if (/s/.test(format)) {
       time.seconds = timeDate.getSeconds();
     }
     return time;
@@ -145,48 +135,46 @@ class DatePicker extends Component {
   )
 
   getDefaultPageDate() {
-    const { minDate, maxDate } = this.props;
     let retDate = new Date();
-
-    if (minDate && retDate.getTime() < minDate.getTime()) {
-      retDate = minDate;
-    }
-
-    if (maxDate && retDate.getTime() > maxDate.getTime()) {
-      retDate = maxDate;
-    }
-
     return retDate;
   }
 
   getDateString() {
     const { placeholder } = this.props;
     const value = this.getValue();
-    return value ? moment(value).format(this.props.dateFormat) : placeholder;
+    return value ? moment(value).format(this.props.format) : placeholder;
   }
 
-
-  setMinDate(date) {
-    this.setState({ minDate: date });
+  handleChangePageDate = (nextPageDate) => {
+    this.setState({
+      missDate: true,
+      pageDate: nextPageDate,
+      calendarState: 'SHOW'
+    });
   }
-
-  setMaxDate(date) {
-    this.setState({ maxDate: date });
+  handleChangePageTime = (nextPageTime) => {
+    this.setState({
+      pageDate: nextPageTime
+    });
   }
 
   resetPageDate() {
     const value = this.getValue() || this.getDefaultPageDate();
-    let pageDate = new Date(value.getFullYear(), value.getMonth());
-    this.setState({ pageDate });
+    this.setState({ pageDate: value });
   }
 
   show() {
     this.resetPageDate();
-    this.setState({ calendarState: 'SHOW' });
+    this.setState({
+      calendarState: 'SHOW',
+    });
   }
 
   hide = () => {
-    this.setState({ calendarState: 'HIDE' });
+    this.setState({
+      calendarState: 'HIDE',
+      missDate: false
+    });
   }
 
   toggle = () => {
@@ -246,13 +234,13 @@ class DatePicker extends Component {
 
 
   shouldMountCalendar() {
-    const { dateFormat } = this.props;
-    return /(Y|M|D)/.test(dateFormat);
+    const { format } = this.props;
+    return /(Y|M|D)/.test(format);
   }
 
   shouldMountTime() {
-    const { dateFormat } = this.props;
-    return /(H|h|m|s)/.test(dateFormat);
+    const { format } = this.props;
+    return /(H|h|m|s)/.test(format);
   }
 
   handleTimeChange = (v) => {
@@ -296,8 +284,6 @@ class DatePicker extends Component {
 
   render() {
     const {
-      minDate,
-      maxDate,
       dateFilter,
       inline,
       className
@@ -325,14 +311,13 @@ class DatePicker extends Component {
         calendarState={calendarState}
         selectedDate={value}
         pageDate={pageDate}
-        minDate={minDate}
-        maxDate={maxDate}
         onMoveForword={this.onMoveForword}
         onMoveBackward={this.onMoveBackward}
         onSelect={this.handleSelect}
         onToggleMonthDropdown={this.toggleMonthDropdown}
         onToggleTimeDropdown={this.toggleTimeDropdown}
-        onChangePageDate={this.onChangePageDate}
+        onChangePageDate={this.handleChangePageDate}
+        onChangePageTime={this.handleChangePageTime}
         dateFilter={dateFilter}
         ref={(ref) => {
           this.calendar = ref;
