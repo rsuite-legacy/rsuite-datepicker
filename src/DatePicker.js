@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
-import { findDOMNode } from 'react-dom';
-import RootCloseWrapper from 'rsuite/lib/fixtures/RootCloseWrapper';
+import RootCloseWrapper from 'rsuite-utils/lib/Overlay/RootCloseWrapper';
 import _ from 'lodash';
 import DateContainer from './DateContainer';
 import Calendar from './Calendar';
@@ -12,9 +11,11 @@ import calendarPropTypes from './calendarPropTypes';
 import decorate from './utils/decorate';
 import { IntlProvider } from './intl';
 import defaultLocale from './locale';
+import Toolbar from './Toolbar';
 
 const propTypes = {
   ...calendarPropTypes,
+  ranges: Toolbar.propTypes.ranges,
   defaultValue: PropTypes.instanceOf(moment),
   value: PropTypes.instanceOf(moment),
   autoClose: PropTypes.bool,
@@ -52,9 +53,8 @@ class DatePicker extends Component {
 
   componentDidMount() {
     const { transitionSupport } = this.state;
-    let el = findDOMNode(this.calendar);
-    if (transitionSupport.supported && el) {
-      el.addEventListener(transitionSupport.event, (e) => {
+    if (transitionSupport.supported && this.calendar) {
+      this.calendar.addEventListener(transitionSupport.event, (e) => {
         if (e.target.className === 'month-view-weeks-wrapper' && e.propertyName === 'left') {
           this.onMoveDone();
         }
@@ -129,6 +129,29 @@ class DatePicker extends Component {
     this.setState({
       pageDate: nextPageTime
     });
+  }
+
+  handleShortcutPageDate = (pageDate) => {
+    this.updateValue(pageDate);
+  }
+
+  handleOK = () => {
+    this.updateValue();
+  }
+
+  updateValue(pageDate) {
+    const { value, onChange } = this.state;
+    const nextValue = pageDate || this.state.pageDate;
+
+    this.setState({
+      value: nextValue
+    });
+
+    if (!nextValue.isSame(value)) {
+      onChange && onChange(nextValue);
+    }
+
+    this.hide();
   }
 
   resetPageDate() {
@@ -228,6 +251,7 @@ class DatePicker extends Component {
       defaultClassName,
       locale,
       renderPlaceholder,
+      disabledDate,
       ...props
     } = this.props;
 
@@ -244,7 +268,7 @@ class DatePicker extends Component {
 
     const calendar = (
       <Calendar
-        {..._.pick(props, Object.keys(calendarPropTypes)) }
+        {..._.pick(this.props, Object.keys(calendarPropTypes)) }
         format={format}
         calendarState={calendarState}
         pageDate={pageDate}
@@ -255,7 +279,7 @@ class DatePicker extends Component {
         onToggleTimeDropdown={this.toggleTimeDropdown}
         onChangePageDate={this.handleChangePageDate}
         onChangePageTime={this.handleChangePageTime}
-        ref={(ref) => {
+        calendarRef={(ref) => {
           this.calendar = ref;
         }}
       />
@@ -276,6 +300,7 @@ class DatePicker extends Component {
       [this.prefix('dropdown')]: !inline
     }, className);
 
+
     return (
       <RootCloseWrapper onRootClose={this.hide}>
         <div className={classes}>
@@ -293,9 +318,12 @@ class DatePicker extends Component {
                 className={paneClasses}
               >
                 {calendar}
-                <div className={this.prefix('toolbar')}>
-                  sdfsdfsdf
-              </div>
+                <Toolbar
+                  pageDate={pageDate}
+                  disabledDate={disabledDate}
+                  onShortcut={this.handleShortcutPageDate}
+                  onOk={this.handleOK}
+                />
               </div>
             </div>
           </IntlProvider>

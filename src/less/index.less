@@ -1,6 +1,5 @@
 @import "~rsuite-theme/dist/less/commonly-variables";
-
-
+@import "./functions";
 .rsuite-datepicker {
   /* settings */
   @container-bg: #FFF;
@@ -26,10 +25,15 @@
   * {
     box-sizing: border-box;
   }
+  a, a:hover {
+    text-decoration: none !important;
+    cursor: pointer;
+  }
   &-pane {
     position: absolute;
     z-index: 999;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    background-color: @container-bg;
     &.hide {
       visibility: hidden;
       display: none;
@@ -57,14 +61,13 @@
       margin-top: -10px;
     }
   }
-  &.rsuite-datepicker-dropdown {
+  &-dropdown {
     .calendar {
       float: left;
     }
   }
-  .calendar {
+  &-calendar {
     position: relative;
-    background-color: @container-bg;
     border: @container-border;
     visibility: visible;
     opacity: 1;
@@ -90,19 +93,6 @@
         transition: left .15s cubic-bezier(0.65, 0.05, 0.36, 1);
       }
     }
-    .drop-active() {
-      .calendar-header {
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.28);
-        i {
-          visibility: hidden;
-          opacity: 0;
-        }
-      }
-    }
-    .drop-active-title() {
-      box-shadow: 0px 0px 1px #999 inset;
-      background: #eee;
-    }
     &.drop-month {
       .drop-active();
       .month-dropdown {
@@ -122,6 +112,19 @@
       .title-time {
         .drop-active-title();
       }
+    }
+    .drop-active() {
+      .calendar-header {
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.28);
+        i {
+          visibility: hidden;
+          opacity: 0;
+        }
+      }
+    }
+    .drop-active-title() {
+      box-shadow: 0px 0px 1px #999 inset;
+      background: #eee;
     }
     .calendar-header {
       position: absolute;
@@ -352,7 +355,6 @@
                 text-align: center;
                 display: block;
                 cursor: pointer;
-                text-decoration: none;
                 color: @font-color;
                 padding: 4px;
                 &:hover {
@@ -372,6 +374,47 @@
               }
             }
           }
+        }
+      }
+    }
+  }
+  &-toolbar {
+    padding: 10px;
+    .clearfix();
+    &-ranges {
+      float: left;
+      a {
+        margin-left: 4px;
+        &:after {
+          content: " ";
+          border-left: 1px solid #eee;
+          margin-left: 8px;
+        }
+        &:last-child {
+          &:after {
+            content: "";
+            border-left: none;
+            margin-left: 0;
+          }
+        }
+        &.disabled {
+          opacity: .4;
+          color: @B500;
+          cursor: not-allowed;
+        }
+      }
+    }
+    &-right {
+      float: right;
+      &-btn-ok {
+        border: none;
+        background: @color-active;
+        padding: 4px 10px;
+        color: #fff;
+        &.disabled {
+          opacity: .4;
+          cursor: not-allowed;
+          outline: none;
         }
       }
     }

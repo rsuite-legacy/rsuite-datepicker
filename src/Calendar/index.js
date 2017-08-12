@@ -9,6 +9,7 @@ import MonthView from './MonthView';
 import MonthHeader from './MonthHeader';
 import WeekHeader from './WeekHeader';
 import calendarPropTypes from '../calendarPropTypes';
+import decorate from '../utils/decorate';
 
 const propTypes = {
   ...calendarPropTypes,
@@ -21,6 +22,7 @@ const propTypes = {
   onToggleTimeDropdown: PropTypes.func,
   onChangePageDate: PropTypes.func,
   onChangePageTime: PropTypes.func,
+  calendarRef: PropTypes.func,
   format: PropTypes.string
 };
 
@@ -87,6 +89,7 @@ class Calendar extends React.Component {
       onChangePageDate,
       onChangePageTime,
       inline,
+      calendarRef,
       ...props
     } = this.props;
 
@@ -100,7 +103,7 @@ class Calendar extends React.Component {
     const dropTime = calendarState === 'DROP_TIME' || onlyShowTime;
     const dropMonth = calendarState === 'DROP_MONTH' || onlyShowMonth;
 
-    const calendarClasses = classNames('calendar', {
+    const calendarClasses = classNames(this.prefix('calendar'), {
       'drop-time': dropTime,
       'drop-month': dropMonth,
       'sliding-left': calendarState === 'SLIDING_L',
@@ -118,7 +121,10 @@ class Calendar extends React.Component {
     ];
 
     return (
-      <div className={calendarClasses}>
+      <div
+        className={calendarClasses}
+        ref={calendarRef}
+      >
         <MonthHeader
           date={pageDate}
           time={time}
@@ -159,4 +165,4 @@ class Calendar extends React.Component {
 
 Calendar.propTypes = propTypes;
 
-export default Calendar;
+export default decorate()(Calendar);
