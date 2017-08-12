@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import classNames from 'classnames';
 import decorate from './utils/decorate';
 
 
@@ -8,27 +9,31 @@ const propTypes = {
   placeholder: PropTypes.string,
   onClick: PropTypes.func,
   onClean: PropTypes.func,
+  disabled: PropTypes.bool,
   showCleanButton: PropTypes.bool,
   renderPlaceholder: PropTypes.func,
   value: PropTypes.instanceOf(moment),
 };
 
-class DateContainer extends Component {
+class DateContainer extends React.Component {
   render() {
     const {
       placeholder,
       onClick,
       onClean,
       showCleanButton,
+      disabled,
       renderPlaceholder,
       value
     } = this.props;
 
+    const classes = classNames(this.prefix('toggle'), { disabled });
+
     return (
       <div
-        className={this.prefix('toggle')}
+        className={classes}
         role="button"
-        onClick={onClick}
+        onClick={!disabled && onClick}
         tabIndex="-1"
       >
         <div className={this.prefix('toggle-placeholder')}>
@@ -42,7 +47,7 @@ class DateContainer extends Component {
             tabIndex="-1"
             onClick={(e) => {
               e.stopPropagation();
-              onClean();
+              !disabled && onClean();
             }}
           >
             ✕

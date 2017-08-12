@@ -93,6 +93,7 @@ class Calendar extends React.Component {
       ...props
     } = this.props;
 
+
     const time = this.getTime();
     const showDate = this.shouldMountDate();
     const showTime = this.shouldMountTime();

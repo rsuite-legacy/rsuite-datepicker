@@ -81,7 +81,7 @@ class MonthHeader extends Component {
         className={`${this.prefix('title')} title-date`}
         onClick={onToggleMonthDropdown}
       >
-        {date.format(this.getDateFormat())}
+        {date && date.format(this.getDateFormat())}
       </span>,
       <i
         key="btn-forward"
@@ -103,7 +103,7 @@ class MonthHeader extends Component {
               className={`${this.prefix('title')} title-time`}
               onClick={onToggleTimeDropdown}
             >
-              {date.format(this.getTimeFormat())}
+              {date && date.format(this.getTimeFormat())}
             </span>
           ) : null
         }

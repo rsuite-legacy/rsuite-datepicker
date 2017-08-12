@@ -40,12 +40,12 @@ class DatePicker extends Component {
     super(props);
 
     const { defaultValue, value } = props;
-    const activeValue = value || defaultValue || this.getDefaultPageDate();
+    const activeValue = value || defaultValue;
     const ret = transitionEndDetect();
 
     this.state = {
       value: activeValue,
-      pageDate: activeValue,
+      pageDate: activeValue || moment(),
       calendarState: 'HIDE',
       transitionSupport: ret
     };
@@ -104,14 +104,7 @@ class DatePicker extends Component {
     });
   }
 
-  getValue = () => (
-    this.props.value || this.state.value || undefined
-  )
-
-  getDefaultPageDate() {
-    let retDate = moment();
-    return retDate;
-  }
+  getValue = () => (this.props.value || this.state.value)
 
   getDateString() {
     const { placeholder } = this.props;
@@ -139,15 +132,16 @@ class DatePicker extends Component {
     this.updateValue();
   }
 
-  updateValue(pageDate) {
-    const { value, onChange } = this.state;
-    const nextValue = pageDate || this.state.pageDate;
+  updateValue(nextPageDate) {
+    const { value, pageDate } = this.state;
+    const { onChange } = this.props;
+    const nextValue = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
 
     this.setState({
       value: nextValue
     });
 
-    if (!nextValue.isSame(value)) {
+    if (nextValue !== value || !nextValue.isSame(value)) {
       onChange && onChange(nextValue);
     }
 
@@ -155,8 +149,10 @@ class DatePicker extends Component {
   }
 
   resetPageDate() {
-    const value = this.getValue() || this.getDefaultPageDate();
-    this.setState({ pageDate: value });
+    const value = this.getValue();
+    this.setState({
+      pageDate: value || moment()
+    });
   }
 
   show() {
@@ -221,16 +217,12 @@ class DatePicker extends Component {
   }
 
   reset = () => {
-    this.setState({
-      value: null,
-      pageDate: this.getDefaultPageDate(),
-      calendarState: 'HIDE'
-    });
+    this.setState({ pageDate: moment() });
+    this.updateValue(null);
   }
 
   handleSelect = (nextValue) => {
     const { pageDate } = this.state;
-
 
     nextValue.hours(pageDate.hours())
       .minutes(pageDate.minutes())
@@ -239,8 +231,6 @@ class DatePicker extends Component {
     this.setState({
       pageDate: nextValue
     });
-
-    // onChange && onChange(nextValue);
   }
 
   render() {
@@ -252,7 +242,7 @@ class DatePicker extends Component {
       locale,
       renderPlaceholder,
       disabledDate,
-      ...props
+      disabled
     } = this.props;
 
     const {
@@ -265,6 +255,7 @@ class DatePicker extends Component {
     const paneClasses = classNames(this.prefix('pane'), {
       hide: calendarState === 'HIDE'
     });
+
 
     const calendar = (
       <Calendar
@@ -307,6 +298,7 @@ class DatePicker extends Component {
           <IntlProvider locale={locale}>
             <div>
               <DateContainer
+                disabled={disabled}
                 placeholder={this.getDateString()}
                 onClick={this.toggle}
                 showCleanButton={!this.props.value && !!value}
