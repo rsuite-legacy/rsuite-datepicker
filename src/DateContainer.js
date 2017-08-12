@@ -1,28 +1,45 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
+import decorate from './utils/decorate';
+
 
 const propTypes = {
   placeholder: PropTypes.string,
   onClick: PropTypes.func,
   onClean: PropTypes.func,
-  showCleanButton: PropTypes.bool
+  showCleanButton: PropTypes.bool,
+  renderPlaceholder: PropTypes.func,
+  value: PropTypes.instanceOf(moment),
 };
 
 class DateContainer extends Component {
   render() {
-    const { placeholder, onClick, onClean, showCleanButton } = this.props;
+    const {
+      placeholder,
+      onClick,
+      onClean,
+      showCleanButton,
+      renderPlaceholder,
+      value
+    } = this.props;
+
     return (
       <div
-        className="rsuite-datepicker-toggle"
+        className={this.prefix('toggle')}
         role="button"
         onClick={onClick}
         tabIndex="-1"
       >
-        <div className="rsuite-datepicker-toggle-placeholder">{placeholder}</div>
+        <div className={this.prefix('toggle-placeholder')}>
+          {renderPlaceholder ? renderPlaceholder(placeholder, value) : placeholder}
+        </div>
         {
           showCleanButton &&
           <div
-            className="rsuite-datepicker-toggle-clean"
+            className={this.prefix('toggle-clean')}
+            role="button"
+            tabIndex="-1"
             onClick={(e) => {
               e.stopPropagation();
               onClean();
@@ -35,6 +52,7 @@ class DateContainer extends Component {
     );
   }
 }
+
 DateContainer.propTypes = propTypes;
 
-export default DateContainer;
+export default decorate()(DateContainer);

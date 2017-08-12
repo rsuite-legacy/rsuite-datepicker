@@ -4,7 +4,8 @@ import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
 import moment from 'moment';
 import MonthDropdownItem from './MonthDropdownItem';
-
+import scrollTopAnimation from '../utils/scrollTopAnimation';
+import decorate from '../utils/decorate';
 
 const propTypes = {
   date: PropTypes.instanceOf(moment),
@@ -17,19 +18,23 @@ const blockHeight = 84;
 class MonthDropdown extends React.Component {
 
   componentDidMount() {
-    const { date } = this.props;
-    date && this.scrollTo(date);
+    this.updatePosition();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { date } = nextProps;
+    this.updatePosition(nextProps);
+  }
+
+  updatePosition(props) {
+    const { date } = props || this.props;
     date && this.scrollTo(date);
   }
 
   scrollTo = (date) => {
     const year = date.year();
     const top = ((year - startYear) * blockHeight);
-    scrollTop(this.content, top);
+
+    scrollTopAnimation(this.content, top, scrollTop(this.content) !== 0);
   }
 
   renderBlock() {
@@ -43,17 +48,17 @@ class MonthDropdown extends React.Component {
       nextYear = startYear + i;
 
       let isSelectedYear = nextYear === selectedYear;
-      let titleClasses = classNames('month-dropdown-year-title', {
+      let titleClasses = classNames(this.prefix('year-title'), {
         selected: isSelectedYear
       });
 
       ret.push(
-        <div className="month-dropdown-year-block" key={i}>
+        <div className={this.prefix('year-block')} key={i}>
           <div className={titleClasses}>{nextYear}</div>
-          <div className="month-dropdown-month-block">
+          <div className={this.prefix('month-block')}>
             {
               [...Array(12).keys()].map((dateMonth) => {
-                let cellCalsses = classNames('month-dropdown-month-cell', {
+                let cellCalsses = classNames(this.prefix('month-cell'), {
                   selected: isSelectedYear && dateMonth === selectedMonth
                 });
                 return (
@@ -79,14 +84,14 @@ class MonthDropdown extends React.Component {
   render() {
 
     return (
-      <div className="month-dropdown">
+      <div className={this.props.defaultClassName}>
         <div
-          className="month-dropdown-content"
+          className={this.prefix('content')}
           ref={(ref) => {
             this.content = ref;
           }}
         >
-          <div className="month-dropdown-scroll">
+          <div className={this.prefix('scroll')}>
             {this.renderBlock()}
           </div>
         </div>
@@ -97,4 +102,6 @@ class MonthDropdown extends React.Component {
 
 MonthDropdown.propTypes = propTypes;
 
-export default MonthDropdown;
+export default decorate({
+  prefixClass: 'month-dropdown'
+})(MonthDropdown);

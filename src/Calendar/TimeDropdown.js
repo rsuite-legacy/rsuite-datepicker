@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { scrollTop, getPosition } from 'dom-lib';
-import requestAnimationFramePolyfill from 'dom-lib/lib/animation/requestAnimationFramePolyfill';
+import { getPosition, scrollTop } from 'dom-lib';
 import moment from 'moment';
 import _ from 'lodash';
 import classNames from 'classnames';
 import calendarPropTypes from '../calendarPropTypes';
+import scrollTopAnimation from '../utils/scrollTopAnimation';
+import decorate from '../utils/decorate';
 
 const propTypes = {
   ..._.omit(calendarPropTypes, 'disabledDate'),
   date: PropTypes.instanceOf(moment),
   onClick: PropTypes.func,
+  show: PropTypes.bool,
   time: PropTypes.shape({
     hours: PropTypes.number,
     minutes: PropTypes.number,
@@ -24,18 +26,6 @@ const ranges = {
   seconds: { start: 0, end: 59 },
 };
 
-function scrollTopAnimation(target, nextTop) {
-  let top = scrollTop(target);
-  const step = () => {
-
-    scrollTop(target, top > nextTop ? nextTop : top);
-    if (top <= nextTop) {
-      requestAnimationFramePolyfill(step);
-    }
-    top += 20;
-  };
-  requestAnimationFramePolyfill(step);
-}
 
 class TimeDropdown extends React.Component {
   constructor(props) {
@@ -44,13 +34,16 @@ class TimeDropdown extends React.Component {
   }
 
   componentDidMount() {
-    const { time } = this.props;
-    time && this.scrollTo(time);
+    this.updatePosition();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { time } = nextProps;
-    time && this.scrollTo(time);
+    this.updatePosition(nextProps);
+  }
+
+  updatePosition(props) {
+    const { time, show } = props || this.props;
+    time && show && this.scrollTo(time);
   }
 
   scrollTo = (time) => {
@@ -58,11 +51,9 @@ class TimeDropdown extends React.Component {
     Object.entries(time).forEach((item) => {
       let container = this.container[item[0]];
       let node = container.querySelector(`.item-${item[0]}-${item[1]}`);
-      if (node) {
+      if (node && container) {
         let { top } = getPosition(node, container);
-        requestAnimationFramePolyfill(() => {
-          scrollTopAnimation(this.container[item[0]], top);
-        });
+        scrollTopAnimation(this.container[item[0]], top, scrollTop(this.container[item[0]]) !== 0);
       }
     });
   }
@@ -125,17 +116,17 @@ class TimeDropdown extends React.Component {
 
   render() {
 
-    const { time } = this.props;
+    const { time, defaultClassName } = this.props;
 
     return (
-      <div className="time-dropdown">
+      <div className={defaultClassName}>
         <div
-          className="time-dropdown-content"
+          className={this.prefix('content')}
           ref={(ref) => {
             this.content = ref;
           }}
         >
-          <div className="time-dropdown-content-row">
+          <div className={this.prefix('content-row')}>
             {this.renderColumn('hours', time.hours)}
             {this.renderColumn('minutes', time.minutes)}
             {this.renderColumn('seconds', time.seconds)}
@@ -148,4 +139,6 @@ class TimeDropdown extends React.Component {
 
 TimeDropdown.propTypes = propTypes;
 
-export default TimeDropdown;
+export default decorate({
+  prefixClass: 'time-dropdown'
+})(TimeDropdown);

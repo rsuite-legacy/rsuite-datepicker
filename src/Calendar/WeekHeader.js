@@ -7,12 +7,12 @@ const contextTypes = {
 class WeekHeader extends Component {
 
   render() {
-    const { locale } = this.context;
+    const { locale = { week: [] } } = this.context;
     return (
-      <div className="weekHeader">
+      <div className="week-header">
         {
           locale.week.map(item => (
-            <span key={item} className="weekHeader-day">
+            <span key={item} className="week-header-day">
               {item}
             </span>
           ))

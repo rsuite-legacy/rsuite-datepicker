@@ -46,8 +46,8 @@ const MonthView = ({ activeDate, onClick, disabledDate }) => {
   const nextMonthDate = activeDate.clone().date(1).add(1, 'month');
 
   return (
-    <div className="monthView">
-      <div className="monthView-weeksWrapper">
+    <div className="month-view">
+      <div className="month-view-weeks-wrapper">
         <Weeks
           inSameMonth={date => inSameMonth(date, prevMonthDate)}
           disabledDate={disabledDate}

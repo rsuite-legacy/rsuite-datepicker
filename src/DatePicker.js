@@ -9,6 +9,9 @@ import DateContainer from './DateContainer';
 import Calendar from './Calendar';
 import { transitionEndDetect } from './utils/eventDetect';
 import calendarPropTypes from './calendarPropTypes';
+import decorate from './utils/decorate';
+import { IntlProvider } from './intl';
+import defaultLocale from './locale';
 
 const propTypes = {
   ...calendarPropTypes,
@@ -20,21 +23,15 @@ const propTypes = {
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
   locale: PropTypes.object,
-  inline: PropTypes.bool
-};
-
-
-const childContextTypes = {
-  locale: PropTypes.object
+  inline: PropTypes.bool,
+  renderPlaceholder: PropTypes.func
 };
 
 const defaultProps = {
   format: 'YYYY-MM-DD',
   autoClose: true,
   placeholder: '',
-  locale: {
-    week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-  }
+  locale: defaultLocale
 };
 
 class DatePicker extends Component {
@@ -53,19 +50,12 @@ class DatePicker extends Component {
     };
   }
 
-  getChildContext() {
-    return {
-      locale: this.props.locale
-    };
-  }
-
   componentDidMount() {
     const { transitionSupport } = this.state;
     let el = findDOMNode(this.calendar);
     if (transitionSupport.supported && el) {
       el.addEventListener(transitionSupport.event, (e) => {
-        if (e.target.className === 'monthView-weeksWrapper'
-          && e.propertyName === 'left') {
+        if (e.target.className === 'month-view-weeks-wrapper' && e.propertyName === 'left') {
           this.onMoveDone();
         }
       });
@@ -100,33 +90,18 @@ class DatePicker extends Component {
   onMoveDone() {
     const { calendarState, pageDate } = this.state;
     let pageChanges = 0;
+
     if (calendarState === 'SLIDING_L') {
       pageChanges = 1;
     }
     if (calendarState === 'SLIDING_R') {
       pageChanges = -1;
     }
+
     this.setState({
       pageDate: pageDate.add(pageChanges, 'month'),
       calendarState: 'SHOW'
     });
-  }
-
-  getTime() {
-    const { format } = this.props;
-    const { pageDate } = this.state;
-    let timeDate = pageDate || moment();
-    let time = {};
-    if (/(H|h)/.test(format)) {
-      time.hours = timeDate.hours();
-    }
-    if (/m/.test(format)) {
-      time.minutes = timeDate.minutes();
-    }
-    if (/s/.test(format)) {
-      time.seconds = timeDate.seconds();
-    }
-    return time;
   }
 
   getValue = () => (
@@ -175,14 +150,14 @@ class DatePicker extends Component {
   }
 
   toggle = () => {
+
     const { calendarState } = this.state;
+
     if (calendarState === 'SHOW') {
       this.hide();
-    }
-    if (calendarState === 'HIDE') {
+    } else if (calendarState === 'HIDE') {
       this.show();
-    }
-    if (calendarState === 'DROP_MONTH') {
+    } else if (calendarState === 'DROP_MONTH') {
       this.hide();
     }
   }
@@ -205,6 +180,7 @@ class DatePicker extends Component {
 
   toggleMonthDropdown = () => {
     const { calendarState } = this.state;
+
     if (calendarState === 'DROP_MONTH') {
       this.hideMonthDropdown();
     } else {
@@ -229,43 +205,29 @@ class DatePicker extends Component {
     });
   }
 
-
-  shouldMountCalendar() {
-    const { format } = this.props;
-    return /(Y|M|D)/.test(format);
-  }
-
-  shouldMountTime() {
-    const { format } = this.props;
-    return /(H|h|m|s)/.test(format);
-  }
-
   handleSelect = (nextValue) => {
-    const { onChange, autoClose } = this.props;
     const { pageDate } = this.state;
 
-    if (autoClose) {
-      this.hide();
-    }
 
     nextValue.hours(pageDate.hours())
       .minutes(pageDate.minutes())
       .seconds(pageDate.seconds());
 
-
     this.setState({
-      value: nextValue,
       pageDate: nextValue
     });
 
-    onChange && onChange(nextValue);
+    // onChange && onChange(nextValue);
   }
 
   render() {
     const {
-      disabledDate,
       inline,
       className,
+      format,
+      defaultClassName,
+      locale,
+      renderPlaceholder,
       ...props
     } = this.props;
 
@@ -275,18 +237,15 @@ class DatePicker extends Component {
     } = this.state;
 
     const value = this.getValue();
-    const shouldMountCalendar = this.shouldMountCalendar();
-    const shouldMountTime = this.shouldMountTime();
 
-    const paneClasses = classNames('rsuite-datepicker-pane', {
-      hide: calendarState === 'HIDE',
-      datetime: shouldMountCalendar && shouldMountTime
+    const paneClasses = classNames(this.prefix('pane'), {
+      hide: calendarState === 'HIDE'
     });
 
     const calendar = (
       <Calendar
-        {..._.pick(props, Object.keys(calendarPropTypes))}
-        time={shouldMountTime ? this.getTime() : null}
+        {..._.pick(props, Object.keys(calendarPropTypes)) }
+        format={format}
         calendarState={calendarState}
         pageDate={pageDate}
         onMoveForword={this.onMoveForword}
@@ -304,30 +263,42 @@ class DatePicker extends Component {
 
     if (inline) {
       return (
-        <div className="rsuite-datepicker inline">
-          {calendar}
-        </div>
+        <IntlProvider locale={locale}>
+          <div className={`${defaultClassName} inline`}>
+            {calendar}
+          </div>
+        </IntlProvider>
       );
     }
 
-    const classes = classNames('rsuite-datepicker', {
-      'date-picker-dropdown': !inline
+
+    const classes = classNames(defaultClassName, {
+      [this.prefix('dropdown')]: !inline
     }, className);
 
     return (
       <RootCloseWrapper onRootClose={this.hide}>
         <div className={classes}>
-          <DateContainer
-            placeholder={this.getDateString()}
-            onClick={this.toggle}
-            showCleanButton={!this.props.value && !!value}
-            onClean={value && this.reset}
-          />
-          <div
-            className={paneClasses}
-          >
-            {calendar}
-          </div>
+          <IntlProvider locale={locale}>
+            <div>
+              <DateContainer
+                placeholder={this.getDateString()}
+                onClick={this.toggle}
+                showCleanButton={!this.props.value && !!value}
+                onClean={value && this.reset}
+                value={value}
+                renderPlaceholder={renderPlaceholder}
+              />
+              <div
+                className={paneClasses}
+              >
+                {calendar}
+                <div className={this.prefix('toolbar')}>
+                  sdfsdfsdf
+              </div>
+              </div>
+            </div>
+          </IntlProvider>
         </div>
       </RootCloseWrapper>
     );
@@ -335,7 +306,6 @@ class DatePicker extends Component {
 }
 
 DatePicker.propTypes = propTypes;
-DatePicker.childContextTypes = childContextTypes;
 DatePicker.defaultProps = defaultProps;
 
-export default DatePicker;
+export default decorate()(DatePicker);

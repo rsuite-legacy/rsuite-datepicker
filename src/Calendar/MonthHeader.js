@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
+import decorate from '../utils/decorate';
 
 const propTypes = {
   date: PropTypes.instanceOf(moment),
@@ -9,6 +10,9 @@ const propTypes = {
   onMoveBackward: PropTypes.func,
   onToggleMonthDropdown: PropTypes.func,
   onToggleTimeDropdown: PropTypes.func,
+  showMonth: PropTypes.bool,
+  showDate: PropTypes.bool,
+  showTime: PropTypes.bool,
   time: PropTypes.shape({
     hours: PropTypes.number,
     minutes: PropTypes.number,
@@ -37,6 +41,18 @@ class MonthHeader extends Component {
     return format.join(':');
   }
 
+  getDateFormat() {
+    const { showDate, showMonth } = this.props;
+
+    if (showDate) {
+      return 'YYYY-MM-DD';
+    } else if (showMonth) {
+      return 'YYYY-MM';
+    }
+
+    return 'YYYY';
+  }
+
   render() {
     const {
       date,
@@ -44,38 +60,47 @@ class MonthHeader extends Component {
       onMoveBackward,
       onToggleMonthDropdown,
       onToggleTimeDropdown,
-      time
+      showTime,
+      showDate,
+      showMonth,
+      defaultClassName
      } = this.props;
 
+    const dateContainer = [
+      <i
+        key="btn-backward"
+        className={this.prefix('backward')}
+        role="button"
+        tabIndex="-1"
+        onClick={_.debounce(onMoveBackward, 200)}
+      />,
+      <span
+        key="title-date"
+        role="button"
+        tabIndex="-1"
+        className={`${this.prefix('title')} title-date`}
+        onClick={onToggleMonthDropdown}
+      >
+        {date.format(this.getDateFormat())}
+      </span>,
+      <i
+        key="btn-forward"
+        className={this.prefix('forward')}
+        role="button"
+        tabIndex="-1"
+        onClick={_.debounce(onMoveForword, 200)}
+      />
+    ];
 
     return (
-      <div className="calendar-header">
-        <i
-          className="calendar-header-backward"
-          role="button"
-          tabIndex="-1"
-          onClick={_.debounce(onMoveBackward, 200)}
-        />
-        <span
-          role="button"
-          tabIndex="-1"
-          className="calendar-header-title title-date"
-          onClick={onToggleMonthDropdown}
-        >
-          {date.format('YYYY-MM-DD')}
-        </span>
-        <i
-          className="calendar-header-forward"
-          role="button"
-          tabIndex="-1"
-          onClick={_.debounce(onMoveForword, 200)}
-        />
+      <div className={defaultClassName}>
+        {(showDate || showMonth) && dateContainer}
         {
-          time ? (
+          showTime ? (
             <span
               role="button"
               tabIndex="-1"
-              className="calendar-header-title title-time"
+              className={`${this.prefix('title')} title-time`}
               onClick={onToggleTimeDropdown}
             >
               {date.format(this.getTimeFormat())}
@@ -89,4 +114,6 @@ class MonthHeader extends Component {
 
 MonthHeader.propTypes = propTypes;
 
-export default MonthHeader;
+export default decorate({
+  prefixClass: 'calendar-header'
+})(MonthHeader);
