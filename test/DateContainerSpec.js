@@ -9,7 +9,7 @@ import DateContainer from '../src/DateContainer';
 describe('DateContainer', () => {
 
 
-  it('should render a div with "dateContainer" class', () => {
+  it('Should render a div with "dateContainer" class', () => {
 
     const instance = ReactTestUtils.renderIntoDocument(
       <DateContainer />
@@ -21,7 +21,7 @@ describe('DateContainer', () => {
 
   });
 
-  it('should render placeholder string', () => {
+  it('Should render placeholder string', () => {
     const instance = ReactTestUtils.renderIntoDocument(
       <DateContainer placeholder="Placeholder Text" />
     );
@@ -29,7 +29,7 @@ describe('DateContainer', () => {
     assert.equal(instanceDOM.querySelector('.rsuite-datepicker-toggle-placeholder').innerText, 'Placeholder Text');
   });
 
-  it('should be disabled', () => {
+  it('Should be disabled', () => {
     const instance = ReactTestUtils.renderIntoDocument(
       <DateContainer disabled />
     );
@@ -37,7 +37,7 @@ describe('DateContainer', () => {
     assert.ok(instanceDOM.className.match(/\bdisabled\b/));
   });
 
-  it('should render a clean button', () => {
+  it('Should render a clean button', () => {
     const instance = ReactTestUtils.renderIntoDocument(
       <DateContainer showCleanButton />
     );
@@ -45,7 +45,7 @@ describe('DateContainer', () => {
     assert.ok(instanceDOM.querySelector('.rsuite-datepicker-toggle-clean'));
   });
 
-  it('should render a custom placeholder', () => {
+  it('Should render a custom placeholder', () => {
     const instance = ReactTestUtils.renderIntoDocument(
       <DateContainer
         placeholder="2017-08-13"
@@ -58,7 +58,7 @@ describe('DateContainer', () => {
     assert.equal(instanceDOM.querySelector('i').innerText, '2017-08-13');
   });
 
-  it('should call onClick callback', (done) => {
+  it('Should call onClick callback', (done) => {
     const doneOp = () => {
       done();
     };
@@ -71,7 +71,7 @@ describe('DateContainer', () => {
     ReactTestUtils.Simulate.click(instanceDOM);
   });
 
-  it('should call onClean callback', (done) => {
+  it('Should call onClean callback', (done) => {
     const doneOp = () => {
       done();
     };
