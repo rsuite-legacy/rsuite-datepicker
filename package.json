@@ -1,16 +1,17 @@
 {
   "name": "rsuite-datepicker",
-  "version": "0.4.2",
+  "version": "2.0.0-beta.1",
   "description": "React Datepicker Component",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src  *.js",
     "tdd": "karma start",
-    "test": "npm run lint &&  karma start --single-run",
+    "test": "npm run lint && NODE_ENV=test  karma start --single-run",
     "build": "rm -rf ./lib && babel ./src --out-dir ./lib && cp -R src/less lib",
     "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3100 --host 0.0.0.0 --devtool source-map",
     "docs": "rm -rf assets &&  NODE_ENV=production webpack ",
-    "publish-docs": "node docs/gh-pages.js"
+    "publish-docs": "node docs/gh-pages.js",
+    "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
@@ -36,25 +37,27 @@
   ],
   "dependencies": {
     "classnames": "^2.2.5",
-    "dom-lib": "^0.2.3",
+    "dom-lib": "^0.2.6",
     "lodash": "^4.17.4",
-    "moment": ">=2.15.2"
+    "moment": ">=2.15.2",
+    "prop-types": "^15.5.10",
+    "rsuite-theme": "^2.0.0-beta.1-1",
+    "rsuite-utils": "^0.0.9"
   },
   "peerDependencies": {
-    "prop-types": "^15.5.10",
     "react": "^0.14.9 || >=15.3.0",
-    "react-dom": "^0.14.9 || >=15.3.0",
-    "rsuite": "^1.0.14",
-    "rsuite-theme": "^2.0.0-beta.1-1"
+    "react-dom": "^0.14.9 || >=15.3.0"
   },
   "devDependencies": {
     "babel-core": "^6.18.0",
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.5",
+    "babel-plugin-istanbul": "^4.1.4",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.16.0",
     "chai": "^3.5.0",
+    "coveralls": "^2.13.1",
     "css-loader": "^0.25.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
@@ -87,6 +90,7 @@
     "react-dom": "^0.14.9",
     "react-hot-loader": "^3.0.0-beta.6",
     "rsuite": "1.0.14",
+    "rsuite-affix": "^1.0.3",
     "rsuite-theme": "^2.0.0-beta.1-1",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
