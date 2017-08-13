@@ -83,13 +83,14 @@ class App extends Component {
                 {require('./md/DatePickerIntl.md')}
               </Markdown>
 
-              <hr id="locale" className="target-fix" />
+              <hr id="controlled" className="target-fix" />
               <h3>非受控与受控</h3>
               <DatePickerValue />
               <Markdown>
                 {require('./md/DatePickerValue.md')}
               </Markdown>
 
+              <hr id="api" className="target-fix" />
               <h3>属性</h3>
               <Markdown>
                 {require('./md/props.md')}
