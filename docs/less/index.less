@@ -1,45 +1,52 @@
 @import "../../src/less/index.less";
 @import '~rsuite-theme/dist/less/rsuite.less';
 @import "~markdownloader/less/highlight.less";
-
 @base-color: #3385ff;
 
-html {
-  font-size:14px;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+.doc-page {
+  margin: 70px 0;
 }
 
-h4{
-    margin-top:40px;
+.sub-title {
+  font-size: 16px;
+  margin: 10px 0;
 }
 
-.doc-page{
-    margin: 70px 0;
+h2 {
+  font-size: 20px;
+  margin-top: 20px;
 }
 
-.sub-title{
-    font-size: 16px;
-    margin: 10px 0;
+h3 {
+  font-size: 16px;
 }
 
-.doc-example{
-    padding: 46px 18px 18px;
-    border: 1px solid #eee;
-    position: relative;
-    &:after{
-        position: absolute;
-        top: 18px;
-        left: 18px;
-        font-size: 12px;
-        font-weight: 300;
-        color: #959595;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        content: "Example";
-    }
+blockquote {
+  font-size: 14px;
 }
 
-.field{
+.sidebar {
+  border-right: 1px solid #f1f1f1;
+}
+
+.field {
+
+  margin-bottom: 10px;
+  .rsuite-datepicker{
     width: 270px;
     margin-bottom: 10px;
+  }
+}
+
+.target-fix {
+  position: relative;
+  top: -70px; // 偏移值
+  display: block;
+  height: 0;
+  border: none;
+}
+
+.example-item {
+  margin: 10px 0;
+  width: 320px;
 }

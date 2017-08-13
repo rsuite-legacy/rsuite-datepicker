@@ -1,13 +1,19 @@
- Name | Type | Default | Description |
- ---- | ---- | ------- | ----------- |
- disabled | bool |  | 禁用
- defaultValue | Date | | 默认值 |
- value | Date |  | 值  `受控组件` |
- maxDate | Date | | 最大可选时间 |
- minDate | Date | | 最小可选时间 |
- autoClose| bool | true | 点击关闭 |
- placeholder | string | |
- dateFormat | string |  `YYYY-MM-DD` | 日期显示格式化
- onChange | func|   | 值改变后的回调函数
- dateFilter | func |  | 过滤时间的回调函数
- locale | object |  | 国际化对应的语言描述
+| Name              | Type                                | Default               | Description |
+|-------------------|-------------------------------------|-----------------------|-------------|
+| value             | [moment](http://momentjs.com/)      |                       | 值  `受控`     |
+| defaultValue      | [moment](http://momentjs.com/)      |                       | 默认值         |
+| onChange          | function(date:`moment`)             |                       | 值改变后的回调函数   |
+| placeholder       | string                              |                       | 没有值时候默认显示内容 |
+| renderPlaceholder | function(placeholder,date:`moment`) |                       |             |
+| format            | string                              | `YYYY-MM-DD`          | 日期显示格式化     |
+| locale            | object                              |                       | 本地化对应的语言描述  |
+| ranges            | array                               | [{Today},{Yesterday}] | 快捷项配置       |
+| inline            | boolean                             |                       | 默认显示日历面板    |
+| disabled          | boolean                             |                       | 禁用组件        |
+| disabledDate      | function(date:`moment`)             |                       | 禁用日期        |
+| disabledHours     | function(hour:`number`)             |                       | 禁用小时        |
+| disabledMinutes   | function(minute:`number`)           |                       | 禁用分钟        |
+| disabledSeconds   | function(second:`number`)           |                       | 禁用秒         |
+| hideHours         | function(hour:`number`)             |                       | 隐藏小时        |
+| hideMinutes       | function(minute:`number`)           |                       | 隐藏分钟        |
+| hideSeconds       | function(second:`number`)           |                       | 隐藏秒         |
