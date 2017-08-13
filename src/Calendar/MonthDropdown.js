@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
 import moment from 'moment';
+import _ from 'lodash';
 import MonthDropdownItem from './MonthDropdownItem';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
 import decorate from '../utils/decorate';
@@ -64,6 +65,7 @@ class MonthDropdown extends React.Component {
           <div className={titleClasses}>{nextYear}</div>
           <div className={this.prefix('month-block')}>
             {
+              /* eslint-disable */
               [...Array(12).keys()].map((month) => {
                 let cellCalsses = classNames(this.prefix('month-cell'), {
                   selected: isSelectedYear && month === selectedMonth
@@ -92,9 +94,10 @@ class MonthDropdown extends React.Component {
 
     const { defaultClassName, className, ...props } = this.props;
     const classes = classNames(defaultClassName, className);
+    const elementProps = _.omit(props, Object.keys(propTypes));
     return (
       <div
-        {...props}
+        {...elementProps}
         className={classes}
       >
         <div

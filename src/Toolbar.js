@@ -65,6 +65,7 @@ class Toolbar extends Component {
               let className = classNames({ disabled });
               return (
                 <a
+                  /* eslint-disable */
                   key={index}
                   role="button"
                   tabIndex="-1"

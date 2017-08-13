@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
+import _ from 'lodash';
 import Weeks from './Weeks';
 
 
@@ -60,10 +61,11 @@ class MonthView extends React.Component {
     const nextMonthDate = activeDate.clone().date(1).add(1, 'month');
 
     const classes = classNames('month-view', className);
+    const elementProps = _.omit(props, Object.keys(propTypes));
 
     return (
       <div
-        {...props}
+        {...elementProps}
         className={classes}
       >
         <div className="month-view-weeks-wrapper">

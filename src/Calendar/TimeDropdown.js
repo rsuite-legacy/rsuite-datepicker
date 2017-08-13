@@ -37,8 +37,8 @@ class TimeDropdown extends React.Component {
     this.updatePosition(nextProps);
   }
 
-  getTime() {
-    const { format, date } = this.props;
+  getTime(props) {
+    const { format, date } = props || this.props;
     let time = date || moment();
     let nextTime = {};
     if (/(H|h)/.test(format)) {
@@ -55,7 +55,7 @@ class TimeDropdown extends React.Component {
 
   updatePosition(props) {
     const { show } = props || this.props;
-    const time = this.getTime();
+    const time = this.getTime(props);
     show && this.scrollTo(time);
   }
 

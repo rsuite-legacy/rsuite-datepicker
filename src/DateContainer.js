@@ -7,7 +7,7 @@ import decorate from './utils/decorate';
 
 
 const propTypes = {
-  placeholder: PropTypes.string,
+  placeholder: PropTypes.node,
   onClick: PropTypes.func,
   onClean: PropTypes.func,
   disabled: PropTypes.bool,

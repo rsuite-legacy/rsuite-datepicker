@@ -105,9 +105,14 @@ class DatePicker extends Component {
   getValue = () => (this.props.value || this.state.value)
 
   getDateString() {
-    const { placeholder } = this.props;
+    const { placeholder, format } = this.props;
     const value = this.getValue();
-    return value ? moment(value).format(this.props.format) : placeholder;
+
+    return value ? moment(value).format(this.props.format) : (
+      <div className="placeholder-text">
+        {placeholder || format}
+      </div>
+    );
   }
 
   handleChangePageDate = (nextPageDate) => {
@@ -240,7 +245,8 @@ class DatePicker extends Component {
       locale,
       renderPlaceholder,
       disabledDate,
-      disabled
+      disabled,
+      ranges
     } = this.props;
 
     const {
@@ -314,6 +320,7 @@ class DatePicker extends Component {
               >
                 {calendar}
                 <Toolbar
+                  ranges={ranges}
                   pageDate={pageDate}
                   disabledDate={disabledDate}
                   onShortcut={this.handleShortcutPageDate}

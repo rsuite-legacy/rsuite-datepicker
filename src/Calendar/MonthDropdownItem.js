@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import _ from 'lodash';
 
 const propTypes = {
   date: PropTypes.instanceOf(moment),
@@ -22,9 +23,10 @@ class MonthDropdownItem extends React.Component {
 
   render() {
     const { className, month, ...props } = this.props;
+    const elementProps = _.omit(props, Object.keys(propTypes));
     return (
       <div
-        {...props}
+        {...elementProps}
         className={className}
         onClick={this.handleClick}
         key={month}

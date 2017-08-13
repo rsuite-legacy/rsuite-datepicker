@@ -17,6 +17,10 @@ const propTypes = {
   format: PropTypes.string
 };
 
+const defaultProps = {
+  date: moment()
+};
+
 
 class MonthHeader extends Component {
 
@@ -66,6 +70,7 @@ class MonthHeader extends Component {
       defaultClassName,
       ...props
      } = this.props;
+
 
     const dateContainer = [
       <i
@@ -120,6 +125,7 @@ class MonthHeader extends Component {
 }
 
 MonthHeader.propTypes = propTypes;
+MonthHeader.defaultProps = defaultProps;
 
 export default decorate({
   prefixClass: 'calendar-header'

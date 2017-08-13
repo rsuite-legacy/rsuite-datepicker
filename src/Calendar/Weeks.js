@@ -41,6 +41,7 @@ class Weeks extends React.Component {
         {
           weeks.map((week, index) => (
             <Week
+              /* eslint-disable */
               key={index}
               weekendDate={week}
               selected={selected}
