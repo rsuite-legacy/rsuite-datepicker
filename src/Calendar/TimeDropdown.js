@@ -13,11 +13,7 @@ const propTypes = {
   date: PropTypes.instanceOf(moment),
   onClick: PropTypes.func,
   show: PropTypes.bool,
-  time: PropTypes.shape({
-    hours: PropTypes.number,
-    minutes: PropTypes.number,
-    seconds: PropTypes.number
-  })
+  format: PropTypes.string
 };
 
 const ranges = {
@@ -41,9 +37,26 @@ class TimeDropdown extends React.Component {
     this.updatePosition(nextProps);
   }
 
+  getTime() {
+    const { format, date } = this.props;
+    let time = date || moment();
+    let nextTime = {};
+    if (/(H|h)/.test(format)) {
+      nextTime.hours = time.hours();
+    }
+    if (/m/.test(format)) {
+      nextTime.minutes = time.minutes();
+    }
+    if (/s/.test(format)) {
+      nextTime.seconds = time.seconds();
+    }
+    return nextTime;
+  }
+
   updatePosition(props) {
-    const { time, show } = props || this.props;
-    time && show && this.scrollTo(time);
+    const { show } = props || this.props;
+    const time = this.getTime();
+    show && this.scrollTo(time);
   }
 
   scrollTo = (time) => {
@@ -116,10 +129,16 @@ class TimeDropdown extends React.Component {
 
   render() {
 
-    const { time, defaultClassName } = this.props;
+    const { defaultClassName, className, ...props } = this.props;
+    const time = this.getTime();
+    const classes = classNames(defaultClassName, className);
+    const elementProps = _.omit(props, Object.keys(propTypes));
 
     return (
-      <div className={defaultClassName}>
+      <div
+        {...elementProps}
+        className={classes}
+      >
         <div
           className={this.prefix('content')}
           ref={(ref) => {

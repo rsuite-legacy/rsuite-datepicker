@@ -2,34 +2,42 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+const propTypes = {
+  date: PropTypes.instanceOf(moment),
+  onClick: PropTypes.func,
+  month: PropTypes.number,
+  year: PropTypes.number
+};
+
+const defaultProps = {
+  month: 0
+};
+
 class MonthDropdownItem extends React.Component {
 
   handleClick = (event) => {
-    const { onClick, dateMonth, curYear, date } = this.props;
-    onClick && onClick(moment(date).year(curYear).month(dateMonth), event);
+    const { onClick, month, year, date } = this.props;
+    onClick && onClick(moment(date).year(year).month(month - 1), event);
   }
 
   render() {
-    const { className, dateMonth } = this.props;
+    const { className, month, ...props } = this.props;
     return (
       <div
+        {...props}
         className={className}
         onClick={this.handleClick}
-        key={dateMonth}
+        key={month}
         role="button"
         tabIndex="-1"
       >
-        {dateMonth + 1}
+        {month}
       </div>
     );
   }
 }
 
-MonthDropdownItem.propTypes = {
-  date: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func,
-  dateMonth: PropTypes.number,
-  curYear: PropTypes.number
-};
+MonthDropdownItem.propTypes = propTypes;
+MonthDropdownItem.defaultProps = defaultProps;
 
 export default MonthDropdownItem;

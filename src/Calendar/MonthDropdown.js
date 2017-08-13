@@ -12,6 +12,10 @@ const propTypes = {
   onClick: PropTypes.func
 };
 
+const defaultProps = {
+  date: moment()
+};
+
 const startYear = 1950;
 const blockHeight = 84;
 
@@ -38,13 +42,16 @@ class MonthDropdown extends React.Component {
   }
 
   renderBlock() {
+
     const { date, onClick } = this.props;
+
     let ret = [];
     let selectedMonth = date.month();
     let selectedYear = date.year();
     let nextYear = 0;
 
     for (let i = 0; i < 100 && nextYear < selectedYear + 5; i += 1) {
+
       nextYear = startYear + i;
 
       let isSelectedYear = nextYear === selectedYear;
@@ -57,18 +64,18 @@ class MonthDropdown extends React.Component {
           <div className={titleClasses}>{nextYear}</div>
           <div className={this.prefix('month-block')}>
             {
-              [...Array(12).keys()].map((dateMonth) => {
+              [...Array(12).keys()].map((month) => {
                 let cellCalsses = classNames(this.prefix('month-cell'), {
-                  selected: isSelectedYear && dateMonth === selectedMonth
+                  selected: isSelectedYear && month === selectedMonth
                 });
                 return (
                   <MonthDropdownItem
                     date={date}
                     className={cellCalsses}
                     onClick={onClick}
-                    key={dateMonth}
-                    dateMonth={dateMonth}
-                    curYear={nextYear}
+                    key={month}
+                    month={month + 1}
+                    year={nextYear}
                   />
                 );
               })
@@ -83,8 +90,13 @@ class MonthDropdown extends React.Component {
 
   render() {
 
+    const { defaultClassName, className, ...props } = this.props;
+    const classes = classNames(defaultClassName, className);
     return (
-      <div className={this.props.defaultClassName}>
+      <div
+        {...props}
+        className={classes}
+      >
         <div
           className={this.prefix('content')}
           ref={(ref) => {
@@ -101,6 +113,7 @@ class MonthDropdown extends React.Component {
 }
 
 MonthDropdown.propTypes = propTypes;
+MonthDropdown.defaultProps = defaultProps;
 
 export default decorate({
   prefixClass: 'month-dropdown'

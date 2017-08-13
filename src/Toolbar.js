@@ -35,7 +35,7 @@ class Toolbar extends Component {
       onOk
     } = this.props;
 
-    const disabled = disabledDate(pageDate);
+    const disabled = disabledDate && disabledDate(pageDate);
     const classes = classNames(this.prefix('toolbar-right-btn-ok'), { disabled });
     return (
       <div className={this.prefix('toolbar-right')}>
@@ -61,7 +61,7 @@ class Toolbar extends Component {
         <div className={this.prefix('toolbar-ranges')}>
           {
             ranges.map((item, index) => {
-              let disabled = disabledDate(item.value);
+              let disabled = disabledDate && disabledDate(item.value);
               let className = classNames({ disabled });
               return (
                 <a

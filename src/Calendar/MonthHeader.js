@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
+import classNames from 'classnames';
 import decorate from '../utils/decorate';
 
 const propTypes = {
@@ -13,32 +14,30 @@ const propTypes = {
   showMonth: PropTypes.bool,
   showDate: PropTypes.bool,
   showTime: PropTypes.bool,
-  time: PropTypes.shape({
-    hours: PropTypes.number,
-    minutes: PropTypes.number,
-    seconds: PropTypes.number
-  })
+  format: PropTypes.string
 };
 
 
 class MonthHeader extends Component {
 
   getTimeFormat() {
-    const { time } = this.props;
-    const format = [];
-    if (!time) {
+    const { format } = this.props;
+    const timeFormat = [];
+    if (!format) {
       return '';
     }
-    if (time.hours >= 0) {
-      format.push('HH');
+
+    if (/(H|h)/.test(format)) {
+      timeFormat.push('HH');
     }
-    if (time.minutes >= 0) {
-      format.push('mm');
+    if (/m/.test(format)) {
+      timeFormat.push('mm');
     }
-    if (time.seconds >= 0) {
-      format.push('ss');
+    if (/s/.test(format)) {
+      timeFormat.push('ss');
     }
-    return format.join(':');
+
+    return timeFormat.join(':');
   }
 
   getDateFormat() {
@@ -63,7 +62,9 @@ class MonthHeader extends Component {
       showTime,
       showDate,
       showMonth,
-      defaultClassName
+      className,
+      defaultClassName,
+      ...props
      } = this.props;
 
     const dateContainer = [
@@ -72,7 +73,7 @@ class MonthHeader extends Component {
         className={this.prefix('backward')}
         role="button"
         tabIndex="-1"
-        onClick={_.debounce(onMoveBackward, 200)}
+        onClick={onMoveBackward && _.debounce(onMoveBackward, 200)}
       />,
       <span
         key="title-date"
@@ -88,12 +89,18 @@ class MonthHeader extends Component {
         className={this.prefix('forward')}
         role="button"
         tabIndex="-1"
-        onClick={_.debounce(onMoveForword, 200)}
+        onClick={onMoveForword && _.debounce(onMoveForword, 200)}
       />
     ];
 
+    const classes = classNames(defaultClassName, className);
+    const elementProps = _.omit(props, Object.keys(propTypes));
+
     return (
-      <div className={defaultClassName}>
+      <div
+        {...elementProps}
+        className={classes}
+      >
         {(showDate || showMonth) && dateContainer}
         {
           showTime ? (

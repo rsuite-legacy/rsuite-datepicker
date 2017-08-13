@@ -18,7 +18,6 @@ const propTypes = {
   ranges: Toolbar.propTypes.ranges,
   defaultValue: PropTypes.instanceOf(moment),
   value: PropTypes.instanceOf(moment),
-  autoClose: PropTypes.bool,
   placeholder: PropTypes.string,
   format: PropTypes.string,
   onChange: PropTypes.func,
@@ -30,7 +29,6 @@ const propTypes = {
 
 const defaultProps = {
   format: 'YYYY-MM-DD',
-  autoClose: true,
   placeholder: '',
   locale: defaultLocale
 };
@@ -256,10 +254,12 @@ class DatePicker extends Component {
       hide: calendarState === 'HIDE'
     });
 
+    const calendarProps = _.pick(this.props, Object.keys(calendarPropTypes));
+    const elementProps = _.omit(this.props, Object.keys(propTypes));
 
     const calendar = (
       <Calendar
-        {..._.pick(this.props, Object.keys(calendarPropTypes)) }
+        {...calendarProps}
         format={format}
         calendarState={calendarState}
         pageDate={pageDate}
@@ -294,7 +294,10 @@ class DatePicker extends Component {
 
     return (
       <RootCloseWrapper onRootClose={this.hide}>
-        <div className={classes}>
+        <div
+          {...elementProps}
+          className={classes}
+        >
           <IntlProvider locale={locale}>
             <div>
               <DateContainer

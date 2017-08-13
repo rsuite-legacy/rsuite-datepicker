@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import classNames from 'classnames';
+import _ from 'lodash';
 import Week from './Week';
+
 
 const propTypes = {
   weeks: PropTypes.array,
@@ -11,23 +14,48 @@ const propTypes = {
   inSameMonth: PropTypes.func
 };
 
-const Weeks = ({ weeks, selected, onClick, disabledDate, inSameMonth }) => (
-  <div className="weeks">
-    {
-      weeks.map((week, i) =>
-        <Week
-          key={i}
-          weekendDate={week}
-          selected={selected}
-          onClick={onClick}
-          inSameMonth={inSameMonth}
-          disabledDate={disabledDate}
-        />
-      )
-    }
-  </div>
-);
+const defaultProps = {
+  weeks: []
+};
+
+class Weeks extends React.Component {
+  render() {
+    const {
+      weeks,
+      selected,
+      onClick,
+      disabledDate,
+      inSameMonth,
+      className,
+      ...props
+    } = this.props;
+
+    const classes = classNames('weeks', className);
+    const elementProps = _.omit(props, Object.keys(propTypes));
+
+    return (
+      <div
+        {...elementProps}
+        className={classes}
+      >
+        {
+          weeks.map((week, index) => (
+            <Week
+              key={index}
+              weekendDate={week}
+              selected={selected}
+              onClick={onClick}
+              inSameMonth={inSameMonth}
+              disabledDate={disabledDate}
+            />
+          ))
+        }
+      </div>
+    );
+  }
+}
 
 Weeks.propTypes = propTypes;
+Weeks.defaultProps = defaultProps;
 
 export default Weeks;

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
+import _ from 'lodash';
 
 const propTypes = {
   weekendDate: PropTypes.instanceOf(moment),
@@ -11,47 +12,69 @@ const propTypes = {
   inSameMonth: PropTypes.func
 };
 
-const Week = ({
-  weekendDate,
-  selected = moment(),
-  onClick,
-  disabledDate,
-  inSameMonth
- }) => (
-    <div className="week">
-      {
-        (() => {
-          let days = [];
-          for (let i = 0; i < 7; i += 1) {
+const defaultProps = {
+  selected: moment()
+};
 
-            let thisDate = moment(weekendDate).add(i, 'd');
-            let disabled = disabledDate && disabledDate(thisDate);
-            let classes = classNames('week-day', {
-              'un-same-month': !(inSameMonth && inSameMonth(thisDate)),
-              'is-today': thisDate.isSame(moment(), 'date'),
-              selected: thisDate.isSame(selected, 'date'),
-              disabled
-            });
+class Week extends React.Component {
 
-            days.push(
-              <div
-                className={classes}
-                role="menu"
-                tabIndex="-1"
-                onClick={!disabled && onClick && onClick.bind(null, thisDate)}
-                key={i}
-              >
-                <span className="date-item">{thisDate.date()}</span>
-              </div>
-            );
-          }
-          return days;
-        })()
-      }
-    </div>
-  );
+  renderDays() {
+    const {
+      weekendDate,
+      disabledDate,
+      inSameMonth,
+      selected,
+      onClick
+     } = this.props;
 
+    let days = [];
+    for (let i = 0; i < 7; i += 1) {
+
+      let thisDate = moment(weekendDate).add(i, 'd');
+      let disabled = disabledDate && disabledDate(thisDate);
+      let classes = classNames('week-day', {
+        'un-same-month': !(inSameMonth && inSameMonth(thisDate)),
+        'is-today': thisDate.isSame(moment(), 'date'),
+        selected: thisDate.isSame(selected, 'date'),
+        disabled
+      });
+
+      days.push(
+        <div
+          className={classes}
+          role="menu"
+          tabIndex="-1"
+          onClick={!disabled && onClick && onClick.bind(null, thisDate)}
+          key={i}
+        >
+          <span className="date-item">{thisDate.date()}</span>
+        </div>
+      );
+    }
+    return days;
+  }
+
+  render() {
+    const {
+      className,
+      ...props
+     } = this.props;
+
+    const classes = classNames('week', className);
+    const elementProps = _.omit(props, Object.keys(propTypes));
+
+    return (
+      <div
+        {...elementProps}
+        className={classes}
+      >
+        {this.renderDays()}
+      </div>
+    );
+  }
+}
 
 Week.propTypes = propTypes;
+Week.defaultProps = defaultProps;
 
 export default Week;

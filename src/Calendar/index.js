@@ -29,22 +29,6 @@ const propTypes = {
 
 class Calendar extends React.Component {
 
-  getTime() {
-    const { format, pageDate } = this.props;
-    let timeDate = pageDate || moment();
-    let time = {};
-    if (/(H|h)/.test(format)) {
-      time.hours = timeDate.hours();
-    }
-    if (/m/.test(format)) {
-      time.minutes = timeDate.minutes();
-    }
-    if (/s/.test(format)) {
-      time.seconds = timeDate.seconds();
-    }
-    return time;
-  }
-
   disabledDate = (date) => {
     const { disabledDate } = this.props;
     if (disabledDate && disabledDate(date)) {
@@ -89,12 +73,13 @@ class Calendar extends React.Component {
       onChangePageDate,
       onChangePageTime,
       inline,
+      format,
       calendarRef,
+      className,
       ...props
     } = this.props;
 
 
-    const time = this.getTime();
     const showDate = this.shouldMountDate();
     const showTime = this.shouldMountTime();
     const showMonth = this.shouldMountMonth();
@@ -109,8 +94,9 @@ class Calendar extends React.Component {
       'drop-month': dropMonth,
       'sliding-left': calendarState === 'SLIDING_L',
       'sliding-right': calendarState === 'SLIDING_R'
-    });
+    }, className);
 
+    const elementProps = _.omit(props, Object.keys(propTypes));
     const calendar = [
       <WeekHeader key={'WeekHeader'} />,
       <MonthView
@@ -121,14 +107,17 @@ class Calendar extends React.Component {
       />
     ];
 
+    const timeDropdownProps = _.pick(props, Object.keys(calendarPropTypes));
+
     return (
       <div
+        {...elementProps}
         className={calendarClasses}
         ref={calendarRef}
       >
         <MonthHeader
           date={pageDate}
-          time={time}
+          format={format}
           showMonth={showMonth}
           showDate={showDate}
           showTime={showTime}
@@ -150,9 +139,9 @@ class Calendar extends React.Component {
         {
           showTime ? (
             <TimeDropdown
-              {..._.pick(props, Object.keys(calendarPropTypes)) }
+              {...timeDropdownProps}
               date={pageDate}
-              time={time}
+              format={format}
               show={dropTime}
               onClick={onChangePageTime}
             />
