@@ -200,6 +200,10 @@
 .rsuite-datepicker-calendar .calendar-header .calendar-header-title:hover {
   background: #eee;
 }
+.rsuite-datepicker-calendar .calendar-header .calendar-header-title.error {
+  background: #c40707;
+  color: #fff;
+}
 .rsuite-datepicker-calendar .month-view {
   position: relative;
   overflow: hidden;
@@ -383,15 +387,15 @@
   background: #ebf3ff;
   color: #575757;
 }
-.rsuite-datepicker-calendar .time-dropdown-content-row .column ul li a.active {
-  background: #3385ff;
-  color: #fff;
-}
 .rsuite-datepicker-calendar .time-dropdown-content-row .column ul li a.disabled {
   opacity: .4;
   background: none;
   color: #b5b5b5;
   cursor: not-allowed;
+}
+.rsuite-datepicker-calendar .time-dropdown-content-row .column ul li a.active {
+  background: #3385ff;
+  color: #fff;
 }
 .rsuite-datepicker-toolbar {
   padding: 10px;
