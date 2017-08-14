@@ -19,7 +19,7 @@ const contextTypes = {
 class FormattedMessage extends React.Component {
   getText() {
     const { id } = this.props;
-    const { locale } = this.context;
+    const { locale = {} } = this.context;
     const text = locale[id];
 
     if (!text) {

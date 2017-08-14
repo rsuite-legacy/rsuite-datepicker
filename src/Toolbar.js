@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
+import _ from 'lodash';
 import decorate from './utils/decorate';
 import { FormattedMessage } from './intl';
 
@@ -52,24 +53,32 @@ class Toolbar extends Component {
     const {
       ranges,
       onShortcut,
-      disabledDate
+      disabledDate,
+      className,
+      ...props
+
     } = this.props;
 
+    const classes = classNames(this.prefix('toolbar'), className);
+    const elementProps = _.omit(props, Object.keys(propTypes));
 
     return (
-      <div className={this.prefix('toolbar')}>
+      <div
+        {...elementProps}
+        className={classes}
+      >
         <div className={this.prefix('toolbar-ranges')}>
           {
             ranges.map((item, index) => {
               let disabled = disabledDate && disabledDate(item.value);
-              let className = classNames({ disabled });
+              let itemClassName = classNames({ disabled });
               return (
                 <a
                   /* eslint-disable */
                   key={index}
                   role="button"
                   tabIndex="-1"
-                  className={className}
+                  className={itemClassName}
                   onClick={() => {
                     !disabled && onShortcut(item.value, event);
                   }}

@@ -83,7 +83,7 @@ class TimeDropdown extends React.Component {
       return null;
     }
 
-    const { start, end } = ranges[type];
+    const { start, end, date } = ranges[type];
     const items = [];
 
     const hide = this.props[_.camelCase(`hide_${type}`)];
@@ -91,10 +91,10 @@ class TimeDropdown extends React.Component {
 
     for (let i = start; i <= end; i += 1) {
 
-      if (!(hide && hide(i))) {
+      if (!(hide && hide(i, date))) {
         let itemClasses = classNames({
           active: active === i,
-          disabled: (disabled && disabled(i))
+          disabled: (disabled && disabled(i, date))
         }, `item-${type}-${i}`);
 
         items.push(
