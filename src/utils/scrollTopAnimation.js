@@ -2,7 +2,7 @@
 import { scrollTop } from 'dom-lib';
 import requestAnimationFramePolyfill from 'dom-lib/lib/animation/requestAnimationFramePolyfill';
 
-export default function scrollTopAnimation(target, nextTop, animation = true) {
+export default function scrollTopAnimation(target, nextTop, animation = true, callback) {
   let top = scrollTop(target);
   const step = () => {
 
@@ -10,6 +10,7 @@ export default function scrollTopAnimation(target, nextTop, animation = true) {
     if (top <= nextTop) {
       requestAnimationFramePolyfill(step);
     }
+    callback && callback(top);
     top += 20;
   };
   if (animation) {

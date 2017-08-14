@@ -76,11 +76,11 @@ class MonthHeader extends Component {
      } = this.props;
 
     const dateTitleClasses = classNames(this.prefix('title'), 'title-date', {
-      error: disabledDate(date)
+      error: disabledDate && disabledDate(date)
     });
 
     const timeTitleClasses = classNames(this.prefix('title'), 'title-time', {
-      error: disabledTime(date)
+      error: disabledTime && disabledTime(date)
     });
 
     const dateContainer = [

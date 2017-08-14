@@ -20,11 +20,13 @@ const propTypes = {
   value: PropTypes.instanceOf(moment),
   placeholder: PropTypes.string,
   format: PropTypes.string,
-  onChange: PropTypes.func,
   disabled: PropTypes.bool,
   locale: PropTypes.object,
   inline: PropTypes.bool,
-  renderPlaceholder: PropTypes.func
+  renderPlaceholder: PropTypes.func,
+  onChange: PropTypes.func,
+  onToggle: PropTypes.func,
+  onSelect: PropTypes.func,
 };
 
 const defaultProps = {
@@ -116,19 +118,25 @@ class DatePicker extends Component {
   }
 
   handleChangePageDate = (nextPageDate) => {
+    const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageDate,
       calendarState: 'SHOW'
     });
+    onSelect && onSelect(nextPageDate);
   }
   handleChangePageTime = (nextPageTime) => {
+    const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageTime
     });
+    onSelect && onSelect(nextPageTime);
   }
 
   handleShortcutPageDate = (pageDate, unclosed) => {
+    const { onSelect } = this.props;
     this.updateValue(pageDate, unclosed);
+    onSelect && onSelect(pageDate);
   }
 
   handleOK = () => {
@@ -163,16 +171,24 @@ class DatePicker extends Component {
   }
 
   show() {
+
+    const { onToggle } = this.props;
     this.resetPageDate();
     this.setState({
       calendarState: 'SHOW',
     });
+
+    onToggle && onToggle(true);
   }
 
   hide = () => {
+
+    const { onToggle } = this.props;
     this.setState({
       calendarState: 'HIDE'
     });
+
+    onToggle && onToggle(false);
   }
 
   toggle = () => {
@@ -230,6 +246,7 @@ class DatePicker extends Component {
 
   handleSelect = (nextValue) => {
     const { pageDate } = this.state;
+    const { onSelect } = this.props;
 
     nextValue.hours(pageDate.hours())
       .minutes(pageDate.minutes())
@@ -238,6 +255,8 @@ class DatePicker extends Component {
     this.setState({
       pageDate: nextValue
     });
+
+    onSelect && onSelect(nextValue);
   }
 
   disabledOkButton = (date) => {
