@@ -127,20 +127,21 @@ class DatePicker extends Component {
     });
   }
 
-  handleShortcutPageDate = (pageDate) => {
-    this.updateValue(pageDate);
+  handleShortcutPageDate = (pageDate, unclosed) => {
+    this.updateValue(pageDate, unclosed);
   }
 
   handleOK = () => {
     this.updateValue();
   }
 
-  updateValue(nextPageDate) {
+  updateValue(nextPageDate, unclosed) {
     const { value, pageDate } = this.state;
     const { onChange } = this.props;
     const nextValue = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
 
     this.setState({
+      pageDate: nextValue,
       value: nextValue
     });
 
@@ -148,7 +149,10 @@ class DatePicker extends Component {
       onChange && onChange(nextValue);
     }
 
-    this.hide();
+    if (!unclosed) {
+      this.hide();
+    }
+
   }
 
   resetPageDate() {

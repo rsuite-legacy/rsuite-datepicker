@@ -9,7 +9,11 @@ import { FormattedMessage } from './intl';
 const propTypes = {
   ranges: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.node,
-    value: PropTypes.instanceOf(moment)
+    unclosed: PropTypes.bool,
+    value: PropTypes.oneOfType([
+      PropTypes.instanceOf(moment),
+      PropTypes.func
+    ])
   })),
   pageDate: PropTypes.instanceOf(moment),
   onShortcut: PropTypes.func,
@@ -55,6 +59,7 @@ class Toolbar extends Component {
       onShortcut,
       disabledDate,
       className,
+      pageDate,
       ...props
 
     } = this.props;
@@ -70,7 +75,8 @@ class Toolbar extends Component {
         <div className={this.prefix('toolbar-ranges')}>
           {
             ranges.map((item, index) => {
-              let disabled = disabledDate && disabledDate(item.value);
+              let value = _.isFunction(item.value) ? item.value(pageDate) : item.value;
+              let disabled = disabledDate && disabledDate(value);
               let itemClassName = classNames({ disabled });
               return (
                 <a
@@ -80,7 +86,7 @@ class Toolbar extends Component {
                   tabIndex="-1"
                   className={itemClassName}
                   onClick={() => {
-                    !disabled && onShortcut(item.value, event);
+                    !disabled && onShortcut(value, item.unclosed, event);
                   }}
                 >
                   <FormattedMessage id={item.label} />

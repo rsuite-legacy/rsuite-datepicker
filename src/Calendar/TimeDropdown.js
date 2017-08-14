@@ -82,8 +82,8 @@ class TimeDropdown extends React.Component {
     if (!_.isNumber(active)) {
       return null;
     }
-
-    const { start, end, date } = ranges[type];
+    const { date } = this.props;
+    const { start, end } = ranges[type];
     const items = [];
 
     const hide = this.props[_.camelCase(`hide_${type}`)];
