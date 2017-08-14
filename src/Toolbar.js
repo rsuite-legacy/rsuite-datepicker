@@ -18,10 +18,10 @@ const propTypes = {
 
 const defaultProps = {
   ranges: [{
-    label: 'Today',
+    label: 'today',
     value: moment()
   }, {
-    label: 'Yesterday',
+    label: 'yesterday',
     value: moment().add(-1, 'd')
   }]
 };
@@ -74,7 +74,7 @@ class Toolbar extends Component {
                     !disabled && onShortcut(item.value, event);
                   }}
                 >
-                  {item.label}
+                  <FormattedMessage id={item.label} />
                 </a>
               );
             })

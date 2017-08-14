@@ -23,7 +23,7 @@ class FormattedMessage extends React.Component {
     const text = locale[id];
 
     if (!text) {
-      throw Error(`${id} is not defined in locale `);
+      return id;
     }
 
     return text;
