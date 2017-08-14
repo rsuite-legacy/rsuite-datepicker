@@ -208,6 +208,10 @@
         &:hover {
           background: #eee;
         }
+        &.error {
+          background: #c40707;
+          color: #fff;
+        }
       }
     }
     .month-view {
@@ -385,15 +389,15 @@
                   background: @cell-hover-bg;
                   color: @font-color;
                 }
-                &.active {
-                  background: @color-active;
-                  color: #fff;
-                }
                 &.disabled {
                   opacity: .4;
                   background: none;
                   color: @B500;
                   cursor: not-allowed;
+                }
+                &.active {
+                  background: @color-active;
+                  color: #fff;
                 }
               }
             }

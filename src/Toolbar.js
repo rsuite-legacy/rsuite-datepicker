@@ -18,7 +18,7 @@ const propTypes = {
   pageDate: PropTypes.instanceOf(moment),
   onShortcut: PropTypes.func,
   onOk: PropTypes.func,
-  disabledDate: PropTypes.func
+  disabledOkButton: PropTypes.func
 };
 
 const defaultProps = {
@@ -35,12 +35,12 @@ const defaultProps = {
 class Toolbar extends Component {
   renderOkButton() {
     const {
-      disabledDate,
+      disabledOkButton,
       pageDate,
       onOk
     } = this.props;
 
-    const disabled = disabledDate && disabledDate(pageDate);
+    const disabled = disabledOkButton && disabledOkButton(pageDate);
     const classes = classNames(this.prefix('toolbar-right-btn-ok'), { disabled });
     return (
       <div className={this.prefix('toolbar-right')}>
@@ -57,7 +57,7 @@ class Toolbar extends Component {
     const {
       ranges,
       onShortcut,
-      disabledDate,
+      disabledOkButton,
       className,
       pageDate,
       ...props
@@ -76,7 +76,7 @@ class Toolbar extends Component {
           {
             ranges.map((item, index) => {
               let value = _.isFunction(item.value) ? item.value(pageDate) : item.value;
-              let disabled = disabledDate && disabledDate(value);
+              let disabled = disabledOkButton && disabledOkButton(value);
               let itemClassName = classNames({ disabled });
               return (
                 <a

@@ -36,6 +36,26 @@ class Calendar extends React.Component {
     }
     return false;
   }
+  disabledTime = (date) => {
+
+    if (!date) {
+      return false;
+    }
+
+    const calendarProps = _.pick(this.props, Object.keys(calendarPropTypes));
+    return Object.keys(calendarProps).some((key) => {
+      if (/(Hours)/.test(key)) {
+        return calendarProps[key](date.hours(), date);
+      }
+      if (/(Minutes)/.test(key)) {
+        return calendarProps[key](date.minutes(), date);
+      }
+      if (/(Seconds)/.test(key)) {
+        return calendarProps[key](date.seconds(), date);
+      }
+      return false;
+    });
+  };
 
   shouldMountTime(props) {
     const { format } = props || this.props;
@@ -121,6 +141,8 @@ class Calendar extends React.Component {
           showMonth={showMonth}
           showDate={showDate}
           showTime={showTime}
+          disabledDate={this.disabledDate}
+          disabledTime={this.disabledTime}
           onMoveForword={this.handleMoveForword}
           onMoveBackward={this.handleMoveBackward}
           onToggleMonthDropdown={onToggleMonthDropdown}

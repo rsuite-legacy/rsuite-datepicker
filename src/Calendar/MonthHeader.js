@@ -14,7 +14,9 @@ const propTypes = {
   showMonth: PropTypes.bool,
   showDate: PropTypes.bool,
   showTime: PropTypes.bool,
-  format: PropTypes.string
+  format: PropTypes.string,
+  disabledDate: PropTypes.func,
+  disabledTime: PropTypes.func
 };
 
 const defaultProps = {
@@ -68,9 +70,18 @@ class MonthHeader extends Component {
       showMonth,
       className,
       defaultClassName,
+      disabledDate,
+      disabledTime,
       ...props
      } = this.props;
 
+    const dateTitleClasses = classNames(this.prefix('title'), 'title-date', {
+      error: disabledDate(date)
+    });
+
+    const timeTitleClasses = classNames(this.prefix('title'), 'title-time', {
+      error: disabledTime(date)
+    });
 
     const dateContainer = [
       <i
@@ -84,7 +95,7 @@ class MonthHeader extends Component {
         key="title-date"
         role="button"
         tabIndex="-1"
-        className={`${this.prefix('title')} title-date`}
+        className={dateTitleClasses}
         onClick={onToggleMonthDropdown}
       >
         {date && date.format(this.getDateFormat())}
@@ -112,7 +123,7 @@ class MonthHeader extends Component {
             <span
               role="button"
               tabIndex="-1"
-              className={`${this.prefix('title')} title-time`}
+              className={timeTitleClasses}
               onClick={onToggleTimeDropdown}
             >
               {date && date.format(this.getTimeFormat())}

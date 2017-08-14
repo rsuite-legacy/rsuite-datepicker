@@ -86,15 +86,16 @@ class TimeDropdown extends React.Component {
     const { start, end } = ranges[type];
     const items = [];
 
-    const hide = this.props[_.camelCase(`hide_${type}`)];
-    const disabled = this.props[_.camelCase(`disabled_${type}`)];
+    const hideFunc = this.props[_.camelCase(`hide_${type}`)];
+    const disabledFunc = this.props[_.camelCase(`disabled_${type}`)];
 
     for (let i = start; i <= end; i += 1) {
 
-      if (!(hide && hide(i, date))) {
+      if (!(hideFunc && hideFunc(i, date))) {
+        let disabled = disabledFunc && disabledFunc(i, date);
         let itemClasses = classNames({
           active: active === i,
-          disabled: (disabled && disabled(i, date))
+          disabled
         }, `item-${type}-${i}`);
 
         items.push(
@@ -104,7 +105,7 @@ class TimeDropdown extends React.Component {
               className={itemClasses}
               tabIndex="-1"
               onClick={(event) => {
-                this.handleClick(type, i, event);
+                !disabled && this.handleClick(type, i, event);
               }}
             >
               {i}

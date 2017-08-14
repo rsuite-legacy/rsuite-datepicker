@@ -141,7 +141,7 @@ class DatePicker extends Component {
     const nextValue = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
 
     this.setState({
-      pageDate: nextValue,
+      pageDate: nextValue || moment(),
       value: nextValue
     });
 
@@ -240,6 +240,24 @@ class DatePicker extends Component {
     });
   }
 
+  disabledOkButton = (date) => {
+    const calendarProps = _.pick(this.props, Object.keys(calendarPropTypes));
+
+    return Object.keys(calendarProps).some((key) => {
+
+      if (/(Hours)/.test(key)) {
+        return calendarProps[key](date.hours(), date);
+      }
+      if (/(Minutes)/.test(key)) {
+        return calendarProps[key](date.minutes(), date);
+      }
+      if (/(Seconds)/.test(key)) {
+        return calendarProps[key](date.seconds(), date);
+      }
+      return calendarProps[key](date);
+    });
+  }
+
   render() {
     const {
       inline,
@@ -248,7 +266,6 @@ class DatePicker extends Component {
       defaultClassName,
       locale,
       renderPlaceholder,
-      disabledDate,
       disabled,
       ranges
     } = this.props;
@@ -326,7 +343,7 @@ class DatePicker extends Component {
                 <Toolbar
                   ranges={ranges}
                   pageDate={pageDate}
-                  disabledDate={disabledDate}
+                  disabledOkButton={this.disabledOkButton}
                   onShortcut={this.handleShortcutPageDate}
                   onOk={this.handleOK}
                 />
