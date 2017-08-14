@@ -44,6 +44,7 @@
 }
 .rsuite-datepicker-toggle-clean {
   position: absolute;
+  opacity: 0;
   top: 50%;
   right: 8px;
   height: 20px;
@@ -51,9 +52,21 @@
   line-height: 20px;
   text-align: center;
   margin-top: -10px;
+  background: #fff;
+  transition: all 0.15s;
+}
+.rsuite-datepicker-toggle:hover .rsuite-datepicker-toggle-clean {
+  opacity: 1;
 }
 .rsuite-datepicker-toggle .placeholder-text {
   color: #575757;
+  opacity: .4;
+}
+.rsuite-datepicker-toggle:before {
+  content: "\F073";
+  font-family: 'RSuiteIconFont';
+  position: absolute;
+  right: 9px;
   opacity: .4;
 }
 .rsuite-datepicker-dropdown .calendar {
@@ -259,8 +272,8 @@
   border-left: 1px solid #eee;
 }
 .rsuite-datepicker-calendar .weeks .week-day.is-today {
-  border: 1px solid #3385ff;
-  color: #3385ff;
+  background: #fcf8e3;
+  border: 1px solid #faebcc;
 }
 .rsuite-datepicker-calendar .weeks .week-day.selected {
   background: #3385ff;
