@@ -20,7 +20,9 @@ const DatePickerDefault = props => (
       defaultValue={moment('2017-12-12 09:15:30')}
       disabledHours={(hour) => hour < 8 || hour > 18}
       disabledMinutes={(minute) => minute % 15 !== 0}
-      disabledSeconds={(second) => second % 30 !== 0}
+      disabledSeconds={(second, date) => {
+        return second % 30 !== 0;
+      }}
     />
 
     <p>隐藏时间: <code>hideHours</code>、<code>hideMinutes</code>、<code>hideSeconds</code></p>
