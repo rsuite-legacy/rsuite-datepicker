@@ -32,9 +32,10 @@ class Week extends React.Component {
 
       let thisDate = moment(weekendDate).add(i, 'd');
       let disabled = disabledDate && disabledDate(thisDate);
+      let isToday = thisDate.isSame(moment(), 'date');
       let classes = classNames('week-day', {
         'un-same-month': !(inSameMonth && inSameMonth(thisDate)),
-        'is-today': thisDate.isSame(moment(), 'date'),
+        'is-today': isToday,
         selected: thisDate.isSame(selected, 'date'),
         disabled
       });
@@ -44,6 +45,7 @@ class Week extends React.Component {
           className={classes}
           role="menu"
           tabIndex="-1"
+          title={isToday ? 'Today' : ''}
           onClick={!disabled && onClick && onClick.bind(null, thisDate)}
           key={i}
         >
