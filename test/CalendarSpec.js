@@ -1,6 +1,7 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import ReactTestUtils from 'react/lib/ReactTestUtils';
+import moment from 'moment';
 
 import Calendar from '../src/Calendar';
 
@@ -14,6 +15,24 @@ describe('Calendar', () => {
 
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
     assert.ok(findDOMNode(instance).className.match(/\bcalendar\b/));
+  });
+
+  it('Should call `onSelect` callback', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <Calendar
+        format="YYYY-MM-DD"
+        calendarState="SHOW"
+        pageDate={moment()}
+        onSelect={doneOp}
+      />
+    );
+    const instanceDOM = findDOMNode(instance);
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.is-today'));
   });
 
   it('Should have a custom className', () => {
