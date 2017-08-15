@@ -11,6 +11,7 @@ import DatePickerDisabled from './example/DatePickerDisabled';
 import DatePickerCustomToolbar from './example/DatePickerCustomToolbar';
 import DatePickerIntl from './example/DatePickerIntl';
 import DatePickerValue from './example/DatePickerValue';
+import DatePickerToggle from './example/DatePickerToggle';
 
 class App extends Component {
   render() {
@@ -44,6 +45,7 @@ class App extends Component {
                   <Nav.Item href="#custom-toolbar">&nbsp;&nbsp;- 自定义快捷项</Nav.Item>
                   <Nav.Item href="#locale">&nbsp;&nbsp;- 本地化</Nav.Item>
                   <Nav.Item href="#controlled">&nbsp;&nbsp;- 非受控与受控</Nav.Item>
+                  <Nav.Item href="#toggle">&nbsp;&nbsp;- 控制展开与关闭</Nav.Item>
                   <Nav.Item href="#api">API</Nav.Item>
                 </Nav>
               </Affix>
@@ -88,6 +90,13 @@ class App extends Component {
               <DatePickerValue />
               <Markdown>
                 {require('./md/DatePickerValue.md')}
+              </Markdown>
+
+              <hr id="toggle" className="target-fix" />
+              <h3>控制展开与关闭</h3>
+              <DatePickerToggle />
+              <Markdown>
+                {require('./md/DatePickerToggle.md')}
               </Markdown>
 
               <hr id="api" className="target-fix" />

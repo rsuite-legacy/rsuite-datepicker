@@ -12,6 +12,7 @@ const DatePickerDefault = props => (
     <DatePicker format="HH:mm" ranges={[]} />
     <DatePicker placeholder="请选择日期" />
     <DatePicker defaultValue={moment()} />
+    <DatePicker format="YYYY-MM-DD HH:mm:ss" calendarDefaultDate={moment('2012-10-01 12:00:00')} />
   </div>
 );
 
