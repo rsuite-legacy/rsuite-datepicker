@@ -18,13 +18,13 @@ const propTypes = {
   ranges: Toolbar.propTypes.ranges,
   defaultValue: PropTypes.instanceOf(moment),
   value: PropTypes.instanceOf(moment),
+  calendarDefaultDate: PropTypes.instanceOf(moment),
   placeholder: PropTypes.string,
   renderPlaceholder: PropTypes.func,
   format: PropTypes.string,
   disabled: PropTypes.bool,
   locale: PropTypes.object,
   inline: PropTypes.bool,
-  toggle: PropTypes.bool,
   onChange: PropTypes.func,
   onToggle: PropTypes.func,
   onSelect: PropTypes.func,
@@ -41,15 +41,14 @@ class DatePicker extends Component {
   constructor(props) {
     super(props);
 
-    const { defaultValue, value, toggle } = props;
+    const { defaultValue, value, calendarDefaultDate } = props;
     const activeValue = value || defaultValue;
     const ret = transitionEndDetect();
-
     this.state = {
       value: activeValue,
       force: false,
-      pageDate: activeValue || moment(),  // display calendar date
-      calendarState: toggle ? 'SHOW' : 'HIDE',
+      calendarState: 'HIDE',
+      pageDate: activeValue || calendarDefaultDate || moment(),  // display calendar date
       transitionSupport: ret
     };
   }
@@ -65,10 +64,19 @@ class DatePicker extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { value, calendarDefaultDate } = this.props;
+    if (nextProps.value !== value) {
+      this.setState({ value: nextProps.value });
+    }
+    if (nextProps.calendarDefaultDate !== calendarDefaultDate) {
+      this.setState({ calendarDefaultDate: nextProps.calendarDefaultDate });
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
   }
-
 
   onMoveForword = (nextPageDate) => {
     const { transitionSupport } = this.state;
@@ -175,9 +183,10 @@ class DatePicker extends Component {
   }
 
   resetPageDate() {
+    const { calendarDefaultDate } = this.props;
     const value = this.getValue();
     this.setState({
-      pageDate: value || moment()
+      pageDate: value || calendarDefaultDate || moment()
     });
   }
 

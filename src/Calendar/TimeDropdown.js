@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import calendarPropTypes from '../calendarPropTypes';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
 import decorate from '../utils/decorate';
+import { FormattedMessage } from '../intl';
 
 const propTypes = {
   ..._.omit(calendarPropTypes, 'disabledDate'),
@@ -117,6 +118,9 @@ class TimeDropdown extends React.Component {
 
     return (
       <div className="column">
+        <div className="column-title">
+          <FormattedMessage id={type} />
+        </div>
         <ul
           ref={(ref) => {
             this.container[type] = ref;
