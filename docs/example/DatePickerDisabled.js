@@ -5,15 +5,15 @@ import DatePicker from '../../src';
 const DatePickerDefault = props => (
   <div className="field">
 
-    <p>禁用组件: <code>disabled</code> </p>
+    <p>- 禁用组件: <code>disabled</code> </p>
     <DatePicker disabled />
 
-    <p>禁用日期: <code>disabledDate</code></p>
+    <p>- 禁用日期: <code>disabledDate</code></p>
     <DatePicker
       disabledDate={(date) => date.isAfter(moment())}
     />
 
-    <p>禁用时间: <code>disabledHours</code>、<code>disabledMinutes</code>、<code>disabledSeconds</code></p>
+    <p>- 禁用时间: <code>disabledHours</code>、<code>disabledMinutes</code>、<code>disabledSeconds</code></p>
     <DatePicker
       format="HH:mm:ss"
       ranges={[]}
@@ -23,7 +23,7 @@ const DatePickerDefault = props => (
       disabledSeconds={second => second % 30 !== 0}
     />
 
-    <p>隐藏时间: <code>hideHours</code>、<code>hideMinutes</code>、<code>hideSeconds</code></p>
+    <p>- 隐藏时间: <code>hideHours</code>、<code>hideMinutes</code>、<code>hideSeconds</code></p>
     <DatePicker
       format="HH:mm:ss"
       ranges={[]}
