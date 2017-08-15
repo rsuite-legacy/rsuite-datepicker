@@ -19,14 +19,16 @@ const propTypes = {
   defaultValue: PropTypes.instanceOf(moment),
   value: PropTypes.instanceOf(moment),
   placeholder: PropTypes.string,
+  renderPlaceholder: PropTypes.func,
   format: PropTypes.string,
   disabled: PropTypes.bool,
   locale: PropTypes.object,
   inline: PropTypes.bool,
-  renderPlaceholder: PropTypes.func,
+  toggle: PropTypes.bool,
   onChange: PropTypes.func,
   onToggle: PropTypes.func,
   onSelect: PropTypes.func,
+  onOk: PropTypes.func
 };
 
 const defaultProps = {
@@ -39,14 +41,15 @@ class DatePicker extends Component {
   constructor(props) {
     super(props);
 
-    const { defaultValue, value } = props;
+    const { defaultValue, value, toggle } = props;
     const activeValue = value || defaultValue;
     const ret = transitionEndDetect();
 
     this.state = {
       value: activeValue,
-      pageDate: activeValue || moment(),
-      calendarState: 'HIDE',
+      force: false,
+      pageDate: activeValue || moment(),  // display calendar date
+      calendarState: toggle ? 'SHOW' : 'HIDE',
       transitionSupport: ret
     };
   }
@@ -61,6 +64,12 @@ class DatePicker extends Component {
       });
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
+  }
+
+
   onMoveForword = (nextPageDate) => {
     const { transitionSupport } = this.state;
     if (!transitionSupport.supported) {
@@ -139,8 +148,10 @@ class DatePicker extends Component {
     onSelect && onSelect(pageDate);
   }
 
-  handleOK = () => {
+  handleOK = (event) => {
+    const { onOk } = this.props;
     this.updateValue();
+    onOk && onOk(this.state.pageDate, event);
   }
 
   updateValue(nextPageDate, unclosed) {
@@ -158,7 +169,7 @@ class DatePicker extends Component {
     }
 
     if (!unclosed) {
-      this.hide();
+      this.handleClose();
     }
 
   }
@@ -171,36 +182,61 @@ class DatePicker extends Component {
   }
 
   show() {
+    const { disabled } = this.props;
+    !disabled && this.handleOpen(true);
+  }
+
+  hide() {
+    const { disabled } = this.props;
+    !disabled && this.handleClose(true);
+  }
+
+  handleOpen = (force) => {
 
     const { onToggle } = this.props;
     this.resetPageDate();
     this.setState({
       calendarState: 'SHOW',
+      force
     });
 
     onToggle && onToggle(true);
+    force && this.cleanForce();
   }
 
-  hide = () => {
-
+  handleClose = (force) => {
     const { onToggle } = this.props;
     this.setState({
-      calendarState: 'HIDE'
+      calendarState: 'HIDE',
+      force
     });
 
     onToggle && onToggle(false);
+    force && this.cleanForce();
   }
 
-  toggle = () => {
+  cleanForce() {
+    setTimeout(() => {
+      this.setState({ force: false });
+    }, 1000);
+  }
+
+  handleDocumentClose = () => {
+    if (!this.state.force) {
+      this.handleClose();
+    }
+  }
+
+  handleToggle = () => {
 
     const { calendarState } = this.state;
 
     if (calendarState === 'SHOW') {
-      this.hide();
+      this.handleClose();
     } else if (calendarState === 'HIDE') {
-      this.show();
+      this.handleOpen();
     } else if (calendarState === 'DROP_MONTH') {
-      this.hide();
+      this.handleClose();
     }
   }
 
@@ -295,7 +331,6 @@ class DatePicker extends Component {
     } = this.state;
 
     const value = this.getValue();
-
     const paneClasses = classNames(this.prefix('pane'), {
       hide: calendarState === 'HIDE'
     });
@@ -337,9 +372,8 @@ class DatePicker extends Component {
       [this.prefix('dropdown')]: !inline
     }, className);
 
-
     return (
-      <RootCloseWrapper onRootClose={this.hide}>
+      <RootCloseWrapper onRootClose={this.handleDocumentClose}>
         <div
           {...elementProps}
           className={classes}
@@ -349,7 +383,7 @@ class DatePicker extends Component {
               <DateContainer
                 disabled={disabled}
                 placeholder={this.getDateString()}
-                onClick={this.toggle}
+                onClick={this.handleToggle}
                 showCleanButton={!this.props.value && !!value}
                 onClean={value && this.reset}
                 value={value}
