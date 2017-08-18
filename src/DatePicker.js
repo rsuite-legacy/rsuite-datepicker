@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
-import RootCloseWrapper from 'rsuite-utils/lib/Overlay/RootCloseWrapper';
+import { on } from 'dom-lib';
 import _ from 'lodash';
 import DateContainer from './DateContainer';
 import Calendar from './Calendar';
@@ -46,7 +46,7 @@ class DatePicker extends Component {
     const ret = transitionEndDetect();
     this.state = {
       value: activeValue,
-      force: false,
+      forceOpen: false,
       calendarState: 'HIDE',
       pageDate: activeValue || calendarDefaultDate || moment(),  // display calendar date
       transitionSupport: ret
@@ -62,6 +62,7 @@ class DatePicker extends Component {
         }
       });
     }
+    this.isMounted = true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,6 +77,11 @@ class DatePicker extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
+  }
+
+  componentWillUnmount() {
+    this.unbindEvent();
+    this.isMounted = false;
   }
 
   onMoveForword = (nextPageDate) => {
@@ -134,6 +140,30 @@ class DatePicker extends Component {
     );
   }
 
+  get isMounted() {
+    return this.mounted;
+  }
+  set isMounted(isMounted) {
+    this.mounted = isMounted;
+  }
+
+  bindEvent() {
+    this.docClickListener = on(document, 'click', this.handleDocumentClick);
+  }
+
+  unbindEvent() {
+    this.docClickListener && this.docClickListener.off();
+  }
+
+  /**
+   * Close menu when click document
+   */
+  handleDocumentClick = (event) => {
+    if (this.isMounted && !this.container.contains(event.target) && !this.state.forceOpen) {
+      this.handleClose();
+    }
+  }
+
   handleChangePageDate = (nextPageDate) => {
     const { onSelect } = this.props;
     this.setState({
@@ -142,6 +172,7 @@ class DatePicker extends Component {
     });
     onSelect && onSelect(nextPageDate);
   }
+
   handleChangePageTime = (nextPageTime) => {
     const { onSelect } = this.props;
     this.setState({
@@ -200,38 +231,40 @@ class DatePicker extends Component {
     !disabled && this.handleClose(true);
   }
 
-  handleOpen = (force) => {
+  handleOpen = (forceOpen) => {
 
     const { onToggle } = this.props;
     this.resetPageDate();
     this.setState({
       calendarState: 'SHOW',
-      force
+      forceOpen
     });
 
     onToggle && onToggle(true);
-    force && this.cleanForce();
+    forceOpen && this.cleanForce();
+    this.bindEvent();
   }
 
-  handleClose = (force) => {
+  handleClose = (forceOpen) => {
     const { onToggle } = this.props;
     this.setState({
       calendarState: 'HIDE',
-      force
+      forceOpen
     });
 
     onToggle && onToggle(false);
-    force && this.cleanForce();
+    forceOpen && this.cleanForce();
+    this.unbindEvent();
   }
 
   cleanForce() {
     setTimeout(() => {
-      this.setState({ force: false });
+      this.setState({ forceOpen: false });
     }, 1000);
   }
 
   handleDocumentClose = () => {
-    if (!this.state.force) {
+    if (!this.state.forceOpen) {
       this.handleClose();
     }
   }
@@ -382,38 +415,37 @@ class DatePicker extends Component {
     }, className);
 
     return (
-      <RootCloseWrapper onRootClose={this.handleDocumentClose}>
+      <IntlProvider locale={locale}>
         <div
           {...elementProps}
           className={classes}
+          ref={(ref) => {
+            this.container = ref;
+          }}
         >
-          <IntlProvider locale={locale}>
-            <div>
-              <DateContainer
-                disabled={disabled}
-                placeholder={this.getDateString()}
-                onClick={this.handleToggle}
-                showCleanButton={!this.props.value && !!value}
-                onClean={value && this.reset}
-                value={value}
-                renderPlaceholder={renderPlaceholder}
-              />
-              <div
-                className={paneClasses}
-              >
-                {calendar}
-                <Toolbar
-                  ranges={ranges}
-                  pageDate={pageDate}
-                  disabledOkButton={this.disabledOkButton}
-                  onShortcut={this.handleShortcutPageDate}
-                  onOk={this.handleOK}
-                />
-              </div>
-            </div>
-          </IntlProvider>
+          <DateContainer
+            disabled={disabled}
+            placeholder={this.getDateString()}
+            onClick={this.handleToggle}
+            showCleanButton={!this.props.value && !!value}
+            onClean={value && this.reset}
+            value={value}
+            renderPlaceholder={renderPlaceholder}
+          />
+          <div
+            className={paneClasses}
+          >
+            {calendar}
+            <Toolbar
+              ranges={ranges}
+              pageDate={pageDate}
+              disabledOkButton={this.disabledOkButton}
+              onShortcut={this.handleShortcutPageDate}
+              onOk={this.handleOK}
+            />
+          </div>
         </div>
-      </RootCloseWrapper>
+      </IntlProvider>
     );
   }
 }
