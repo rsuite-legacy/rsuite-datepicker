@@ -82,6 +82,126 @@ describe('DatePicker', () => {
     ReactTestUtils.Simulate.click(instanceDOM.querySelector('.is-today'));
   });
 
+  it('Should call `onOk` callback', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onOk={doneOp} />
+    );
+    const instanceDOM = findDOMNode(instance);
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rsuite-datepicker-toolbar-right-btn-ok'));
+  });
+
+  it('Should call `onNextMonth` callback', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onNextMonth={doneOp} />
+    );
+    instance.show();
+    const instanceDOM = findDOMNode(instance);
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.calendar-header-forward'));
+  });
+
+  it('Should call `onPrevMonth` callback', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onPrevMonth={doneOp} />
+    );
+    instance.show();
+    const instanceDOM = findDOMNode(instance);
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.calendar-header-backward'));
+  });
+
+  it('Should call `onToggle` callback when show()', (done) => {
+
+    const doneOp = (status) => {
+      if (status === true) {
+        done();
+      }
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onToggle={doneOp} />
+    );
+    instance.show();
+  });
+
+
+
+
+
+  it('Should call `onToggle` callback when hide()', (done) => {
+
+    const doneOp = (status) => {
+      if (status === false) {
+        done();
+      }
+    };
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onToggle={doneOp} />
+    );
+    instance.hide();
+  });
+
+  it('Should call `onToggle` callback when click `DateContainer` ', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onToggle={doneOp} />
+    );
+    ReactTestUtils.Simulate.click(findDOMNode(instance).querySelector('.rsuite-datepicker-toggle'));
+  });
+
+
+  it('Should call `onToggle` callback when click `DateContainer` ', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onToggle={doneOp} />
+    );
+    ReactTestUtils.Simulate.click(findDOMNode(instance).querySelector('.rsuite-datepicker-toggle'));
+  });
+
+  it('Should call `onToggleMonthDropdown` callback', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onToggleMonthDropdown={doneOp} inline format="YYYY-MM-DD HH:mm:ss" />
+    );
+    ReactTestUtils.Simulate.click(findDOMNode(instance).querySelector('.title-date'));
+  });
+
+  it('Should call `onToggleTimeDropdown` callback', (done) => {
+
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onToggleTimeDropdown={doneOp} inline format="YYYY-MM-DD HH:mm:ss" />
+    );
+    ReactTestUtils.Simulate.click(findDOMNode(instance).querySelector('.title-time'));
+  });
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
