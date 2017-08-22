@@ -17,7 +17,6 @@ describe('MonthDropdown', () => {
 
     const instanceDOM = findDOMNode(instance);
     assert.equal(instanceDOM.querySelectorAll('.month-dropdown-year-title').length, size);
-    assert.equal(instanceDOM.querySelectorAll('.month-dropdown-month-cell').length, size * 12);
   });
 
   it('Should call `onClick` callback ', (done) => {
