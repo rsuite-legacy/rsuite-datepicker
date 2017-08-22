@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
-import _ from 'lodash';
+import pick from 'lodash/pick';
+import omit from 'lodash/omit';
 import MonthDropdown from './MonthDropdown';
 import TimeDropdown from './TimeDropdown';
 import MonthView from './MonthView';
@@ -42,7 +43,7 @@ class Calendar extends React.Component {
       return false;
     }
 
-    const calendarProps = _.pick(this.props, Object.keys(calendarPropTypes));
+    const calendarProps = pick(this.props, Object.keys(calendarPropTypes));
     return Object.keys(calendarProps).some((key) => {
       if (/(Hours)/.test(key)) {
         return calendarProps[key](date.hours(), date);
@@ -116,7 +117,7 @@ class Calendar extends React.Component {
       'sliding-right': calendarState === 'SLIDING_R'
     }, className);
 
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
     const calendar = [
       <WeekHeader key={'WeekHeader'} />,
       <MonthView
@@ -127,7 +128,7 @@ class Calendar extends React.Component {
       />
     ];
 
-    const timeDropdownProps = _.pick(props, Object.keys(calendarPropTypes));
+    const timeDropdownProps = pick(props, Object.keys(calendarPropTypes));
 
     return (
       <div

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
 import moment from 'moment';
-import _ from 'lodash';
+import omit from 'lodash/omit';
 import MonthDropdownItem from './MonthDropdownItem';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
 import decorate from '../utils/decorate';
@@ -94,7 +94,7 @@ class MonthDropdown extends React.Component {
 
     const { defaultClassName, className, ...props } = this.props;
     const classes = classNames(defaultClassName, className);
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
     return (
       <div
         {...elementProps}

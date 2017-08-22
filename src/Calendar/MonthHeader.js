@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
 import moment from 'moment';
 import classNames from 'classnames';
+import omit from 'lodash/omit';
 import decorate from '../utils/decorate';
 
 const propTypes = {
@@ -89,7 +90,7 @@ class MonthHeader extends Component {
         className={this.prefix('backward')}
         role="button"
         tabIndex="-1"
-        onClick={onMoveBackward && _.debounce(onMoveBackward, 200)}
+        onClick={onMoveBackward && debounce(onMoveBackward, 200)}
       />,
       <span
         key="title-date"
@@ -105,12 +106,12 @@ class MonthHeader extends Component {
         className={this.prefix('forward')}
         role="button"
         tabIndex="-1"
-        onClick={onMoveForword && _.debounce(onMoveForword, 200)}
+        onClick={onMoveForword && debounce(onMoveForword, 200)}
       />
     ];
 
     const classes = classNames(defaultClassName, className);
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
 
     return (
       <div

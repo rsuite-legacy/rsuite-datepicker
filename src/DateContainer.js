@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
-import _ from 'lodash';
+import omit from 'lodash/omit';
 import decorate from './utils/decorate';
 
 
@@ -51,7 +51,7 @@ class DateContainer extends React.Component {
     } = this.props;
 
     const classes = classNames(this.prefix('toggle'), className, { disabled });
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
 
     return (
       <div

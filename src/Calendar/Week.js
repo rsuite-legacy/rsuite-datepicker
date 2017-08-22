@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
-import _ from 'lodash';
+import omit from 'lodash/omit';
 
 const propTypes = {
   weekendDate: PropTypes.instanceOf(moment),
@@ -63,7 +63,7 @@ class Week extends React.Component {
      } = this.props;
 
     const classes = classNames('week', className);
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
 
     return (
       <div

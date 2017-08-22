@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
-import _ from 'lodash';
+import omit from 'lodash/omit';
 import Week from './Week';
 
 
@@ -31,7 +31,7 @@ class Weeks extends React.Component {
     } = this.props;
 
     const classes = classNames('weeks', className);
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
 
     return (
       <div

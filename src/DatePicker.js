@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
 import { on } from 'dom-lib';
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
+import pick from 'lodash/pick';
+import isUndefined from 'lodash/isUndefined';
 import DateContainer from './DateContainer';
 import Calendar from './Calendar';
 import { transitionEndDetect } from './utils/eventDetect';
@@ -27,7 +30,11 @@ const propTypes = {
   inline: PropTypes.bool,
   onChange: PropTypes.func,
   onToggle: PropTypes.func,
+  onToggleMonthDropdown: PropTypes.func,
+  onToggleTimeDropdown: PropTypes.func,
   onSelect: PropTypes.func,
+  onPrevMonth: PropTypes.func,
+  onNextMonth: PropTypes.func,
   onOk: PropTypes.func
 };
 
@@ -76,7 +83,7 @@ class DatePicker extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
+    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
   }
 
   componentWillUnmount() {
@@ -86,6 +93,7 @@ class DatePicker extends Component {
 
   onMoveForword = (nextPageDate) => {
     const { transitionSupport } = this.state;
+    const { onNextMonth } = this.props;
     if (!transitionSupport.supported) {
       this.setState({
         pageDate: nextPageDate
@@ -95,10 +103,12 @@ class DatePicker extends Component {
     this.setState({
       calendarState: 'SLIDING_L'
     });
+    onNextMonth && onNextMonth(nextPageDate);
   }
 
   onMoveBackward = (nextPageDate) => {
     const { transitionSupport } = this.state;
+    const { onPrevMonth } = this.props;
     if (!transitionSupport.supported) {
       this.setState({
         pageDate: nextPageDate
@@ -108,6 +118,7 @@ class DatePicker extends Component {
     this.setState({
       calendarState: 'SLIDING_R'
     });
+    onPrevMonth && onPrevMonth(nextPageDate);
   }
 
   onMoveDone() {
@@ -196,7 +207,7 @@ class DatePicker extends Component {
   updateValue(nextPageDate, unclosed) {
     const { value, pageDate } = this.state;
     const { onChange } = this.props;
-    const nextValue = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
+    const nextValue = !isUndefined(nextPageDate) ? nextPageDate : pageDate;
 
     this.setState({
       pageDate: nextValue || moment(),
@@ -263,12 +274,6 @@ class DatePicker extends Component {
     }, 1000);
   }
 
-  handleDocumentClose = () => {
-    if (!this.state.forceOpen) {
-      this.handleClose();
-    }
-  }
-
   handleToggle = () => {
 
     const { calendarState } = this.state;
@@ -300,21 +305,32 @@ class DatePicker extends Component {
 
   toggleMonthDropdown = () => {
     const { calendarState } = this.state;
+    const { onToggleMonthDropdown } = this.props;
+    let toggle;
 
     if (calendarState === 'DROP_MONTH') {
       this.hideMonthDropdown();
+      toggle = false;
     } else {
       this.showMonthDropdown();
+      toggle = true;
     }
+    onToggleMonthDropdown && onToggleMonthDropdown(toggle);
   }
 
   toggleTimeDropdown = () => {
     const { calendarState } = this.state;
+    const { onToggleTimeDropdown } = this.props;
+    let toggle;
     if (calendarState === 'DROP_TIME') {
       this.hideTimeDropdown();
+      toggle = false;
     } else {
       this.showTimeDropdown();
+      toggle = true;
     }
+
+    onToggleTimeDropdown && onToggleTimeDropdown(toggle);
   }
 
   reset = () => {
@@ -338,7 +354,7 @@ class DatePicker extends Component {
   }
 
   disabledOkButton = (date) => {
-    const calendarProps = _.pick(this.props, Object.keys(calendarPropTypes));
+    const calendarProps = pick(this.props, Object.keys(calendarPropTypes));
 
     return Object.keys(calendarProps).some((key) => {
 
@@ -377,8 +393,8 @@ class DatePicker extends Component {
       hide: calendarState === 'HIDE'
     });
 
-    const calendarProps = _.pick(this.props, Object.keys(calendarPropTypes));
-    const elementProps = _.omit(this.props, Object.keys(propTypes));
+    const calendarProps = pick(this.props, Object.keys(calendarPropTypes));
+    const elementProps = omit(this.props, Object.keys(propTypes));
 
     const calendar = (
       <Calendar

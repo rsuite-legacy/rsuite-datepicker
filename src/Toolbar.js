@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import isFunction from 'lodash/isFunction';
 import decorate from './utils/decorate';
 import { FormattedMessage } from './intl';
 
@@ -65,7 +66,7 @@ class Toolbar extends Component {
     } = this.props;
 
     const classes = classNames(this.prefix('toolbar'), className);
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
 
     return (
       <div
@@ -75,7 +76,7 @@ class Toolbar extends Component {
         <div className={this.prefix('toolbar-ranges')}>
           {
             ranges.map((item, index) => {
-              let value = _.isFunction(item.value) ? item.value(pageDate) : item.value;
+              let value = isFunction(item.value) ? item.value(pageDate) : item.value;
               let disabled = disabledOkButton && disabledOkButton(value);
               let itemClassName = classNames({ disabled });
               return (

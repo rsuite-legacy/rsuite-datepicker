@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getPosition, scrollTop } from 'dom-lib';
 import moment from 'moment';
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import isNumber from 'lodash/isNumber';
+import camelCase from 'lodash/camelCase';
 import classNames from 'classnames';
 import calendarPropTypes from '../calendarPropTypes';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
@@ -10,7 +12,7 @@ import decorate from '../utils/decorate';
 import { FormattedMessage } from '../intl';
 
 const propTypes = {
-  ..._.omit(calendarPropTypes, 'disabledDate'),
+  ...omit(calendarPropTypes, 'disabledDate'),
   date: PropTypes.instanceOf(moment),
   onClick: PropTypes.func,
   show: PropTypes.bool,
@@ -80,15 +82,15 @@ class TimeDropdown extends React.Component {
 
   renderColumn(type, active) {
 
-    if (!_.isNumber(active)) {
+    if (!isNumber(active)) {
       return null;
     }
     const { date } = this.props;
     const { start, end } = ranges[type];
     const items = [];
 
-    const hideFunc = this.props[_.camelCase(`hide_${type}`)];
-    const disabledFunc = this.props[_.camelCase(`disabled_${type}`)];
+    const hideFunc = this.props[camelCase(`hide_${type}`)];
+    const disabledFunc = this.props[camelCase(`disabled_${type}`)];
 
     for (let i = start; i <= end; i += 1) {
 
@@ -137,7 +139,7 @@ class TimeDropdown extends React.Component {
     const { defaultClassName, className, ...props } = this.props;
     const time = this.getTime();
     const classes = classNames(defaultClassName, className);
-    const elementProps = _.omit(props, Object.keys(propTypes));
+    const elementProps = omit(props, Object.keys(propTypes));
 
     return (
       <div
