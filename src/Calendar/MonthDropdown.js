@@ -66,7 +66,7 @@ class MonthDropdown extends React.Component {
           <div className={this.prefix('month-block')}>
             {
               /* eslint-disable */
-              [...Array(12).keys()].map((month) => {
+              [1,2,3,4,5,6].map((month) => {
                 let cellCalsses = classNames(this.prefix('month-cell'), {
                   selected: isSelectedYear && month === selectedMonth
                 });
