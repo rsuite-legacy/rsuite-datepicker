@@ -10,13 +10,11 @@
 
 版本与状态
 
-`稳定版` [![npm](https://img.shields.io/npm/v/rsuite-datepicker.svg)](https://www.npmjs.com/package/rsuite-datepicker)
+[![npm][npm-badge]][npm]
 
-`测试版` [![npm](https://cnpmjs.org/badge/v/rsuite-datepicker.svg?&tag=beta&subject=npm)](https://www.npmjs.com/package/rsuite-datepicker)
+[![npm][npm-beta-badge]][npm-beta]
 
-[![Travis][build-badge]][build]  [![Coverage Status](https://coveralls.io/repos/github/rsuite/rsuite-datepicker/badge.svg?branch=next)](https://coveralls.io/github/rsuite/rsuite-datepicker?branch=next)
-
-
+[![Travis][build-badge]][build] [![Coverage Status][coverage-badge]][coverage]
 
 ## 快速开始
 
@@ -48,10 +46,18 @@ render(){
 ```
 
 
-[build-badge]: https://travis-ci.org/rsuite/rsuite-datepicker.svg?branch=master
+[npm-badge]: https://img.shields.io/npm/v/rsuite-datepicker.svg
+[npm]: https://www.npmjs.com/package/rsuite-datepicker
+
+
+[npm-beta-badge]: https://img.shields.io/npm/v/rsuite-datepicker/beta.svg
+[npm-beta]: https://www.npmjs.com/package/rsuite-datepicker
+
+
+[build-badge]: https://travis-ci.org/rsuite/rsuite-datepicker.svg
 [build]: https://travis-ci.org/rsuite/rsuite-datepicker
 
+[coverage-badge]: https://coveralls.io/repos/github/rsuite/rsuite-datepicker/badge.svg?branch=next
+[coverage]: https://coveralls.io/github/rsuite/rsuite-datepicker
 
-[npm-badge]: https://badge.fury.io/js/rsuite-datepicker.svg
-[npm]: http://badge.fury.io/js/rsuite-datepicker
 
