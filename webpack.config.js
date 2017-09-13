@@ -38,7 +38,8 @@ const common = {
   devServer: {
     hot: true,
     contentBase: path.resolve(__dirname, ''),
-    publicPath: '/'
+    publicPath: '/',
+    disableHostCheck: true
   },
   output: {
     path: path.resolve(__dirname, 'assets'),
