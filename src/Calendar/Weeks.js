@@ -7,6 +7,7 @@ import Week from './Week';
 
 
 const propTypes = {
+  /* eslint-disable */
   weeks: PropTypes.array,
   selected: PropTypes.instanceOf(moment),
   onClick: PropTypes.func,

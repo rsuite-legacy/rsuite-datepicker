@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
+  /* eslint-disable */
   locale: PropTypes.object
 };
 
