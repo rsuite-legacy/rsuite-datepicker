@@ -52,6 +52,7 @@ class DatePicker extends Component {
     const { defaultValue, value, calendarDefaultDate } = props;
     const activeValue = value || defaultValue;
     const ret = transitionEndDetect();
+
     this.state = {
       value: activeValue,
       forceOpen: false,
@@ -139,7 +140,10 @@ class DatePicker extends Component {
     });
   }
 
-  getValue = () => (this.props.value || this.state.value)
+  getValue = () => {
+    const value = this.props.value || this.state.value;
+    return value ? value.clone() : null;
+  }
 
   getDateString() {
     const { placeholder, format } = this.props;
