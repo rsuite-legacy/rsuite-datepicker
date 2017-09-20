@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
-import { on } from 'dom-lib';
+import { on, getWidth } from 'dom-lib';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
 import pick from 'lodash/pick';
@@ -18,6 +18,7 @@ import Toolbar from './Toolbar';
 
 const propTypes = {
   ...calendarPropTypes,
+  align: PropTypes.oneOf(['right', 'left']),
   ranges: Toolbar.propTypes.ranges,
   defaultValue: PropTypes.instanceOf(moment),
   value: PropTypes.instanceOf(moment),
@@ -40,6 +41,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  align: 'left',
   format: 'YYYY-MM-DD',
   placeholder: '',
   locale: defaultLocale
@@ -57,6 +59,7 @@ class DatePicker extends Component {
       value: activeValue,
       forceOpen: false,
       calendarState: 'HIDE',
+      toggleWidth: 0,
       pageDate: activeValue || calendarDefaultDate || moment(),  // display calendar date
       transitionSupport: ret
     };
@@ -287,6 +290,9 @@ class DatePicker extends Component {
       this.handleClose();
     } else if (calendarState === 'HIDE') {
       this.handleOpen();
+      this.setState({
+        toggleWidth: this.toggle ? getWidth(this.toggle) : 0
+      });
     } else if (calendarState === 'DROP_MONTH') {
       this.handleClose();
     }
@@ -385,12 +391,14 @@ class DatePicker extends Component {
       locale,
       renderPlaceholder,
       disabled,
-      ranges
+      ranges,
+      align
     } = this.props;
 
     const {
       calendarState,
-      pageDate
+      pageDate,
+      toggleWidth
     } = this.state;
 
     const value = this.getValue();
@@ -435,6 +443,11 @@ class DatePicker extends Component {
       [this.prefix('dropdown')]: !inline
     }, className);
 
+    // pane width is 270px
+    const paneStyles = {
+      marginLeft: align === 'right' ? toggleWidth - 270 : 0
+    };
+
     return (
       <IntlProvider locale={locale}>
         <div
@@ -452,9 +465,13 @@ class DatePicker extends Component {
             onClean={value && this.reset}
             value={value}
             renderPlaceholder={renderPlaceholder}
+            toggleRef={(ref) => {
+              this.toggle = ref;
+            }}
           />
           <div
             className={paneClasses}
+            style={paneStyles}
           >
             {calendar}
             <Toolbar

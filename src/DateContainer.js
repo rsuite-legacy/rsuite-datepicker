@@ -13,6 +13,7 @@ const propTypes = {
   disabled: PropTypes.bool,
   showCleanButton: PropTypes.bool,
   renderPlaceholder: PropTypes.func,
+  toggleRef: PropTypes.func,
   value: PropTypes.instanceOf(moment),
 };
 
@@ -47,6 +48,7 @@ class DateContainer extends React.Component {
       renderPlaceholder,
       value,
       className,
+      toggleRef,
       ...props
     } = this.props;
 
@@ -56,6 +58,7 @@ class DateContainer extends React.Component {
     return (
       <div
         {...elementProps}
+        ref={toggleRef}
         className={classes}
         role="button"
         onClick={!disabled && onClick}
