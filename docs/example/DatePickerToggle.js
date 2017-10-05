@@ -5,12 +5,6 @@ import DatePicker from '../../src';
 
 
 class DatePickerToggle extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      toggle: false
-    };
-  }
   render() {
     return (
       <div className="field">
@@ -35,7 +29,6 @@ class DatePickerToggle extends React.Component {
 
         <DatePicker
           ref={ref => this.picker = ref}
-          toggle={this.state.toggle}
         />
 
       </div>
