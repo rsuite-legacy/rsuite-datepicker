@@ -1,10 +1,8 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
-import moment from 'moment';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-dom/test-utils';
 
 import DateContainer from '../src/DateContainer';
-
 
 describe('DateContainer', () => {
 

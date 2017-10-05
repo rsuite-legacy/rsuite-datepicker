@@ -1,6 +1,6 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-dom/test-utils';
 
 import TimeDropdown from '../src/Calendar/TimeDropdown';
 
