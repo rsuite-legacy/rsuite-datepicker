@@ -123,7 +123,7 @@ class Calendar extends React.Component {
       <MonthView
         key={'MonthView'}
         activeDate={pageDate}
-        onClick={onSelect}
+        onSelect={onSelect}
         disabledDate={this.disabledDate}
       />
     ];
@@ -154,7 +154,6 @@ class Calendar extends React.Component {
           showMonth ? (
             <MonthDropdown
               date={pageDate}
-              show={dropMonth}
               onClick={onChangePageDate}
             />
           ) : null

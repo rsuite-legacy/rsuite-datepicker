@@ -8,7 +8,7 @@ import Weeks from './Weeks';
 
 const propTypes = {
   activeDate: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func,
+  onSelect: PropTypes.func,
   disabledDate: PropTypes.func
 };
 
@@ -50,7 +50,7 @@ class MonthView extends React.Component {
 
     const {
       activeDate,
-      onClick,
+      onSelect,
       disabledDate,
       className,
       ...props
@@ -72,18 +72,20 @@ class MonthView extends React.Component {
           <Weeks
             inSameMonth={date => inSameMonth(date, prevMonthDate)}
             disabledDate={disabledDate}
+            onSelect={onSelect}
             weeks={getMonthView(prevMonthDate)}
           />
           <Weeks
             weeks={getMonthView(thisMonthDate)}
             selected={activeDate}
-            onClick={onClick}
+            onSelect={onSelect}
             inSameMonth={date => inSameMonth(date, thisMonthDate)}
             disabledDate={disabledDate}
           />
           <Weeks
             inSameMonth={date => inSameMonth(date, nextMonthDate)}
             disabledDate={disabledDate}
+            onSelect={onSelect}
             weeks={getMonthView(nextMonthDate)}
           />
         </div>

@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const contextTypes = {
-  locale: React.PropTypes.object
+  locale: PropTypes.object
 };
 
 class WeekHeader extends React.Component {

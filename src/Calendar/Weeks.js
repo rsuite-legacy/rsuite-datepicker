@@ -10,7 +10,7 @@ const propTypes = {
   /* eslint-disable */
   weeks: PropTypes.array,
   selected: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func,
+  onSelect: PropTypes.func,
   disabledDate: PropTypes.func,
   inSameMonth: PropTypes.func
 };
@@ -24,7 +24,7 @@ class Weeks extends React.Component {
     const {
       weeks,
       selected,
-      onClick,
+      onSelect,
       disabledDate,
       inSameMonth,
       className,
@@ -46,7 +46,7 @@ class Weeks extends React.Component {
               key={index}
               weekendDate={week}
               selected={selected}
-              onClick={onClick}
+              onSelect={onSelect}
               inSameMonth={inSameMonth}
               disabledDate={disabledDate}
             />

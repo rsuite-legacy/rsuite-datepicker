@@ -7,7 +7,7 @@ import omit from 'lodash/omit';
 const propTypes = {
   weekendDate: PropTypes.instanceOf(moment),
   selected: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func,
+  onSelect: PropTypes.func,
   disabledDate: PropTypes.func,
   inSameMonth: PropTypes.func
 };
@@ -24,7 +24,7 @@ class Week extends React.Component {
       disabledDate,
       inSameMonth,
       selected,
-      onClick
+      onSelect
      } = this.props;
 
     let days = [];
@@ -46,7 +46,12 @@ class Week extends React.Component {
           role="menu"
           tabIndex="-1"
           title={isToday ? 'Today' : ''}
-          onClick={!disabled && onClick && onClick.bind(null, thisDate)}
+          onClick={() => {
+            if (disabled) {
+              return;
+            }
+            onSelect && onSelect(thisDate);
+          }}
           key={i}
         >
           <span className="date-item">{thisDate.date()}</span>
