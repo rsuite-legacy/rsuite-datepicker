@@ -223,7 +223,7 @@ class DatePicker extends Component {
     });
 
     if (nextValue !== value || !nextValue.isSame(value)) {
-      onChange && onChange(nextValue);
+      onChange && onChange(nextValue ? nextValue.clone() : null);
     }
 
     if (!unclosed) {
@@ -461,7 +461,7 @@ class DatePicker extends Component {
             disabled={disabled}
             placeholder={this.getDateString()}
             onClick={this.handleToggle}
-            showCleanButton={!this.props.value && !!value}
+            showCleanButton={!!value}
             onClean={value && this.reset}
             value={value}
             renderPlaceholder={renderPlaceholder}
