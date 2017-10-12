@@ -12,13 +12,16 @@ class DatePickerValue extends React.Component {
   render() {
     return (
       <div className="field">
-        <DatePicker defaultValue={moment()} onChange={(value) => {
-          console.log('1', value.format('YYYY-MM-DD'));
-        }} />
+        <DatePicker
+          defaultValue={moment()}
+          onChange={(value) => {
+            console.log('1', value && value.format('YYYY-MM-DD'));
+          }}
+        />
         <DatePicker
           value={this.state.value}
           onChange={(value) => {
-            console.log('2', value.format('YYYY-MM-DD'));
+            console.log('2', value && value.format('YYYY-MM-DD'));
             this.setState({ value });
           }}
         />
