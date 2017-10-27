@@ -10,7 +10,8 @@ import decorate from '../utils/decorate';
 
 const propTypes = {
   date: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  show: PropTypes.bool
 };
 
 const defaultProps = {
@@ -30,6 +31,10 @@ class MonthDropdown extends React.Component {
     this.updatePosition(nextProps);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.show;
+  }
+
   updatePosition(props) {
     const { date } = props || this.props;
     date && this.scrollTo(date);
@@ -40,7 +45,7 @@ class MonthDropdown extends React.Component {
     const top = ((year - startYear) * blockHeight);
 
     scrollTopAnimation(this.content, top, scrollTop(this.content) !== 0);
-  }
+  };
 
   renderBlock() {
 
