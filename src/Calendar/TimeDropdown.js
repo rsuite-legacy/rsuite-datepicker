@@ -40,6 +40,10 @@ class TimeDropdown extends React.Component {
     this.updatePosition(nextProps);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.show;
+  }
+
   getTime(props) {
     const { format, date } = props || this.props;
     let time = date || moment();
