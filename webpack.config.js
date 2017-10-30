@@ -38,7 +38,8 @@ const common = {
   devServer: {
     hot: true,
     contentBase: path.resolve(__dirname, ''),
-    publicPath: '/'
+    publicPath: '/',
+    disableHostCheck: true
   },
   output: {
     path: path.resolve(__dirname, 'assets'),
@@ -92,7 +93,7 @@ const common = {
   }
 };
 
-module.exports = (env = {}) => {
+module.exports = () => {
 
   if (process.env.NODE_ENV === 'development') {
     return Object.assign({}, common, {
@@ -106,11 +107,11 @@ module.exports = (env = {}) => {
     });
   }
 
-  if (process.env.NODE_ENV === 'production') {
-    return Object.assign({}, common, {
-      entry: [
-        path.resolve(__dirname, 'docs/index')
-      ]
-    });
-  }
+
+  return Object.assign({}, common, {
+    entry: [
+      path.resolve(__dirname, 'docs/index')
+    ]
+  });
+
 };

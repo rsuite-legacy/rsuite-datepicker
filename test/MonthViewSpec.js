@@ -2,23 +2,23 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import WeekHeader from '../src/Calendar/WeekHeader';
+import MonthView from '../src/Calendar/MonthView';
 
-describe('WeekHeader', () => {
+describe('MonthView', () => {
 
-  it('Should render a div with "week-header" class', () => {
+  it('Should render a div with "month-view" class', () => {
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <WeekHeader />
+      <MonthView />
     );
 
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
-    assert.ok(findDOMNode(instance).className.match(/\bweek-header\b/));
+    assert.ok(findDOMNode(instance).className.match(/\bmonth-view\b/));
   });
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <WeekHeader className="custom" />
+      <MonthView className="custom" />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -26,7 +26,7 @@ describe('WeekHeader', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <WeekHeader style={{ fontSize }} />
+      <MonthView style={{ fontSize }} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });

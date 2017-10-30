@@ -1,24 +1,23 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
+import moment from 'moment';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import WeekHeader from '../src/Calendar/WeekHeader';
+import Weeks from '../src/Calendar/Weeks';
 
-describe('WeekHeader', () => {
+describe('Weeks', () => {
 
-  it('Should render a div with "week-header" class', () => {
-
+  it('Should render a div with `weeks` class', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <WeekHeader />
+      <Weeks />
     );
-
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
-    assert.ok(findDOMNode(instance).className.match(/\bweek-header\b/));
+    assert.ok(findDOMNode(instance).className.match(/\bweeks\b/));
   });
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <WeekHeader className="custom" />
+      <Weeks className="custom" />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -26,7 +25,7 @@ describe('WeekHeader', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <WeekHeader style={{ fontSize }} />
+      <Weeks style={{ fontSize }} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });

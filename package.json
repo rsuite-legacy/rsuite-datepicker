@@ -1,16 +1,17 @@
 {
   "name": "rsuite-datepicker",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.16",
   "description": "React Datepicker Component",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint src  *.js",
     "tdd": "karma start",
-    "test": "npm run lint &&  karma start --single-run",
+    "test": "npm run lint && NODE_ENV=test  karma start --single-run",
     "build": "rm -rf ./lib && babel ./src --out-dir ./lib && cp -R src/less lib",
-    "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3100 --host 0.0.0.0 ",
+    "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3100 --host 0.0.0.0 --devtool source-map",
     "docs": "rm -rf assets &&  NODE_ENV=production webpack ",
-    "publish-docs": "node docs/gh-pages.js"
+    "publish-docs": "node docs/gh-pages.js",
+    "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,10 @@
     "react",
     "datepicker"
   ],
-  "author": "A2ZH",
+  "contributors": [
+    "A2ZH",
+    "Simon Guo <simonguo.2009@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/rsuite/rsuite-datepicker/issues"
@@ -32,8 +36,13 @@
     "lib"
   ],
   "dependencies": {
+    "classnames": "^2.2.5",
+    "dom-lib": "^0.2.6",
     "lodash": "^4.17.4",
-    "moment": ">=2.15.2"
+    "moment": ">=2.15.2",
+    "prop-types": "^15.5.10",
+    "rsuite-theme": "^2.0.0-beta.1-1",
+    "rsuite-utils": "^0.0.9"
   },
   "peerDependencies": {
     "react": "^0.14.9 || >=15.3.0",
@@ -43,14 +52,19 @@
     "babel-core": "^6.18.0",
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.5",
+    "babel-plugin-istanbul": "^4.1.4",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.16.0",
     "chai": "^3.5.0",
+    "coveralls": "^2.13.1",
     "css-loader": "^0.25.0",
-    "eslint": "^3.7.1",
-    "eslint-plugin-babel": "^4.1.1",
-    "eslint-plugin-react": "^6.4.1",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-babel": "^3.2.0",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-jsx-a11y": "^5.0.1",
+    "eslint-plugin-react": "^7.3.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
     "gh-pages": "^0.12.0",
@@ -70,16 +84,18 @@
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "markdown-loader": "2.0.0",
-    "markdownloader": "1.0.5",
+    "markdownloader": "^1.0.6",
     "mocha": "^3.1.0",
+    "react": "15.6.2",
+    "react-dom": "^15.6.2",
     "react-hot-loader": "^3.0.0-beta.6",
-    "rsuite": "0.0.24",
-    "rsuite-theme": "0.3.22",
+    "rsuite": "^2.0.5",
+    "rsuite-affix": "^1.1.2",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^2.2.1",
+    "webpack": "^3.0.0",
     "webpack-dev-server": "^2.3.0"
   }
 }

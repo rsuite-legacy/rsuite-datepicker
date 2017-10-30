@@ -1,30 +1,101 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
-import ReactTestUtils from 'react/lib/ReactTestUtils';
+import ReactTestUtils from 'react-dom/test-utils';
 
 import DateContainer from '../src/DateContainer';
-
 
 describe('DateContainer', () => {
 
 
-  it('should render a div with "dateContainer" class', () => {
+  it('Should render a div with "dateContainer" class', () => {
 
-    let instance = ReactTestUtils.renderIntoDocument(
+    const instance = ReactTestUtils.renderIntoDocument(
       <DateContainer />
     );
 
-
-    assert.equal(findDOMNode(instance).nodeName, 'DIV');
-    assert.ok(findDOMNode(instance).className.match(/\bdateContainer\b/));
+    const instanceDOM = findDOMNode(instance);
+    assert.equal(instanceDOM.nodeName, 'DIV');
+    assert.ok(instanceDOM.className.match(/\brsuite-datepicker-toggle\b/));
 
   });
 
-  it('should render placeholder string', () => {
-    let instance = ReactTestUtils.renderIntoDocument(
+  it('Should render placeholder string', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
       <DateContainer placeholder="Placeholder Text" />
     );
-    assert.equal(findDOMNode(instance).querySelector('.dateContainer-placeholder').innerText, 'Placeholder Text');
+    const instanceDOM = findDOMNode(instance);
+    assert.equal(instanceDOM.querySelector('.rsuite-datepicker-toggle-placeholder').innerText, 'Placeholder Text');
   });
-});
 
+  it('Should be disabled', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DateContainer disabled />
+    );
+    const instanceDOM = findDOMNode(instance);
+    assert.ok(instanceDOM.className.match(/\bdisabled\b/));
+  });
+
+  it('Should render a clean button', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DateContainer showCleanButton />
+    );
+    const instanceDOM = findDOMNode(instance);
+    assert.ok(instanceDOM.querySelector('.rsuite-datepicker-toggle-clean'));
+  });
+
+  it('Should render a custom placeholder', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DateContainer
+        placeholder="2017-08-13"
+        renderPlaceholder={(placeholder) => {
+          return <i>{placeholder}</i>;
+        }}
+      />
+    );
+    const instanceDOM = findDOMNode(instance);
+    assert.equal(instanceDOM.querySelector('i').innerText, '2017-08-13');
+  });
+
+  it('Should call onClick callback', (done) => {
+    const doneOp = () => {
+      done();
+    };
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DateContainer
+        onClick={doneOp}
+      />
+    );
+    const instanceDOM = findDOMNode(instance);
+    ReactTestUtils.Simulate.click(instanceDOM);
+  });
+
+  it('Should call onClean callback', (done) => {
+    const doneOp = () => {
+      done();
+    };
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DateContainer
+        showCleanButton
+        onClean={doneOp}
+      />
+    );
+    const instanceDOM = findDOMNode(instance);
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rsuite-datepicker-toggle-clean'));
+  });
+
+  it('Should have a custom className', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DateContainer className="custom" />
+    );
+    assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
+  });
+
+  it('Should have a custom style', () => {
+    const fontSize = '12px';
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DateContainer style={{ fontSize }} />
+    );
+    assert.equal(findDOMNode(instance).style.fontSize, fontSize);
+  });
+
+});
