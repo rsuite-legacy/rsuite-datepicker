@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
 import decorate from './utils/decorate';
 import { FormattedMessage } from './intl';
@@ -34,6 +35,10 @@ const defaultProps = {
 
 
 class Toolbar extends Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
+
   renderOkButton() {
     const {
       disabledOkButton,
@@ -54,6 +59,7 @@ class Toolbar extends Component {
       </div>
     );
   }
+
   render() {
     const {
       ranges,

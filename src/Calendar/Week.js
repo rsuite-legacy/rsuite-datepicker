@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 
 const propTypes = {
   weekendDate: PropTypes.instanceOf(moment),
@@ -17,6 +18,9 @@ const defaultProps = {
 };
 
 class Week extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
 
   renderDays() {
     const {
@@ -25,7 +29,7 @@ class Week extends React.Component {
       inSameMonth,
       selected,
       onSelect
-     } = this.props;
+    } = this.props;
 
     let days = [];
     for (let i = 0; i < 7; i += 1) {
@@ -65,7 +69,7 @@ class Week extends React.Component {
     const {
       className,
       ...props
-     } = this.props;
+    } = this.props;
 
     const classes = classNames('week', className);
     const elementProps = omit(props, Object.keys(propTypes));

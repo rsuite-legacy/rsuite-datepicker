@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
 import moment from 'moment';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 import MonthDropdownItem from './MonthDropdownItem';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
 import decorate from '../utils/decorate';
@@ -32,7 +33,7 @@ class MonthDropdown extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.show;
+    return nextProps.show && !isEqual(this.props, nextProps);
   }
 
   updatePosition(props) {

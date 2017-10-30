@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import isEqual from 'lodash/isEqual';
 
 const contextTypes = {
-  locale: PropTypes.object
+  locale: PropTypes.object,
 };
 
 class WeekHeader extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
 
   render() {
 

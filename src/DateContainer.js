@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 import decorate from './utils/decorate';
 
 
@@ -18,6 +19,9 @@ const propTypes = {
 };
 
 class DateContainer extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
 
   renderToggleClean() {
 
