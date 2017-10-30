@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 import Week from './Week';
 
 
@@ -20,6 +21,10 @@ const defaultProps = {
 };
 
 class Weeks extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
+
   render() {
     const {
       weeks,

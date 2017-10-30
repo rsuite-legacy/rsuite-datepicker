@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 import Weeks from './Weeks';
 
 
@@ -17,10 +18,10 @@ const defaultProps = {
 };
 
 /**
-  * Get all weeks of this month
-  * @params monthDate
-  * @return date[]
-  */
+ * Get all weeks of this month
+ * @params monthDate
+ * @return date[]
+ */
 function getMonthView(monthDate) {
 
   let firstDayOfMonth = monthDate.day();
@@ -46,6 +47,33 @@ function inSameMonth(dateA, dateB) {
 
 
 class MonthView extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
+
+  getPrevMonthDate = date => date.clone().date(1).add(-1, 'month');
+
+  getThisMonthDate = date => date.clone().date(1);
+
+  getNextMonthDate = date => date.clone().date(1).add(1, 'month');
+
+  inSameMonthDate = month => date => inSameMonth(month, date)
+
+  inSamePrevMonthDate = (date) => {
+    const prevMonthDate = this.getPrevMonthDate(this.props.activeDate);
+    return this.inSameMonthDate(date, prevMonthDate);
+  }
+
+  inSameThisMonthDate = (date) => {
+    const thisMonthDate = this.getThisMonthDate(this.props.activeDate);
+    return this.inSameMonthDate(date, thisMonthDate);
+  }
+
+  inSameNextMonthDate = (date) => {
+    const nextMonthDate = this.getNextMonthDate(this.props.activeDate);
+    return this.inSameMonthDate(date, nextMonthDate);
+  }
+
   render() {
 
     const {
@@ -56,12 +84,12 @@ class MonthView extends React.Component {
       ...props
     } = this.props;
 
-    const thisMonthDate = activeDate.clone().date(1);
-    const prevMonthDate = activeDate.clone().date(1).add(-1, 'month');
-    const nextMonthDate = activeDate.clone().date(1).add(1, 'month');
-
+    const thisMonthDate = this.getThisMonthDate(activeDate);
+    const prevMonthDate = this.getPrevMonthDate(activeDate);
+    const nextMonthDate = this.getNextMonthDate(activeDate);
     const classes = classNames('month-view', className);
     const elementProps = omit(props, Object.keys(propTypes));
+
 
     return (
       <div
@@ -70,7 +98,7 @@ class MonthView extends React.Component {
       >
         <div className="month-view-weeks-wrapper">
           <Weeks
-            inSameMonth={date => inSameMonth(date, prevMonthDate)}
+            inSameMonth={this.inSamePrevMonthDate}
             disabledDate={disabledDate}
             onSelect={onSelect}
             weeks={getMonthView(prevMonthDate)}
@@ -79,11 +107,11 @@ class MonthView extends React.Component {
             weeks={getMonthView(thisMonthDate)}
             selected={activeDate}
             onSelect={onSelect}
-            inSameMonth={date => inSameMonth(date, thisMonthDate)}
+            inSameMonth={this.inSameThisMonthDate}
             disabledDate={disabledDate}
           />
           <Weeks
-            inSameMonth={date => inSameMonth(date, nextMonthDate)}
+            inSameMonth={this.inSameNextMonthDate}
             disabledDate={disabledDate}
             onSelect={onSelect}
             weeks={getMonthView(nextMonthDate)}

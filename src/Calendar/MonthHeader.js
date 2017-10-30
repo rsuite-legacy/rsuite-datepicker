@@ -4,6 +4,7 @@ import debounce from 'lodash/debounce';
 import moment from 'moment';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 import decorate from '../utils/decorate';
 
 const propTypes = {
@@ -26,6 +27,10 @@ const defaultProps = {
 
 
 class MonthHeader extends Component {
+
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
 
   getTimeFormat() {
     const { format } = this.props;
@@ -74,7 +79,7 @@ class MonthHeader extends Component {
       disabledDate,
       disabledTime,
       ...props
-     } = this.props;
+    } = this.props;
 
     const dateTitleClasses = classNames(this.prefix('title'), 'title-date', {
       error: disabledDate && disabledDate(date)

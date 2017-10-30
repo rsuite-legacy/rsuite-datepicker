@@ -5,6 +5,7 @@ import moment from 'moment';
 import omit from 'lodash/omit';
 import isNumber from 'lodash/isNumber';
 import camelCase from 'lodash/camelCase';
+import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 import calendarPropTypes from '../calendarPropTypes';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
@@ -41,7 +42,7 @@ class TimeDropdown extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.show;
+    return nextProps.show && !isEqual(this.props, nextProps);
   }
 
   getTime(props) {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import omit from 'lodash/omit';
+import isEqual from 'lodash/isEqual';
 
 const propTypes = {
   date: PropTypes.instanceOf(moment),
@@ -15,6 +16,9 @@ const defaultProps = {
 };
 
 class MonthDropdownItem extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props, nextProps);
+  }
 
   handleClick = (event) => {
     const { onClick, month, year, date } = this.props;

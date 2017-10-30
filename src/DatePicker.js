@@ -382,6 +382,14 @@ class DatePicker extends Component {
     });
   }
 
+  bindRef = name => ref => {
+    this[name] = ref;
+  }
+
+  bindCalendar = this.bindRef('calendar')
+
+  bindContainer = this.bindRef('container')
+
   render() {
     const {
       inline,
@@ -422,9 +430,7 @@ class DatePicker extends Component {
         onToggleTimeDropdown={this.toggleTimeDropdown}
         onChangePageDate={this.handleChangePageDate}
         onChangePageTime={this.handleChangePageTime}
-        calendarRef={(ref) => {
-          this.calendar = ref;
-        }}
+        calendarRef={this.bindCalendar}
       />
     );
 
@@ -453,9 +459,7 @@ class DatePicker extends Component {
         <div
           {...elementProps}
           className={classes}
-          ref={(ref) => {
-            this.container = ref;
-          }}
+          ref={this.bindContainer}
         >
           <DateContainer
             disabled={disabled}
@@ -465,9 +469,7 @@ class DatePicker extends Component {
             onClean={value && this.reset}
             value={value}
             renderPlaceholder={renderPlaceholder}
-            toggleRef={(ref) => {
-              this.toggle = ref;
-            }}
+            toggleRef={this.bindCalendar}
           />
           <div
             className={paneClasses}
