@@ -37,13 +37,15 @@ const propTypes = {
   onSelect: PropTypes.func,
   onPrevMonth: PropTypes.func,
   onNextMonth: PropTypes.func,
-  onOk: PropTypes.func
+  onOk: PropTypes.func,
+  cleanable: PropTypes.bool
 };
 
 const defaultProps = {
   align: 'left',
   format: 'YYYY-MM-DD',
   placeholder: '',
+  cleanable: true,
   locale: defaultLocale
 };
 
@@ -400,6 +402,7 @@ class DatePicker extends Component {
       renderPlaceholder,
       disabled,
       ranges,
+      cleanable,
       align
     } = this.props;
 
@@ -465,8 +468,8 @@ class DatePicker extends Component {
             disabled={disabled}
             placeholder={this.getDateString()}
             onClick={this.handleToggle}
-            showCleanButton={!!value}
-            onClean={value && this.reset}
+            showCleanButton={!!value && cleanable}
+            onClean={(value && cleanable) ? this.reset : null}
             value={value}
             renderPlaceholder={renderPlaceholder}
             toggleRef={this.bindCalendar}
