@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
 import Weeks from './Weeks';
 
 
@@ -47,9 +46,6 @@ function inSameMonth(dateA, dateB) {
 
 
 class MonthView extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps);
-  }
 
   getPrevMonthDate = date => date.clone().date(1).add(-1, 'month');
 

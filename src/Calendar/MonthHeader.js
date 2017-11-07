@@ -4,7 +4,6 @@ import debounce from 'lodash/debounce';
 import moment from 'moment';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
 import decorate from '../utils/decorate';
 
 const propTypes = {
@@ -25,12 +24,7 @@ const defaultProps = {
   date: moment()
 };
 
-
 class MonthHeader extends Component {
-
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps);
-  }
 
   getTimeFormat() {
     const { format } = this.props;
