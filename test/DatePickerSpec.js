@@ -2,6 +2,9 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import moment from 'moment';
 import ReactTestUtils from 'react-dom/test-utils';
+import sinon from 'sinon';
+
+import { mount } from 'enzyme';
 
 import DatePicker from '../src/DatePicker';
 
@@ -23,6 +26,14 @@ describe('DatePicker', () => {
     );
 
     assert.ok(findDOMNode(instance).querySelector('.rsuite-datepicker-toggle').className.match(/\bdisabled\b/));
+  });
+
+  it('Should be not cleanable', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker cleanable={false} value={moment()} />
+    );
+
+    assert.ok(!findDOMNode(instance).querySelector('.rsuite-datepicker-toggle-clean'));
   });
 
   it('Should be inline', () => {
@@ -217,6 +228,45 @@ describe('DatePicker', () => {
       <DatePicker style={{ fontSize }} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
+  });
+
+  it('Should be a complete life cycle', () => {
+
+    const willMount = sinon.spy();
+    const didMount = sinon.spy();
+    const willUnmount = sinon.spy();
+    const diduMount = sinon.spy();
+
+    class Foo extends React.Component {
+      constructor(props) {
+        super(props);
+        this.componentWillUnmount = willUnmount;
+        this.componentWillMount = willMount;
+        this.componentDidMount = didMount;
+        this.componentDidUpdate = diduMount;
+      }
+      render() {
+
+        return (
+          <DatePicker />
+        );
+      }
+    }
+    const wrapper = mount(<Foo />);
+    expect(willMount.callCount).to.equal(1);
+    expect(didMount.callCount).to.equal(1);
+    expect(willUnmount.callCount).to.equal(0);
+
+    wrapper.setProps({
+      calendarDefaultDate: moment('2012-01-01'),
+      value: moment('2012-01-01')
+    });
+
+    expect(diduMount.callCount).to.equal(1);
+
+    wrapper.unmount();
+    expect(willUnmount.callCount).to.equal(1);
+
   });
 
 
