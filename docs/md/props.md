@@ -21,4 +21,5 @@
 | hideMinutes         | function(`minute`:number, `date`:moment)   |            | 隐藏分钟                    |
 | hideSeconds         | function(`second`:number, `date`:moment)   |            | 隐藏秒                     |
 | align               | string                                     | `left`     | 对齐方式，选项 `left`, `right` |
+| cleanable           | boolean                                    | `true`     | 可以清除                    |
 
