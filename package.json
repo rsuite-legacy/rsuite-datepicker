@@ -1,6 +1,6 @@
 {
   "name": "rsuite-datepicker",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "React Datepicker Component",
   "main": "lib/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "npm run lint && NODE_ENV=test  karma start --single-run",
     "build": "rm -rf ./lib && babel ./src --out-dir ./lib && cp -R src/less lib",
     "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3100 --host 0.0.0.0 --devtool source-map",
-    "docs": "rm -rf assets &&  NODE_ENV=production webpack ",
+    "docs": "rm -rf assets &&  NODE_ENV=production webpack",
     "publish-docs": "node docs/gh-pages.js",
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/.bin/coveralls"
   },
@@ -90,11 +90,11 @@
     "markdownloader": "^1.0.6",
     "mocha": "^3.1.0",
     "react": "15.6.2",
+    "react-code-view": "^1.0.11",
     "react-dom": "^15.6.2",
     "react-hot-loader": "^3.0.0-beta.6",
-    "react-test-renderer": "^16.0.0",
-    "react-code-view": "^1.0.10",
     "react-markdown-reader": "^1.0.1",
+    "react-test-renderer": "^16.0.0",
     "rsuite": "^2.0.5",
     "rsuite-affix": "^1.1.2",
     "sinon": "^4.1.1",
