@@ -9,7 +9,7 @@ describe('getMonthView', () => {
   });
 
   it('Monday is the first day of the week.', () => {
-    const weeks = getMonthView(moment('2017-11-30'), 'Monday');
+    const weeks = getMonthView(moment('2017-11-30'), true);
     assert.equal(weeks[0].format('YYYY-MM-DD'), '2017-11-27');
   });
 
