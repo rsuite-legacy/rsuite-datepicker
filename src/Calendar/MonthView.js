@@ -11,7 +11,7 @@ const propTypes = {
   activeDate: PropTypes.instanceOf(moment),
   onSelect: PropTypes.func,
   disabledDate: PropTypes.func,
-  firstDayOfWeek: PropTypes.oneOf(['Sunday', 'Monday'])
+  isoWeek: PropTypes.bool
 };
 
 const defaultProps = {
@@ -56,7 +56,7 @@ class MonthView extends React.Component {
       onSelect,
       disabledDate,
       className,
-      firstDayOfWeek,
+      isoWeek,
       ...props
     } = this.props;
 
@@ -77,20 +77,20 @@ class MonthView extends React.Component {
             inSameMonth={this.inSamePrevMonthDate}
             disabledDate={disabledDate}
             onSelect={onSelect}
-            weeks={getMonthView(prevMonthDate, firstDayOfWeek)}
+            weeks={getMonthView(prevMonthDate, isoWeek)}
           />
           <Weeks
             selected={activeDate}
             onSelect={onSelect}
             inSameMonth={this.inSameThisMonthDate}
             disabledDate={disabledDate}
-            weeks={getMonthView(thisMonthDate, firstDayOfWeek)}
+            weeks={getMonthView(thisMonthDate, isoWeek)}
           />
           <Weeks
             inSameMonth={this.inSameNextMonthDate}
             disabledDate={disabledDate}
             onSelect={onSelect}
-            weeks={getMonthView(nextMonthDate, firstDayOfWeek)}
+            weeks={getMonthView(nextMonthDate, isoWeek)}
           />
         </div>
       </div>

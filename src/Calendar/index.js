@@ -25,7 +25,7 @@ const propTypes = {
   onChangePageTime: PropTypes.func,
   calendarRef: PropTypes.func,
   format: PropTypes.string,
-  firstDayOfWeek: PropTypes.oneOf(['Sunday', 'Monday'])
+  isoWeek: PropTypes.bool
 };
 
 
@@ -98,7 +98,7 @@ class Calendar extends React.Component {
       format,
       calendarRef,
       className,
-      firstDayOfWeek,
+      isoWeek,
       ...props
     } = this.props;
 
@@ -126,7 +126,7 @@ class Calendar extends React.Component {
         key={'MonthView'}
         activeDate={pageDate}
         onSelect={onSelect}
-        firstDayOfWeek={firstDayOfWeek}
+        isoWeek={isoWeek}
         disabledDate={this.disabledDate}
       />
     ];

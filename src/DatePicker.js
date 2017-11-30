@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames';
 import { on, getWidth } from 'dom-lib';
+import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
 import pick from 'lodash/pick';
@@ -39,15 +40,14 @@ const propTypes = {
   onNextMonth: PropTypes.func,
   onOk: PropTypes.func,
   cleanable: PropTypes.bool,
-  firstDayOfWeek: PropTypes.oneOf(['Sunday', 'Monday'])
+  isoWeek: PropTypes.bool
 };
 
 const defaultProps = {
   align: 'left',
   format: 'YYYY-MM-DD',
   placeholder: '',
-  cleanable: true,
-  firstDayOfWeek: 'Sunday'
+  cleanable: true
 };
 
 class DatePicker extends Component {
@@ -63,7 +63,7 @@ class DatePicker extends Component {
       forceOpen: false,
       calendarState: 'HIDE',
       toggleWidth: 0,
-      locale: defaultLocale(props.firstDayOfWeek),
+      locale: merge(defaultLocale(props.isoWeek), props.locale),
       pageDate: activeValue || calendarDefaultDate || moment(),  // display calendar date
       transitionSupport: ret
     };
@@ -415,7 +415,7 @@ class DatePicker extends Component {
       ranges,
       cleanable,
       align,
-      firstDayOfWeek
+      isoWeek
     } = this.props;
 
     const {
@@ -437,7 +437,7 @@ class DatePicker extends Component {
       <Calendar
         {...calendarProps}
         format={format}
-        firstDayOfWeek={firstDayOfWeek}
+        isoWeek={isoWeek}
         calendarState={calendarState}
         pageDate={pageDate}
         onMoveForword={this.onMoveForword}

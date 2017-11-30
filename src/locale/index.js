@@ -8,8 +8,8 @@ const locale = {
   seconds: 'Seconds'
 };
 
-export default (firstDayOfWeek) => {
-  if (firstDayOfWeek === 'Monday') {
+export default (isoWeek) => {
+  if (isoWeek) {
     locale.week = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
   }
   return locale;
