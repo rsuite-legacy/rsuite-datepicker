@@ -41,7 +41,9 @@
     "lodash": "^4.17.4",
     "moment": ">=2.15.2",
     "prop-types": "^15.5.10",
-    "rsuite-theme": "^2.0.9",
+    "react-code-view": "^1.0.10",
+    "react-markdown-reader": "^1.0.1",
+    "rsuite-theme": "^2.0.14",
     "rsuite-utils": "^0.0.9"
   },
   "peerDependencies": {

@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Markdown } from 'markdownloader';
-import { Header, Navbar, Nav, Row, Col } from 'rsuite';
+import { Markdown } from 'react-markdown-reader';
+import { Header, Navbar, Nav, Row, Col, Button, ButtonToolbar } from 'rsuite';
 import Affix from 'rsuite-affix';
+import CodeView from 'react-code-view';
+import moment from 'moment';
 
 
+import 'react-code-view/lib/less/index.less';
 import './less/index.less';
-import DatePickerDefault from './example/DatePickerDefault';
-import DatePickerDisabled from './example/DatePickerDisabled';
-import DatePickerCustomToolbar from './example/DatePickerCustomToolbar';
-import DatePickerIntl from './example/DatePickerIntl';
-import DatePickerValue from './example/DatePickerValue';
-import DatePickerToggle from './example/DatePickerToggle';
+
+import DatePicker from '../src';
 
 class App extends Component {
   render() {
@@ -58,46 +57,63 @@ class App extends Component {
 
               <hr id="default" className="target-fix" />
               <h2>示例</h2>
-              <h3>默认</h3>
-              <DatePickerDefault />
-              <Markdown>
-                {require('./md/DatePickerDefault.md')}
-              </Markdown>
+
+              <CodeView
+                source={require('./md/DatePickerDefault.md')}
+                dependencies={{
+                  moment,
+                  DatePicker
+                }}
+              />
 
               <hr id="disabled" className="target-fix" />
-              <h3>禁用与隐藏</h3>
-              <DatePickerDisabled />
-              <Markdown>
-                {require('./md/DatePickerDisabled.md')}
-              </Markdown>
+              <CodeView
+                source={require('./md/DatePickerDisabled.md')}
+                dependencies={{
+                  moment,
+                  DatePicker
+                }}
+              />
 
               <hr id="custom-toolbar" className="target-fix" />
-              <h3>自定义快捷项</h3>
-              <DatePickerCustomToolbar />
-              <Markdown>
-                {require('./md/DatePickerCustomToolbar.md')}
-              </Markdown>
+              <CodeView
+                source={require('./md/DatePickerCustomToolbar.md')}
+                dependencies={{
+                  moment,
+                  DatePicker
+                }}
+              />
+
 
               <hr id="locale" className="target-fix" />
-              <h3>本地化</h3>
-              <DatePickerIntl />
-              <Markdown>
-                {require('./md/DatePickerIntl.md')}
-              </Markdown>
+              <CodeView
+                source={require('./md/DatePickerIntl.md')}
+                dependencies={{
+                  moment,
+                  DatePicker
+                }}
+              />
 
               <hr id="controlled" className="target-fix" />
-              <h3>非受控与受控</h3>
-              <DatePickerValue />
-              <Markdown>
-                {require('./md/DatePickerValue.md')}
-              </Markdown>
+              <CodeView
+                source={require('./md/DatePickerValue.md')}
+                dependencies={{
+                  moment,
+                  DatePicker
+                }}
+              />
 
               <hr id="toggle" className="target-fix" />
-              <h3>控制展开与关闭</h3>
-              <DatePickerToggle />
-              <Markdown>
-                {require('./md/DatePickerToggle.md')}
-              </Markdown>
+
+              <CodeView
+                source={require('./md/DatePickerToggle.md')}
+                dependencies={{
+                  Button,
+                  ButtonToolbar,
+                  moment,
+                  DatePicker
+                }}
+              />
 
               <hr id="api" className="target-fix" />
               <h3>属性</h3>

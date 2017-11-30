@@ -46,18 +46,16 @@ render(){
 ```
 
 
-[npm-badge]: https://img.shields.io/npm/v/rsuite-datepicker.svg
+
+[npm-badge]: https://img.shields.io/npm/v/rsuite-datepicker.svg?style=flat-square
 [npm]: https://www.npmjs.com/package/rsuite-datepicker
 
 
-[npm-beta-badge]: https://img.shields.io/npm/v/rsuite-datepicker/beta.svg
+[npm-beta-badge]: https://img.shields.io/npm/v/rsuite-datepicker/beta.svg?style=flat-square
 [npm-beta]: https://www.npmjs.com/package/rsuite-datepicker
 
-
-[build-badge]: https://travis-ci.org/rsuite/rsuite-datepicker.svg
+[build-badge]: https://img.shields.io/travis/rsuite/rsuite-datepicker.svg?style=flat-square
 [build]: https://travis-ci.org/rsuite/rsuite-datepicker
 
-[coverage-badge]: https://coveralls.io/repos/github/rsuite/rsuite-datepicker/badge.svg?branch=next
+[coverage-badge]: https://img.shields.io/coveralls/rsuite/rsuite-datepicker.svg?style=flat-square
 [coverage]: https://coveralls.io/github/rsuite/rsuite-datepicker
-
-

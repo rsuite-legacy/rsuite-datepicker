@@ -3,8 +3,7 @@ const webpack = require('webpack');
 const HtmlwebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const markdownLoader = require('markdownloader').renderer;
-
+const markdownLoader = require('react-markdown-reader').renderer;
 
 const extractLess = new ExtractTextPlugin({
   filename: '[name].[contenthash].css',
@@ -86,7 +85,7 @@ const common = {
             loader: 'markdown-loader',
             options: {
               pedantic: true,
-              renderer: markdownLoader.renderer
+              renderer: markdownLoader
             }
           }
         ]
