@@ -8,8 +8,8 @@ const DatePickerDefault = props => (
   <div className="field">
     <p>- 显示日历面板</p>
     <DatePicker format="YYYY-MM-DD HH:mm:ss" inline />
-    <p>- 设置 <code>Monday</code> 为周的第一天 </p>
-    <DatePicker format="YYYY-MM-DD HH:mm:ss" inline firstDayOfWeek="Monday" />
+    <p>- 设置每个日历星期从星期一开始 </p>
+    <DatePicker format="YYYY-MM-DD HH:mm:ss" inline isoWeek />
     <p>- 显示日期与时间:</p>
     <DatePicker format="YYYY-MM-DD HH:mm:ss" />
     <p>- 显示日期</p>
