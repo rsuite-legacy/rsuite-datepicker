@@ -63,7 +63,7 @@ class DatePicker extends Component {
       forceOpen: false,
       calendarState: 'HIDE',
       toggleWidth: 0,
-      locale: merge(defaultLocale(props.isoWeek), props.locale),
+      locale: merge({}, defaultLocale(props.isoWeek), props.locale),
       pageDate: activeValue || calendarDefaultDate || moment(),  // display calendar date
       transitionSupport: ret
     };
