@@ -4,40 +4,19 @@ import moment from 'moment';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
 import Weeks from './Weeks';
+import getMonthView from '../utils/getMonthView';
 
 
 const propTypes = {
   activeDate: PropTypes.instanceOf(moment),
   onSelect: PropTypes.func,
-  disabledDate: PropTypes.func
+  disabledDate: PropTypes.func,
+  firstDayOfWeek: PropTypes.oneOf(['Sunday', 'Monday'])
 };
 
 const defaultProps = {
   activeDate: moment()
 };
-
-/**
- * Get all weeks of this month
- * @params monthDate
- * @return date[]
- */
-function getMonthView(monthDate) {
-
-  let firstDayOfMonth = monthDate.day();
-  let distance = 0 - firstDayOfMonth;
-  let firstWeekendDate = monthDate.clone().add(distance, 'days');
-
-  let weeks = [firstWeekendDate];
-  let nextWeekendDate = firstWeekendDate.clone().add(7, 'days');
-
-  weeks.push(nextWeekendDate);
-  while (weeks.length < 6) {
-    nextWeekendDate = nextWeekendDate.clone().add(7, 'days');
-    weeks.push(nextWeekendDate);
-  }
-
-  return weeks;
-}
 
 // is two date in the same month
 function inSameMonth(dateA, dateB) {
@@ -77,6 +56,7 @@ class MonthView extends React.Component {
       onSelect,
       disabledDate,
       className,
+      firstDayOfWeek,
       ...props
     } = this.props;
 
@@ -97,20 +77,20 @@ class MonthView extends React.Component {
             inSameMonth={this.inSamePrevMonthDate}
             disabledDate={disabledDate}
             onSelect={onSelect}
-            weeks={getMonthView(prevMonthDate)}
+            weeks={getMonthView(prevMonthDate, firstDayOfWeek)}
           />
           <Weeks
-            weeks={getMonthView(thisMonthDate)}
             selected={activeDate}
             onSelect={onSelect}
             inSameMonth={this.inSameThisMonthDate}
             disabledDate={disabledDate}
+            weeks={getMonthView(thisMonthDate, firstDayOfWeek)}
           />
           <Weeks
             inSameMonth={this.inSameNextMonthDate}
             disabledDate={disabledDate}
             onSelect={onSelect}
-            weeks={getMonthView(nextMonthDate)}
+            weeks={getMonthView(nextMonthDate, firstDayOfWeek)}
           />
         </div>
       </div>

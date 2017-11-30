@@ -38,7 +38,8 @@ const propTypes = {
   onPrevMonth: PropTypes.func,
   onNextMonth: PropTypes.func,
   onOk: PropTypes.func,
-  cleanable: PropTypes.bool
+  cleanable: PropTypes.bool,
+  firstDayOfWeek: PropTypes.oneOf(['Sunday', 'Monday'])
 };
 
 const defaultProps = {
@@ -46,7 +47,7 @@ const defaultProps = {
   format: 'YYYY-MM-DD',
   placeholder: '',
   cleanable: true,
-  locale: defaultLocale
+  firstDayOfWeek: 'Sunday'
 };
 
 class DatePicker extends Component {
@@ -62,6 +63,7 @@ class DatePicker extends Component {
       forceOpen: false,
       calendarState: 'HIDE',
       toggleWidth: 0,
+      locale: defaultLocale(props.firstDayOfWeek),
       pageDate: activeValue || calendarDefaultDate || moment(),  // display calendar date
       transitionSupport: ret
     };
@@ -80,13 +82,23 @@ class DatePicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { value, calendarDefaultDate } = this.props;
-    if (nextProps.value !== value) {
+    const { value, calendarDefaultDate, locale } = this.props;
+
+    if (nextProps.value && !nextProps.value.isSame(value, 'day')) {
       this.setState({ value: nextProps.value });
     }
-    if (nextProps.calendarDefaultDate !== calendarDefaultDate) {
+
+    if (
+      nextProps.calendarDefaultDate &&
+      !nextProps.calendarDefaultDate.isSame(calendarDefaultDate, 'day')
+    ) {
       this.setState({ calendarDefaultDate: nextProps.calendarDefaultDate });
     }
+
+    if (isEqual(nextProps.locale, locale)) {
+      this.setState({ locale: nextProps.locale });
+    }
+
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -398,17 +410,18 @@ class DatePicker extends Component {
       className,
       format,
       defaultClassName,
-      locale,
       renderPlaceholder,
       disabled,
       ranges,
       cleanable,
-      align
+      align,
+      firstDayOfWeek
     } = this.props;
 
     const {
       calendarState,
       pageDate,
+      locale,
       toggleWidth
     } = this.state;
 
@@ -424,6 +437,7 @@ class DatePicker extends Component {
       <Calendar
         {...calendarProps}
         format={format}
+        firstDayOfWeek={firstDayOfWeek}
         calendarState={calendarState}
         pageDate={pageDate}
         onMoveForword={this.onMoveForword}
