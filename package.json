@@ -41,7 +41,7 @@
     "lodash": "^4.17.4",
     "moment": ">=2.15.2",
     "prop-types": "^15.5.10",
-    "rsuite-theme": "^2.0.14",
+    "rsuite-theme": "^2.0.16",
     "rsuite-utils": "^0.0.9"
   },
   "peerDependencies": {
@@ -97,6 +97,7 @@
     "react-test-renderer": "^16.0.0",
     "rsuite": "^2.0.5",
     "rsuite-affix": "^1.1.2",
+    "rsuite-docs": "^0.1.7",
     "sinon": "^4.1.1",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",

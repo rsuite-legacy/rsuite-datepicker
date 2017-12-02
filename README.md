@@ -32,7 +32,7 @@ npm i rsuite-datepicker --save
 ```
 
 
-### 示例
+### 示例代码
 
 ```jsx
 import DatePicker from 'rsuite-datepicker';
