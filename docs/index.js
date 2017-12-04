@@ -26,55 +26,61 @@ class App extends Component {
         <h2>示例</h2>
 
         <CodeView
-          source={require('./md/DatePickerDefault.md')}
           dependencies={{
             moment,
             DatePicker
           }}
-        />
+        >
+          {require('./md/DatePickerDefault.md')}
+        </CodeView>
 
         <CodeView
-          source={require('./md/DatePickerDisabled.md')}
           dependencies={{
             moment,
             DatePicker
           }}
-        />
+        >
+          {require('./md/DatePickerDisabled.md')}
+        </CodeView>
 
         <CodeView
-          source={require('./md/DatePickerCustomToolbar.md')}
           dependencies={{
             moment,
             DatePicker
           }}
-        />
+        >
+          {require('./md/DatePickerCustomToolbar.md')}
+        </CodeView>
 
 
         <CodeView
-          source={require('./md/DatePickerIntl.md')}
           dependencies={{
             moment,
             DatePicker
           }}
-        />
+        >
+          {require('./md/DatePickerIntl.md')}
+        </CodeView>
 
         <CodeView
-          source={require('./md/DatePickerValue.md')}
           dependencies={{
             moment,
             DatePicker
           }}
-        />
+        >
+          {require('./md/DatePickerValue.md')}
+        </CodeView>
 
         <CodeView
-          source={require('./md/DatePickerToggle.md')}
           dependencies={{
             Button,
             ButtonToolbar,
             moment,
             DatePicker
           }}
-        />
+        >
+          {require('./md/DatePickerToggle.md')}
+        </CodeView>
 
         <Markdown>
           {require('./md/props.md')}
