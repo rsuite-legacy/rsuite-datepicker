@@ -1,6 +1,6 @@
 {
   "name": "rsuite-datepicker",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "React Datepicker Component",
   "main": "lib/index.js",
   "scripts": {
@@ -97,7 +97,7 @@
     "react-test-renderer": "^16.0.0",
     "rsuite": "^2.0.5",
     "rsuite-affix": "^1.1.2",
-    "rsuite-docs": "^0.1.11",
+    "rsuite-docs": "^0.2.2",
     "sinon": "^4.1.1",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",

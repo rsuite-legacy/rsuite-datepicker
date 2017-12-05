@@ -12,9 +12,8 @@
 
 [![npm][npm-badge]][npm]
 
-[![npm][npm-beta-badge]][npm-beta]
 
-[![Travis][build-badge]][build] [![Coverage Status][coverage-badge]][coverage]
+[![Travis][build-badge]][build]
 
 ## 快速开始
 
@@ -47,14 +46,14 @@ render(){
 
 
 
-[npm-badge]: https://img.shields.io/npm/v/rsuite-datepicker.svg?style=flat-square
+[npm-badge]: https://img.shields.io/npm/v/rsuite-datepicker/version2.x.svg?style=flat-square
 [npm]: https://www.npmjs.com/package/rsuite-datepicker
 
 
 [npm-beta-badge]: https://img.shields.io/npm/v/rsuite-datepicker/beta.svg?style=flat-square
 [npm-beta]: https://www.npmjs.com/package/rsuite-datepicker
 
-[build-badge]: https://img.shields.io/travis/rsuite/rsuite-datepicker.svg?style=flat-square
+[build-badge]: https://img.shields.io/badge/build-passing-green.svg?style=flat-square
 [build]: https://travis-ci.org/rsuite/rsuite-datepicker
 
 [coverage-badge]: https://img.shields.io/coveralls/rsuite/rsuite-datepicker.svg?style=flat-square
