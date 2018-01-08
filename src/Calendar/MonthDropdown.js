@@ -12,7 +12,8 @@ import decorate from '../utils/decorate';
 const propTypes = {
   date: PropTypes.instanceOf(moment),
   onClick: PropTypes.func,
-  show: PropTypes.bool
+  show: PropTypes.bool,
+  yearCeiling: PropTypes.number
 };
 
 const defaultProps = {
@@ -50,14 +51,14 @@ class MonthDropdown extends React.Component {
 
   renderBlock() {
 
-    const { date, onClick } = this.props;
+    const { date, onClick, yearCeiling } = this.props;
 
     let ret = [];
     let selectedMonth = date.month();
     let selectedYear = date.year();
     let nextYear = 0;
 
-    for (let i = 0; i < 100 && nextYear < selectedYear + 5; i += 1) {
+    for (let i = 0; i < 100 && nextYear < selectedYear + yearCeiling; i += 1) {
 
       nextYear = startYear + i;
 

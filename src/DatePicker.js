@@ -40,10 +40,12 @@ const propTypes = {
   onNextMonth: PropTypes.func,
   onOk: PropTypes.func,
   cleanable: PropTypes.bool,
-  isoWeek: PropTypes.bool
+  isoWeek: PropTypes.bool,
+  yearCeiling: PropTypes.number
 };
 
 const defaultProps = {
+  yearCeiling: 5,
   align: 'left',
   format: 'YYYY-MM-DD',
   placeholder: '',
@@ -415,7 +417,8 @@ class DatePicker extends Component {
       ranges,
       cleanable,
       align,
-      isoWeek
+      isoWeek,
+      yearCeiling
     } = this.props;
 
     const {
@@ -436,6 +439,7 @@ class DatePicker extends Component {
     const calendar = (
       <Calendar
         {...calendarProps}
+        yearCeiling={yearCeiling}
         format={format}
         isoWeek={isoWeek}
         calendarState={calendarState}

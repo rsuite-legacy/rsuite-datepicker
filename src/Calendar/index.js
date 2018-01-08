@@ -25,7 +25,8 @@ const propTypes = {
   onChangePageTime: PropTypes.func,
   calendarRef: PropTypes.func,
   format: PropTypes.string,
-  isoWeek: PropTypes.bool
+  isoWeek: PropTypes.bool,
+  yearCeiling: PropTypes.number
 };
 
 
@@ -99,6 +100,7 @@ class Calendar extends React.Component {
       calendarRef,
       className,
       isoWeek,
+      yearCeiling,
       ...props
     } = this.props;
 
@@ -159,6 +161,7 @@ class Calendar extends React.Component {
               date={pageDate}
               onClick={onChangePageDate}
               show={dropMonth}
+              yearCeiling={yearCeiling}
             />
           ) : null
         }
