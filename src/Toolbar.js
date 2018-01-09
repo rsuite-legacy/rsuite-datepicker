@@ -35,9 +35,6 @@ const defaultProps = {
 
 
 class Toolbar extends Component {
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps);
-  }
 
   renderOkButton() {
     const {
