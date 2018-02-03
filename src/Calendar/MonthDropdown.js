@@ -1,53 +1,64 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
 import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
 import moment from 'moment';
-import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
+import type { Moment } from 'moment';
+import _ from 'lodash';
+import { constants } from 'rsuite-utils/lib/Picker';
+import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
+
 import MonthDropdownItem from './MonthDropdownItem';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
-import decorate from '../utils/decorate';
 
-const propTypes = {
-  date: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func,
-  show: PropTypes.bool,
-  yearCeiling: PropTypes.number
-};
-
-const defaultProps = {
-  date: moment()
+type Props = {
+  onClick?: (month: number, event: SyntheticEvent<*>) => void,
+  show: boolean,
+  date: Moment,
+  yearCeiling?: number,
+  className?: string,
+  classPrefix?: string
 };
 
 const startYear = 1950;
 const blockHeight = 84;
 
-class MonthDropdown extends React.Component {
+class MonthDropdown extends React.Component<Props> {
+
+  static defaultProps = {
+    classPrefix: `${constants.namespace}-calendar-month-dropdown`,
+    show: false,
+    date: moment()
+  };
 
   componentDidMount() {
     this.updatePosition();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     this.updatePosition(nextProps);
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.show && !isEqual(this.props, nextProps);
+  shouldComponentUpdate(nextProps: Props) {
+    return nextProps.show && !_.isEqual(this.props, nextProps);
   }
 
-  updatePosition(props) {
+  updatePosition(props?: Props) {
     const { date } = props || this.props;
     date && this.scrollTo(date);
   }
 
-  scrollTo = (date) => {
+  scrollTo = (date: Moment) => {
     const year = date.year();
     const top = ((year - startYear) * blockHeight);
 
     scrollTopAnimation(this.content, top, scrollTop(this.content) !== 0);
   };
+
+  content = null;
+
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
 
   renderBlock() {
 
@@ -63,18 +74,18 @@ class MonthDropdown extends React.Component {
       nextYear = startYear + i;
 
       let isSelectedYear = nextYear === selectedYear;
-      let titleClasses = classNames(this.prefix('year-title'), {
+      let titleClasses = classNames(this.addPrefix('year-title'), {
         selected: isSelectedYear
       });
 
       ret.push(
-        <div className={this.prefix('year-block')} key={i}>
+        <div className={this.addPrefix('year-block')} key={i}>
           <div className={titleClasses}>{nextYear}</div>
-          <div className={this.prefix('month-block')}>
+          <div className={this.addPrefix('month-block')}>
             {
               /* eslint-disable */
               [...Array(12)].map((i, month) => {
-                let cellCalsses = classNames(this.prefix('month-cell'), {
+                let cellCalsses = classNames(this.addPrefix('month-cell'), {
                   selected: isSelectedYear && month === selectedMonth
                 });
                 return (
@@ -99,21 +110,21 @@ class MonthDropdown extends React.Component {
 
   render() {
 
-    const { defaultClassName, className, ...props } = this.props;
-    const classes = classNames(defaultClassName, className);
-    const elementProps = omit(props, Object.keys(propTypes));
+    const { classPrefix, className, ...rest } = this.props;
+    const classes = classNames(classPrefix, className);
+    const unhandled = getUnhandledProps(MonthDropdown, rest);
     return (
       <div
-        {...elementProps}
+        {...unhandled}
         className={classes}
       >
         <div
-          className={this.prefix('content')}
+          className={this.addPrefix('content')}
           ref={(ref) => {
             this.content = ref;
           }}
         >
-          <div className={this.prefix('scroll')}>
+          <div className={this.addPrefix('scroll')}>
             {this.renderBlock()}
           </div>
         </div>
@@ -122,9 +133,4 @@ class MonthDropdown extends React.Component {
   }
 }
 
-MonthDropdown.propTypes = propTypes;
-MonthDropdown.defaultProps = defaultProps;
-
-export default decorate({
-  prefixClass: 'month-dropdown'
-})(MonthDropdown);
+export default MonthDropdown;

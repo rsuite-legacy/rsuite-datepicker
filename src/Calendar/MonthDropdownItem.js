@@ -1,36 +1,41 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
 import moment from 'moment';
-import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
+import type { Moment } from 'moment';
+import _ from 'lodash';
+import { getUnhandledProps } from 'rsuite-utils/lib/utils';
 
-const propTypes = {
-  date: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func,
-  month: PropTypes.number,
-  year: PropTypes.number
+type Props = {
+  date: Moment,
+  month: number,
+  year: number,
+  onClick?: (month: number, event: SyntheticEvent<*>) => void,
+  className?: string
 };
 
-const defaultProps = {
-  month: 0
-};
 
-class MonthDropdownItem extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps);
+class MonthDropdownItem extends React.Component<Props> {
+
+  static defaultProps = {
+    month: 0
+  };
+
+  shouldComponentUpdate(nextProps: Props) {
+    return !_.isEqual(this.props, nextProps);
   }
 
-  handleClick = (event) => {
+  handleClick = (event: SyntheticEvent<*>) => {
     const { onClick, month, year, date } = this.props;
     onClick && onClick(moment(date).year(year).month(month - 1), event);
   }
 
   render() {
-    const { className, month, ...props } = this.props;
-    const elementProps = omit(props, Object.keys(propTypes));
+    const { className, month, ...rest } = this.props;
+    const unhandled = getUnhandledProps(MonthDropdownItem, rest);
     return (
       <div
-        {...elementProps}
+        {...unhandled}
         className={className}
         onClick={this.handleClick}
         key={month}
@@ -42,8 +47,5 @@ class MonthDropdownItem extends React.Component {
     );
   }
 }
-
-MonthDropdownItem.propTypes = propTypes;
-MonthDropdownItem.defaultProps = defaultProps;
 
 export default MonthDropdownItem;

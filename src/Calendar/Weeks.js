@@ -1,28 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+// @flow
+
+import * as React from 'react';
+import type { Moment } from 'moment';
 import classNames from 'classnames';
-import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
+import { constants } from 'rsuite-utils/lib/Picker';
 import Week from './Week';
 
-
-const propTypes = {
-  /* eslint-disable */
-  weeks: PropTypes.array,
-  selected: PropTypes.instanceOf(moment),
-  onSelect: PropTypes.func,
-  disabledDate: PropTypes.func,
-  inSameMonth: PropTypes.func
+type Props = {
+  weeks: Array<any>,
+  selected?: Moment,
+  onSelect?: () => void,
+  disabledDate?: (date: Moment) => boolean,
+  inSameMonth?: (date: Moment) => boolean,
+  className?: string,
+  classPrefix?: string
 };
 
-const defaultProps = {
-  weeks: []
-};
 
-class Weeks extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps);
+class Weeks extends React.Component<Props> {
+  static defaultProps = {
+    classPrefix: `${constants.namespace}-calendar-weeks`,
+    weeks: []
+  };
+
+
+  shouldComponentUpdate(nextProps: Props) {
+    return !_.isEqual(this.props, nextProps);
   }
 
   render() {
@@ -33,15 +37,15 @@ class Weeks extends React.Component {
       disabledDate,
       inSameMonth,
       className,
-      ...props
+      classPrefix,
+      ...rest
     } = this.props;
 
-    const classes = classNames('weeks', className);
-    const elementProps = omit(props, Object.keys(propTypes));
+    const classes = classNames(classPrefix, className);
 
     return (
       <div
-        {...elementProps}
+        {...rest}
         className={classes}
       >
         {
@@ -61,8 +65,5 @@ class Weeks extends React.Component {
     );
   }
 }
-
-Weeks.propTypes = propTypes;
-Weeks.defaultProps = defaultProps;
 
 export default Weeks;

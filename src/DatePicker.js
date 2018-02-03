@@ -1,162 +1,130 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import classNames from 'classnames';
-import { on, getWidth } from 'dom-lib';
-import merge from 'lodash/merge';
-import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
-import pick from 'lodash/pick';
-import isUndefined from 'lodash/isUndefined';
-import DateContainer from './DateContainer';
+import _ from 'lodash';
+import { IntlProvider } from 'rsuite-intl';
+import OverlayTrigger from 'rsuite-utils/lib/Overlay/OverlayTrigger';
+import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
+import { MenuWrapper, Toggle, constants } from 'rsuite-utils/lib/Picker';
+
 import Calendar from './Calendar';
-import { transitionEndDetect } from './utils/eventDetect';
-import calendarPropTypes from './calendarPropTypes';
-import decorate from './utils/decorate';
-import { IntlProvider } from './intl';
 import defaultLocale from './locale';
 import Toolbar from './Toolbar';
+import disabledTime, { calendarOnlyProps } from './utils/disabledTime';
 
-const propTypes = {
-  ...calendarPropTypes,
-  align: PropTypes.oneOf(['right', 'left']),
-  ranges: Toolbar.propTypes.ranges,
-  defaultValue: PropTypes.instanceOf(moment),
-  value: PropTypes.instanceOf(moment),
-  calendarDefaultDate: PropTypes.instanceOf(moment),
-  placeholder: PropTypes.string,
-  renderPlaceholder: PropTypes.func,
-  format: PropTypes.string,
-  disabled: PropTypes.bool,
-  /* eslint-disable */
-  locale: PropTypes.object,
-  inline: PropTypes.bool,
-  onChange: PropTypes.func,
-  onToggle: PropTypes.func,
-  onToggleMonthDropdown: PropTypes.func,
-  onToggleTimeDropdown: PropTypes.func,
-  onSelect: PropTypes.func,
-  onPrevMonth: PropTypes.func,
-  onNextMonth: PropTypes.func,
-  onOk: PropTypes.func,
-  cleanable: PropTypes.bool,
-  isoWeek: PropTypes.bool,
-  yearCeiling: PropTypes.number
+const { namespace } = constants;
+
+type PlacementEighPoints = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight' | 'leftTop' | 'rightTop' | 'leftBottom' | 'rightBottom';
+type Range = {
+  label: React.Node,
+  closeOverlay?: boolean,
+  value: Moment | (pageDate: Moment)=> Moment,
 };
 
-const defaultProps = {
-  yearCeiling: 5,
-  align: 'left',
-  format: 'YYYY-MM-DD',
-  placeholder: '',
-  cleanable: true
-};
+type Props = {
+  disabledDate?: (date: Moment) => boolean,
+  disabledHours?: (hour: number, date: Moment) => boolean,
+  disabledMinutes?: (minute: number, date: Moment) => boolean,
+  disabledSeconds?: (second: number, date: Moment) => boolean,
+  hideHours?: (hour: number, date: Moment) => boolean,
+  hideMinutes?: (minute: number, date: Moment) => boolean,
+  hideSeconds?: (second: number, date: Moment) => boolean,
+  ranges?: Array<Range>,
+  defaultValue?: Moment,
+  value?: Moment,
+  calendarDefaultDate?: Moment,
+  placeholder?: string,
+  format: string,
+  disabled?: boolean,
+  locale?: Object,
+  inline?: boolean,
+  onChange?: (value: Moment) => void,
+  onToggleMonthDropdown?: (toggle: boolean) => void,
+  onToggleTimeDropdown?: (toggle: boolean) => void,
+  onSelect?: (date: Moment, event?: SyntheticEvent<*>) => void,
+  onPrevMonth?: (date: Moment) => void,
+  onNextMonth?: (date: Moment) => void,
+  onOk?: (date: Moment, event: SyntheticEvent<*>) => void,
+  cleanable?: boolean,
+  isoWeek?: boolean,
+  yearCeiling?: number,
+  className?: string,
+  classPrefix?: string,
+  open?: boolean,
+  defaultOpen?: boolean,
+  placement?: PlacementEighPoints,
+  onOpen?: () => void,
+  onClose?: () => void
+}
 
-class DatePicker extends Component {
-  constructor(props) {
+type States = {
+  value?: Moment,
+  forceOpen?: boolean,
+  calendarState?: 'DROP_MONTH' | 'DROP_TIME',
+  locale?: Object,
+  pageDate: Moment
+}
+
+class DatePicker extends React.Component<Props, States> {
+
+  static defaultProps = {
+    classPrefix: `${namespace}-date`,
+    placement: 'bottomLeft',
+    yearCeiling: 5,
+    format: 'YYYY-MM-DD',
+    placeholder: '',
+    cleanable: true
+  };
+
+  constructor(props: Props) {
     super(props);
 
     const { defaultValue, value, calendarDefaultDate } = props;
     const activeValue = value || defaultValue;
-    const ret = transitionEndDetect();
 
     this.state = {
       value: activeValue,
       forceOpen: false,
-      calendarState: 'HIDE',
-      toggleWidth: 0,
-      locale: merge({}, defaultLocale(props.isoWeek), props.locale),
-      pageDate: activeValue || calendarDefaultDate || moment(),  // display calendar date
-      transitionSupport: ret
+      calendarState: undefined,
+      locale: _.merge({}, defaultLocale(props.isoWeek), props.locale),
+      pageDate: activeValue || calendarDefaultDate || moment()  // display calendar date
     };
   }
 
-  componentDidMount() {
-    const { transitionSupport } = this.state;
-    if (transitionSupport.supported && this.calendar) {
-      this.calendar.addEventListener(transitionSupport.event, (e) => {
-        if (e.target.className === 'month-view-weeks-wrapper' && e.propertyName === 'left') {
-          this.onMoveDone();
-        }
-      });
-    }
-    this.isMounted = true;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { value, calendarDefaultDate, locale } = this.props;
+  componentWillReceiveProps(nextProps: Props) {
+    const { value, locale } = this.props;
 
     if (nextProps.value && !nextProps.value.isSame(value, 'day')) {
       this.setState({ value: nextProps.value });
     }
 
-    if (
-      nextProps.calendarDefaultDate &&
-      !nextProps.calendarDefaultDate.isSame(calendarDefaultDate, 'day')
-    ) {
-      this.setState({ calendarDefaultDate: nextProps.calendarDefaultDate });
-    }
-
-    if (isEqual(nextProps.locale, locale)) {
-      this.setState({ locale: nextProps.locale });
+    if (_.isEqual(nextProps.locale, locale)) {
+      this.setState({ locale: _.merge({}, this.state.locale, nextProps.locale) });
     }
 
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
+  shouldComponentUpdate(nextProps: Props, nextState: States) {
+    return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
   }
 
-  componentWillUnmount() {
-    this.unbindEvent();
-    this.isMounted = false;
-  }
-
-  onMoveForword = (nextPageDate) => {
-    const { transitionSupport } = this.state;
+  onMoveForword = (nextPageDate: Moment) => {
     const { onNextMonth } = this.props;
-    if (!transitionSupport.supported) {
-      this.setState({
-        pageDate: nextPageDate
-      });
-      return;
-    }
     this.setState({
-      calendarState: 'SLIDING_L'
+      pageDate: nextPageDate
     });
     onNextMonth && onNextMonth(nextPageDate);
   }
 
-  onMoveBackward = (nextPageDate) => {
-    const { transitionSupport } = this.state;
+  onMoveBackward = (nextPageDate: Moment) => {
     const { onPrevMonth } = this.props;
-    if (!transitionSupport.supported) {
-      this.setState({
-        pageDate: nextPageDate
-      });
-      return;
-    }
     this.setState({
-      calendarState: 'SLIDING_R'
+      pageDate: nextPageDate
     });
     onPrevMonth && onPrevMonth(nextPageDate);
-  }
-
-  onMoveDone() {
-    const { calendarState, pageDate } = this.state;
-    let pageChanges = 0;
-
-    if (calendarState === 'SLIDING_L') {
-      pageChanges = 1;
-    }
-    if (calendarState === 'SLIDING_R') {
-      pageChanges = -1;
-    }
-
-    this.setState({
-      pageDate: pageDate.add(pageChanges, 'month'),
-      calendarState: 'SHOW'
-    });
   }
 
   getValue = () => {
@@ -168,47 +136,22 @@ class DatePicker extends Component {
     const { placeholder, format } = this.props;
     const value = this.getValue();
 
-    return value ? moment(value).format(this.props.format) : (
-      <div className="placeholder-text">
-        {placeholder || format}
-      </div>
-    );
+    return value ? moment(value).format(this.props.format) : placeholder || format;
   }
 
-  get isMounted() {
-    return this.mounted;
-  }
-  set isMounted(isMounted) {
-    this.mounted = isMounted;
-  }
+  calendar = null;
 
-  bindEvent() {
-    this.docClickListener = on(document, 'click', this.handleDocumentClick);
-  }
 
-  unbindEvent() {
-    this.docClickListener && this.docClickListener.off();
-  }
-
-  /**
-   * Close menu when click document
-   */
-  handleDocumentClick = (event) => {
-    if (this.isMounted && !this.container.contains(event.target) && !this.state.forceOpen) {
-      this.handleClose();
-    }
-  }
-
-  handleChangePageDate = (nextPageDate) => {
+  handleChangePageDate = (nextPageDate: Moment) => {
     const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageDate,
-      calendarState: 'SHOW'
+      calendarState: undefined
     });
     onSelect && onSelect(nextPageDate);
   }
 
-  handleChangePageTime = (nextPageTime) => {
+  handleChangePageTime = (nextPageTime: Moment) => {
     const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageTime
@@ -216,22 +159,22 @@ class DatePicker extends Component {
     onSelect && onSelect(nextPageTime);
   }
 
-  handleShortcutPageDate = (pageDate, unclosed) => {
+  handleShortcutPageDate = (value: Moment, closeOverlay?: boolean, event?: SyntheticEvent<*>) => {
     const { onSelect } = this.props;
-    this.updateValue(pageDate, unclosed);
-    onSelect && onSelect(pageDate);
+    this.updateValue(value, closeOverlay);
+    onSelect && onSelect(value, event);
   }
 
-  handleOK = (event) => {
+  handleOK = (event: SyntheticEvent<*>) => {
     const { onOk } = this.props;
     this.updateValue();
     onOk && onOk(this.state.pageDate, event);
   }
 
-  updateValue(nextPageDate, unclosed) {
+  updateValue(nextPageDate?: Moment, closeOverlay?: boolean = true) {
     const { value, pageDate } = this.state;
     const { onChange } = this.props;
-    const nextValue = !isUndefined(nextPageDate) ? nextPageDate : pageDate;
+    const nextValue: Moment = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
 
     this.setState({
       pageDate: nextValue || moment(),
@@ -242,8 +185,9 @@ class DatePicker extends Component {
       onChange && onChange(nextValue ? nextValue.clone() : null);
     }
 
-    if (!unclosed) {
-      this.handleClose();
+    // `closeOverlay` default value is `true`
+    if (closeOverlay !== false) {
+      this.close();
     }
 
   }
@@ -256,61 +200,15 @@ class DatePicker extends Component {
     });
   }
 
-  show() {
-    const { disabled } = this.props;
-    !disabled && this.handleOpen(true);
+  open() {
+    if (this.trigger) {
+      this.trigger.show();
+    }
   }
 
-  hide() {
-    const { disabled } = this.props;
-    !disabled && this.handleClose(true);
-  }
-
-  handleOpen = (forceOpen) => {
-
-    const { onToggle } = this.props;
-    this.resetPageDate();
-    this.setState({
-      calendarState: 'SHOW',
-      forceOpen
-    });
-
-    onToggle && onToggle(true);
-    forceOpen && this.cleanForce();
-    this.bindEvent();
-  }
-
-  handleClose = (forceOpen) => {
-    const { onToggle } = this.props;
-    this.setState({
-      calendarState: 'HIDE',
-      forceOpen
-    });
-
-    onToggle && onToggle(false);
-    forceOpen && this.cleanForce();
-    this.unbindEvent();
-  }
-
-  cleanForce() {
-    setTimeout(() => {
-      this.setState({ forceOpen: false });
-    }, 1000);
-  }
-
-  handleToggle = () => {
-
-    const { calendarState } = this.state;
-
-    if (calendarState === 'SHOW') {
-      this.handleClose();
-    } else if (calendarState === 'HIDE') {
-      this.handleOpen();
-      this.setState({
-        toggleWidth: this.toggle ? getWidth(this.toggle) : 0
-      });
-    } else if (calendarState === 'DROP_MONTH') {
-      this.handleClose();
+  close() {
+    if (this.trigger) {
+      this.trigger.hide();
     }
   }
 
@@ -319,7 +217,7 @@ class DatePicker extends Component {
   }
 
   hideMonthDropdown() {
-    this.setState({ calendarState: 'SHOW' });
+    this.setState({ calendarState: undefined });
   }
 
   showTimeDropdown() {
@@ -327,7 +225,7 @@ class DatePicker extends Component {
   }
 
   hideTimeDropdown() {
-    this.setState({ calendarState: 'SHOW' });
+    this.setState({ calendarState: undefined });
   }
 
   toggleMonthDropdown = () => {
@@ -360,12 +258,12 @@ class DatePicker extends Component {
     onToggleTimeDropdown && onToggleTimeDropdown(toggle);
   }
 
-  reset = () => {
+  handleClean = () => {
     this.setState({ pageDate: moment() });
     this.updateValue(null);
   }
 
-  handleSelect = (nextValue) => {
+  handleSelect = (nextValue: Moment) => {
     const { pageDate } = this.state;
     const { onSelect } = this.props;
 
@@ -380,65 +278,33 @@ class DatePicker extends Component {
     onSelect && onSelect(nextValue);
   }
 
-  disabledOkButton = (date) => {
-    const calendarProps = pick(this.props, Object.keys(calendarPropTypes));
+  disabledOkButton = (date: Moment) => disabledTime(this.props, date)
 
-    return Object.keys(calendarProps).some((key) => {
+  calendar = null;
+  container = null;
+  trigger = null;
 
-      if (/(Hours)/.test(key)) {
-        return calendarProps[key](date.hours(), date);
-      }
-      if (/(Minutes)/.test(key)) {
-        return calendarProps[key](date.minutes(), date);
-      }
-      if (/(Seconds)/.test(key)) {
-        return calendarProps[key](date.seconds(), date);
-      }
-      return calendarProps[key](date);
-    });
-  }
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name);
 
-  bindRef = name => ref => {
-    this[name] = ref;
-  }
-
-  bindCalendar = this.bindRef('calendar')
-
-  bindContainer = this.bindRef('container')
-
-  render() {
+  renderCalendar() {
     const {
-      inline,
-      className,
       format,
-      defaultClassName,
-      renderPlaceholder,
-      disabled,
-      ranges,
-      cleanable,
-      align,
       isoWeek,
-      yearCeiling
+      yearCeiling,
+      disabledDate
     } = this.props;
 
     const {
       calendarState,
-      pageDate,
-      locale,
-      toggleWidth
+      pageDate
     } = this.state;
 
-    const value = this.getValue();
-    const paneClasses = classNames(this.prefix('pane'), {
-      hide: calendarState === 'HIDE'
-    });
+    const calendarProps = _.pick(this.props, calendarOnlyProps);
 
-    const calendarProps = pick(this.props, Object.keys(calendarPropTypes));
-    const elementProps = omit(this.props, Object.keys(propTypes));
-
-    const calendar = (
+    return (
       <Calendar
         {...calendarProps}
+        disabledDate={disabledDate}
         yearCeiling={yearCeiling}
         format={format}
         isoWeek={isoWeek}
@@ -451,67 +317,108 @@ class DatePicker extends Component {
         onToggleTimeDropdown={this.toggleTimeDropdown}
         onChangePageDate={this.handleChangePageDate}
         onChangePageTime={this.handleChangePageTime}
-        calendarRef={this.bindCalendar}
+        calendarRef={(ref) => {
+          this.calendar = ref;
+        }}
       />
     );
+  }
+  renderDropdownMenu(calendar: React.Node) {
+    const { placement, ranges } = this.props;
+    const { pageDate } = this.state;
+    const classes = classNames(
+      this.addPrefix('menu'),
+      `${namespace}-placement-${_.kebabCase(placement)}`
+    );
+    return (
+      <MenuWrapper
+        className={classes}
+      >
+        {calendar}
+        <Toolbar
+          ranges={ranges}
+          pageDate={pageDate}
+          disabledOkButton={this.disabledOkButton}
+          onShortcut={this.handleShortcutPageDate}
+          onOk={this.handleOK}
+        />
+      </MenuWrapper>
+    );
+  }
+  render() {
+    const {
+      inline,
+      className,
+      disabled,
+      ranges,
+      cleanable,
+      open,
+      defaultOpen,
+      placement,
+      onOpen,
+      onClose,
+      classPrefix,
+      ...rest
+    } = this.props;
+
+    const { locale } = this.state;
+    const value = this.getValue();
+    const unhandled = getUnhandledProps(DatePicker, rest);
+    const hasValue = !!value;
+    const calendar = this.renderCalendar();
 
     if (inline) {
       return (
         <IntlProvider locale={locale}>
-          <div className={`${defaultClassName} inline`}>
+          <div className={classNames(classPrefix, this.addPrefix('inline'), className)}>
             {calendar}
           </div>
         </IntlProvider>
       );
     }
 
-
-    const classes = classNames(defaultClassName, {
-      [this.prefix('dropdown')]: !inline
-    }, className);
-
-    // pane width is 270px
-    const paneStyles = {
-      marginLeft: align === 'right' ? toggleWidth - 270 : 0
-    };
+    const classes = classNames(classPrefix, {
+      [this.addPrefix('has-value')]: hasValue,
+      [this.addPrefix('disabled')]: disabled
+    }, `${namespace}-placement-${_.kebabCase(placement)}`, className);
 
     return (
       <IntlProvider locale={locale}>
         <div
-          {...elementProps}
+          {...unhandled}
           className={classes}
-          ref={this.bindContainer}
+          ref={(ref) => {
+            this.container = ref;
+          }}
         >
-          <DateContainer
+
+          <OverlayTrigger
+            ref={(ref) => {
+              this.trigger = ref;
+            }}
+            open={open}
+            defaultOpen={defaultOpen}
             disabled={disabled}
-            placeholder={this.getDateString()}
-            onClick={this.handleToggle}
-            showCleanButton={!!value && cleanable}
-            onClean={(value && cleanable) ? this.reset : null}
-            value={value}
-            renderPlaceholder={renderPlaceholder}
-            toggleRef={this.bindCalendar}
-          />
-          <div
-            className={paneClasses}
-            style={paneStyles}
+            trigger="click"
+            placement={placement}
+            onEntered={onOpen}
+            onExited={onClose}
+            speaker={this.renderDropdownMenu(calendar)}
           >
-            {calendar}
-            <Toolbar
-              ranges={ranges}
-              pageDate={pageDate}
-              disabledOkButton={this.disabledOkButton}
-              onShortcut={this.handleShortcutPageDate}
-              onOk={this.handleOK}
-            />
-          </div>
+
+            <Toggle
+              onClean={this.handleClean}
+              cleanable={cleanable && !disabled}
+              hasValue={!!value}
+            >
+              {this.getDateString()}
+            </Toggle>
+          </OverlayTrigger>
+
         </div>
       </IntlProvider>
     );
   }
 }
 
-DatePicker.propTypes = propTypes;
-DatePicker.defaultProps = defaultProps;
-
-export default decorate()(DatePicker);
+export default DatePicker;

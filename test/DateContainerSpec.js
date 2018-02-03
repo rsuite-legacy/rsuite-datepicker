@@ -43,19 +43,6 @@ describe('DateContainer', () => {
     assert.ok(instanceDOM.querySelector('.rsuite-datepicker-toggle-clean'));
   });
 
-  it('Should render a custom placeholder', () => {
-    const instance = ReactTestUtils.renderIntoDocument(
-      <DateContainer
-        placeholder="2017-08-13"
-        renderPlaceholder={(placeholder) => {
-          return <i>{placeholder}</i>;
-        }}
-      />
-    );
-    const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelector('i').innerText, '2017-08-13');
-  });
-
   it('Should call onClick callback', (done) => {
     const doneOp = () => {
       done();

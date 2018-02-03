@@ -47,3 +47,4 @@ dist/
 assets
 lib
 yarn.lock
+dev-publish.sh

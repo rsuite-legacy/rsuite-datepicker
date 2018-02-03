@@ -9,7 +9,6 @@
 | onToggle            | function(`show`:boolean)                   |            | 打开或者关闭日历版本的回调函数                          |
 | onSelect            | function(`date`:moment)                    |            | 选择日期或者时间的回调函数                              |
 | placeholder         | string                                     |            | 没有值时候默认显示内容                                  |
-| renderPlaceholder   | function(`placeholder`:node,`date`:moment) |            |                                                         |
 | format              | string                                     | YYYY-MM-DD | 日期显示格式化                                          |
 | locale              | object                                     |            | 本地化对应的语言描述                                    |
 | ranges              | array                                      | [...]      | 快捷项配置                                              |

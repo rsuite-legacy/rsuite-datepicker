@@ -18,7 +18,9 @@ module.exports = {
   'parser': 'babel-eslint',
   'plugins': [
     'react',
-    'babel'
+    'babel',
+    'json',
+    'flowtype'
   ],
   'parserOptions': {
     'ecmaVersion': 6,
@@ -61,11 +63,23 @@ module.exports = {
     'react/self-closing-comp': ERROR,                 //没有子元素的标签来说总是自己关闭标签
     'react/jsx-no-bind': ERROR,                       //当在 render() 里使用事件处理方法时，提前在构造函数里把 this 绑定上去
     'react/no-is-mounted': ERROR,                      //不要再使用 isMounted
-    'react/prop-types': [ERROR, { ignore: ['children', 'className', 'style', 'defaultClassName'] }],
+    'react/prop-types': [ERROR, { ignore: ['children', 'className', 'style'] }],
     'jsx-a11y/href-no-hash': OFF,
     'jsx-a11y/label-has-for': OFF,
     'react/jsx-filename-extension': OFF,
     'react/prefer-stateless-function': OFF,
-    'react/require-default-props': OFF
+    'react/require-default-props': OFF,
+
+    /**
+     * Flowtype
+     */
+    'flowtype/define-flow-type': 'error',
+    'flowtype/require-valid-file-annotation': 'off',
+    'flowtype/require-parameter-type': 'off',
+    'flowtype/require-return-type': 'off',
+    'flowtype/space-after-type-colon': 'off',
+    'flowtype/space-before-type-colon': 'off',
+    'flowtype/type-id-match': 'off',
+    'flowtype/use-flow-type': 'error'
   }
 };

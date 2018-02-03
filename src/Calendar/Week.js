@@ -1,26 +1,34 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
-import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
+import type { Moment } from 'moment';
+import _ from 'lodash';
+import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
+import { constants } from 'rsuite-utils/lib/Picker';
 
-const propTypes = {
-  weekendDate: PropTypes.instanceOf(moment),
-  selected: PropTypes.instanceOf(moment),
-  onSelect: PropTypes.func,
-  disabledDate: PropTypes.func,
-  inSameMonth: PropTypes.func
+type Props = {
+  weekendDate?: Moment,
+  selected?: Moment,
+  onSelect?: (date: Moment) => void,
+  disabledDate?: (date: Moment) => boolean,
+  inSameMonth?: (date: Moment) => boolean,
+  className?: string,
+  classPrefix?: string
 };
 
-const defaultProps = {
-  selected: moment()
-};
+class Week extends React.Component<Props> {
 
-class Week extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return !isEqual(this.props, nextProps);
+  static defaultProps = {
+    classPrefix: `${constants.namespace}-calendar-week`,
+    selected: moment()
   }
+
+  shouldComponentUpdate(nextProps: Props) {
+    return !_.isEqual(this.props, nextProps);
+  }
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
 
   renderDays() {
     const {
@@ -37,11 +45,12 @@ class Week extends React.Component {
       let thisDate = moment(weekendDate).add(i, 'd');
       let disabled = disabledDate && disabledDate(thisDate);
       let isToday = thisDate.isSame(moment(), 'date');
-      let classes = classNames('week-day', {
-        'un-same-month': !(inSameMonth && inSameMonth(thisDate)),
-        'is-today': isToday,
-        selected: thisDate.isSame(selected, 'date'),
-        disabled
+      let classes = classNames(this.addPrefix('day'), {
+        [this.addPrefix('day-un-same-month')]: !(inSameMonth && inSameMonth(thisDate)),
+        [this.addPrefix('day-is-today')]: isToday,
+        [this.addPrefix('day-selected')]: thisDate.isSame(selected, 'date'),
+        [this.addPrefix('day-disabled')]: disabled
+
       });
 
       days.push(
@@ -58,7 +67,7 @@ class Week extends React.Component {
           }}
           key={i}
         >
-          <span className="date-item">{thisDate.date()}</span>
+          <span className={this.addPrefix('date-item')}>{thisDate.date()}</span>
         </div>
       );
     }
@@ -68,15 +77,16 @@ class Week extends React.Component {
   render() {
     const {
       className,
-      ...props
+      classPrefix,
+      ...rest
     } = this.props;
 
-    const classes = classNames('week', className);
-    const elementProps = omit(props, Object.keys(propTypes));
+    const classes = classNames(classPrefix, className);
+    const unhandled = getUnhandledProps(Week, rest);
 
     return (
       <div
-        {...elementProps}
+        {...unhandled}
         className={classes}
       >
         {this.renderDays()}
@@ -84,8 +94,5 @@ class Week extends React.Component {
     );
   }
 }
-
-Week.propTypes = propTypes;
-Week.defaultProps = defaultProps;
 
 export default Week;

@@ -1,22 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Markdown } from 'react-markdown-reader';
 import { Button, ButtonToolbar } from 'rsuite';
 
-import CodeView from 'react-code-view';
 import moment from 'moment';
 import { PageContainer } from 'rsuite-docs';
 
 import './less/index.less';
-
+import Examples from './Examples';
 import DatePicker from '../src';
 
-class App extends Component {
+class App extends React.Component {
   render() {
     return (
       <PageContainer
-        githubURL="https://github.com/rsuite/rsuite-datepicker"
         activeKey="DatePicker"
+        githubURL="https://github.com/rsuite/rsuite-datepicker"
       >
 
         <Markdown>
@@ -25,68 +24,29 @@ class App extends Component {
 
         <h2>示例</h2>
 
-        <CodeView
-          dependencies={{
-            moment,
-            DatePicker
-          }}
-        >
-          {require('./md/DatePickerDefault.md')}
-        </CodeView>
-
-        <CodeView
-          dependencies={{
-            moment,
-            DatePicker
-          }}
-        >
-          {require('./md/DatePickerDisabled.md')}
-        </CodeView>
-
-        <CodeView
-          dependencies={{
-            moment,
-            DatePicker
-          }}
-        >
-          {require('./md/DatePickerCustomToolbar.md')}
-        </CodeView>
-
-
-        <CodeView
-          dependencies={{
-            moment,
-            DatePicker
-          }}
-        >
-          {require('./md/DatePickerIntl.md')}
-        </CodeView>
-
-        <CodeView
-          dependencies={{
-            moment,
-            DatePicker
-          }}
-        >
-          {require('./md/DatePickerValue.md')}
-        </CodeView>
-
-        <CodeView
+        <Examples
           dependencies={{
             Button,
             ButtonToolbar,
             moment,
             DatePicker
           }}
-        >
-          {require('./md/DatePickerToggle.md')}
-        </CodeView>
+          list={[
+            require('./md/default.md'),
+            require('./md/placement.md'),
+            require('./md/intl.md'),
+            require('./md/value.md'),
+            require('./md/custom.md'),
+            require('./md/disabled.md')
+          ]}
+        />
 
         <Markdown>
           {require('./md/props.md')}
         </Markdown>
 
       </PageContainer>
+
     );
   }
 }

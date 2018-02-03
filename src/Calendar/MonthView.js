@@ -1,52 +1,38 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import * as React from 'react';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import classNames from 'classnames';
-import omit from 'lodash/omit';
+import { constants } from 'rsuite-utils/lib/Picker';
+import { prefix } from 'rsuite-utils/lib/utils';
+
 import Weeks from './Weeks';
 import getMonthView from '../utils/getMonthView';
 
-
-const propTypes = {
-  activeDate: PropTypes.instanceOf(moment),
-  onSelect: PropTypes.func,
-  disabledDate: PropTypes.func,
-  isoWeek: PropTypes.bool
-};
-
-const defaultProps = {
-  activeDate: moment()
+type Props = {
+  activeDate?: Moment,
+  onSelect?: (date: Moment) => void,
+  disabledDate?: (date: Moment) => boolean,
+  isoWeek?: boolean,
+  className?: string,
+  classPrefix?: string
 };
 
 // is two date in the same month
-function inSameMonth(dateA, dateB) {
-  return dateA.month() === dateB.month();
-}
+const inSameMonth = (dateA: Moment, dateB: Moment) => dateA.month() === dateB.month();
+const getThisMonthDate = (date: Moment) => date.clone().date(1);
 
+class MonthView extends React.Component<Props> {
 
-class MonthView extends React.Component {
+  static defaultProps = {
+    classPrefix: `${constants.namespace}-calendar-month-view`,
+    activeDate: moment()
+  };
 
-  getPrevMonthDate = date => date.clone().date(1).add(-1, 'month');
-
-  getThisMonthDate = date => date.clone().date(1);
-
-  getNextMonthDate = date => date.clone().date(1).add(1, 'month');
-
-  inSameMonthDate = month => date => inSameMonth(month, date)
-
-  inSamePrevMonthDate = (date) => {
-    const prevMonthDate = this.getPrevMonthDate(this.props.activeDate);
-    return this.inSameMonthDate(date, prevMonthDate);
-  }
-
-  inSameThisMonthDate = (date) => {
-    const thisMonthDate = this.getThisMonthDate(this.props.activeDate);
-    return this.inSameMonthDate(date, thisMonthDate);
-  }
-
-  inSameNextMonthDate = (date) => {
-    const nextMonthDate = this.getNextMonthDate(this.props.activeDate);
-    return this.inSameMonthDate(date, nextMonthDate);
+  inSameThisMonthDate = (date: Moment) => {
+    const thisMonthDate = getThisMonthDate(this.props.activeDate);
+    return inSameMonth(date, thisMonthDate);
   }
 
   render() {
@@ -56,29 +42,21 @@ class MonthView extends React.Component {
       onSelect,
       disabledDate,
       className,
+      classPrefix,
       isoWeek,
-      ...props
+      ...rest
     } = this.props;
 
-    const thisMonthDate = this.getThisMonthDate(activeDate);
-    const prevMonthDate = this.getPrevMonthDate(activeDate);
-    const nextMonthDate = this.getNextMonthDate(activeDate);
-    const classes = classNames('month-view', className);
-    const elementProps = omit(props, Object.keys(propTypes));
-
+    const thisMonthDate = getThisMonthDate(activeDate);
+    const addPrefix = prefix(classPrefix);
+    const classes = classNames(classPrefix, className);
 
     return (
       <div
-        {...elementProps}
+        {...rest}
         className={classes}
       >
-        <div className="month-view-weeks-wrapper">
-          <Weeks
-            inSameMonth={this.inSamePrevMonthDate}
-            disabledDate={disabledDate}
-            onSelect={onSelect}
-            weeks={getMonthView(prevMonthDate, isoWeek)}
-          />
+        <div className={addPrefix('weeks-wrapper')}>
           <Weeks
             selected={activeDate}
             onSelect={onSelect}
@@ -86,19 +64,11 @@ class MonthView extends React.Component {
             disabledDate={disabledDate}
             weeks={getMonthView(thisMonthDate, isoWeek)}
           />
-          <Weeks
-            inSameMonth={this.inSameNextMonthDate}
-            disabledDate={disabledDate}
-            onSelect={onSelect}
-            weeks={getMonthView(nextMonthDate, isoWeek)}
-          />
         </div>
       </div>
     );
   }
 }
 
-MonthView.propTypes = propTypes;
-MonthView.defaultProps = defaultProps;
 
 export default MonthView;

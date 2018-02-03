@@ -1,24 +1,33 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { getPosition, scrollTop } from 'dom-lib';
-import moment from 'moment';
-import omit from 'lodash/omit';
-import isNumber from 'lodash/isNumber';
-import camelCase from 'lodash/camelCase';
-import isEqual from 'lodash/isEqual';
-import classNames from 'classnames';
-import calendarPropTypes from '../calendarPropTypes';
-import scrollTopAnimation from '../utils/scrollTopAnimation';
-import decorate from '../utils/decorate';
-import { FormattedMessage } from '../intl';
+// @flow
 
-const propTypes = {
-  ...omit(calendarPropTypes, 'disabledDate'),
-  date: PropTypes.instanceOf(moment),
-  onClick: PropTypes.func,
-  show: PropTypes.bool,
-  format: PropTypes.string
-};
+import * as React from 'react';
+import { getPosition, scrollTop } from 'dom-lib';
+import { FormattedMessage } from 'rsuite-intl';
+import moment from 'moment';
+import type { Moment } from 'moment';
+import _ from 'lodash';
+import classNames from 'classnames';
+import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
+import { constants } from 'rsuite-utils/lib/Picker';
+
+import scrollTopAnimation from '../utils/scrollTopAnimation';
+
+
+type Props = {
+  disabledDate?: (date: Moment) => boolean,
+  disabledHours?: (hour: number, date: Moment) => boolean,
+  disabledMinutes?: (minute: number, date: Moment) => boolean,
+  disabledSeconds?: (second: number, date: Moment) => boolean,
+  hideHours?: (hour: number, date: Moment) => boolean,
+  hideMinutes?: (minute: number, date: Moment) => boolean,
+  hideSeconds?: (second: number, date: Moment) => boolean,
+  date?: Moment,
+  onClick?: (nextDate: Moment, event: SyntheticEvent<*>) => void,
+  show: boolean,
+  format: string,
+  className?: string,
+  classPrefix?: string
+}
 
 const ranges = {
   hours: { start: 0, end: 23 },
@@ -26,26 +35,34 @@ const ranges = {
   seconds: { start: 0, end: 59 },
 };
 
+class TimeDropdown extends React.Component<Props> {
 
-class TimeDropdown extends React.Component {
-  constructor(props) {
-    super(props);
-    this.container = {};
-  }
+  static defaultProps = {
+    classPrefix: `${constants.namespace}-calendar-time-dropdown`,
+    ranges: [{
+      label: 'today',
+      value: moment(),
+      closeOverlay: true
+    }, {
+      label: 'yesterday',
+      value: moment().add(-1, 'd'),
+      closeOverlay: true,
+    }]
+  };
 
   componentDidMount() {
     this.updatePosition();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     this.updatePosition(nextProps);
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.show && !isEqual(this.props, nextProps);
+  shouldComponentUpdate(nextProps: Props) {
+    return nextProps.show && !_.isEqual(this.props, nextProps);
   }
 
-  getTime(props) {
+  getTime(props?: Props) {
     const { format, date } = props || this.props;
     let time = date || moment();
     let nextTime = {};
@@ -61,15 +78,18 @@ class TimeDropdown extends React.Component {
     return nextTime;
   }
 
-  updatePosition(props) {
+  container = {}
+  content = {}
+
+  updatePosition(props?: Props) {
     const { show } = props || this.props;
     const time = this.getTime(props);
     show && this.scrollTo(time);
   }
 
-  scrollTo = (time) => {
+  scrollTo = (time: Object) => {
 
-    Object.entries(time).forEach((item) => {
+    Object.entries(time).forEach((item: any) => {
       let container = this.container[item[0]];
       let node = container.querySelector(`.item-${item[0]}-${item[1]}`);
       if (node && container) {
@@ -79,23 +99,23 @@ class TimeDropdown extends React.Component {
     });
   }
 
-  handleClick = (type, d, event) => {
+  handleClick = (type: string, d: Moment, event: SyntheticEvent<*>) => {
     const { onClick, date } = this.props;
     const nextDate = moment(date)[type](d);
     onClick && onClick(nextDate, event);
   }
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
+  renderColumn(type: string, active: any) {
 
-  renderColumn(type, active) {
-
-    if (!isNumber(active)) {
+    if (!_.isNumber(active)) {
       return null;
     }
     const { date } = this.props;
     const { start, end } = ranges[type];
     const items = [];
 
-    const hideFunc = this.props[camelCase(`hide_${type}`)];
-    const disabledFunc = this.props[camelCase(`disabled_${type}`)];
+    const hideFunc = this.props[_.camelCase(`hide_${type}`)];
+    const disabledFunc = this.props[_.camelCase(`disabled_${type}`)];
 
     for (let i = start; i <= end; i += 1) {
 
@@ -124,8 +144,8 @@ class TimeDropdown extends React.Component {
     }
 
     return (
-      <div className="column">
-        <div className="column-title">
+      <div className={this.addPrefix('column')}>
+        <div className={this.addPrefix('column-title')}>
           <FormattedMessage id={type} />
         </div>
         <ul
@@ -141,23 +161,27 @@ class TimeDropdown extends React.Component {
 
   render() {
 
-    const { defaultClassName, className, ...props } = this.props;
+    const {
+      className,
+      classPrefix,
+      ...rest
+    } = this.props;
     const time = this.getTime();
-    const classes = classNames(defaultClassName, className);
-    const elementProps = omit(props, Object.keys(propTypes));
+    const classes = classNames(classPrefix, className);
+    const unhandled = getUnhandledProps(TimeDropdown, rest);
 
     return (
       <div
-        {...elementProps}
+        {...unhandled}
         className={classes}
       >
         <div
-          className={this.prefix('content')}
+          className={this.addPrefix('content')}
           ref={(ref) => {
             this.content = ref;
           }}
         >
-          <div className={this.prefix('content-row')}>
+          <div className={this.addPrefix('row')}>
             {this.renderColumn('hours', time.hours)}
             {this.renderColumn('minutes', time.minutes)}
             {this.renderColumn('seconds', time.seconds)}
@@ -168,8 +192,5 @@ class TimeDropdown extends React.Component {
   }
 }
 
-TimeDropdown.propTypes = propTypes;
 
-export default decorate({
-  prefixClass: 'time-dropdown'
-})(TimeDropdown);
+export default TimeDropdown;

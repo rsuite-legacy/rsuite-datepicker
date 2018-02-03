@@ -1,34 +1,34 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import debounce from 'lodash/debounce';
+import * as React from 'react';
 import moment from 'moment';
+import type { Moment } from 'moment';
 import classNames from 'classnames';
-import omit from 'lodash/omit';
-import decorate from '../utils/decorate';
+import { constants } from 'rsuite-utils/lib/Picker';
+import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
 
-const propTypes = {
-  date: PropTypes.instanceOf(moment),
-  onMoveForword: PropTypes.func,
-  onMoveBackward: PropTypes.func,
-  onToggleMonthDropdown: PropTypes.func,
-  onToggleTimeDropdown: PropTypes.func,
-  showMonth: PropTypes.bool,
-  showDate: PropTypes.bool,
-  showTime: PropTypes.bool,
-  format: PropTypes.string,
-  disabledDate: PropTypes.func,
-  disabledTime: PropTypes.func
+type Props = {
+  date?: Moment,
+  onMoveForword?: () => void,
+  onMoveBackward?: () => void,
+  onToggleMonthDropdown?: () => void,
+  onToggleTimeDropdown?: () => void,
+  showMonth?: boolean,
+  showDate?: boolean,
+  showTime?: boolean,
+  format?: string,
+  disabledDate?: (date: Moment) => boolean,
+  disabledTime?: (date: Moment) => boolean,
+  classPrefix?: string
 };
 
-const defaultProps = {
-  date: moment()
-};
-
-class MonthHeader extends Component {
-
+class MonthHeader extends React.Component<Props> {
+  static defaultProps = {
+    classPrefix: `${constants.namespace}-calendar-header`,
+    date: moment()
+  };
   getTimeFormat() {
     const { format } = this.props;
     const timeFormat = [];
+
     if (!format) {
       return '';
     }
@@ -47,6 +47,7 @@ class MonthHeader extends Component {
   }
 
   getDateFormat() {
+
     const { showDate, showMonth } = this.props;
 
     if (showDate) {
@@ -68,28 +69,30 @@ class MonthHeader extends Component {
       showTime,
       showDate,
       showMonth,
+      classPrefix,
       className,
-      defaultClassName,
       disabledDate,
       disabledTime,
-      ...props
+      ...rest
     } = this.props;
 
-    const dateTitleClasses = classNames(this.prefix('title'), 'title-date', {
-      error: disabledDate && disabledDate(date)
-    });
+    const addPrefix = prefix(classPrefix);
 
-    const timeTitleClasses = classNames(this.prefix('title'), 'title-time', {
+    const dateTitleClasses = classNames(addPrefix('title'), {
+      error: disabledDate && disabledDate(date)
+    }, addPrefix('title-date'));
+
+    const timeTitleClasses = classNames(addPrefix('title'), {
       error: disabledTime && disabledTime(date)
-    });
+    }, addPrefix('title-time'));
 
     const dateContainer = [
       <i
         key="btn-backward"
-        className={this.prefix('backward')}
+        className={addPrefix('backward')}
         role="button"
         tabIndex="-1"
-        onClick={onMoveBackward && debounce(onMoveBackward, 200)}
+        onClick={onMoveBackward && onMoveBackward}
       />,
       <span
         key="title-date"
@@ -102,19 +105,19 @@ class MonthHeader extends Component {
       </span>,
       <i
         key="btn-forward"
-        className={this.prefix('forward')}
+        className={addPrefix('forward')}
         role="button"
         tabIndex="-1"
-        onClick={onMoveForword && debounce(onMoveForword, 200)}
+        onClick={onMoveForword && onMoveForword}
       />
     ];
 
-    const classes = classNames(defaultClassName, className);
-    const elementProps = omit(props, Object.keys(propTypes));
+    const classes = classNames(classPrefix, className);
+    const unhandled = getUnhandledProps(MonthHeader, rest);
 
     return (
       <div
-        {...elementProps}
+        {...unhandled}
         className={classes}
       >
         {(showDate || showMonth) && dateContainer}
@@ -135,9 +138,4 @@ class MonthHeader extends Component {
   }
 }
 
-MonthHeader.propTypes = propTypes;
-MonthHeader.defaultProps = defaultProps;
-
-export default decorate({
-  prefixClass: 'calendar-header'
-})(MonthHeader);
+export default MonthHeader;
