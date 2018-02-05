@@ -5,9 +5,8 @@ import moment from 'moment';
 import type { Moment } from 'moment';
 import classNames from 'classnames';
 import { constants } from 'rsuite-utils/lib/Picker';
-import { prefix } from 'rsuite-utils/lib/utils';
 
-import Weeks from './Weeks';
+import Table from './Table';
 import getMonthView from '../utils/getMonthView';
 
 type Props = {
@@ -26,7 +25,7 @@ const getThisMonthDate = (date: Moment) => date.clone().date(1);
 class MonthView extends React.Component<Props> {
 
   static defaultProps = {
-    classPrefix: `${constants.namespace}-calendar-month-view`,
+    classPrefix: `${constants.namespace}-calendar-view`,
     activeDate: moment()
   };
 
@@ -48,7 +47,6 @@ class MonthView extends React.Component<Props> {
     } = this.props;
 
     const thisMonthDate = getThisMonthDate(activeDate);
-    const addPrefix = prefix(classPrefix);
     const classes = classNames(classPrefix, className);
 
     return (
@@ -56,15 +54,14 @@ class MonthView extends React.Component<Props> {
         {...rest}
         className={classes}
       >
-        <div className={addPrefix('weeks-wrapper')}>
-          <Weeks
-            selected={activeDate}
-            onSelect={onSelect}
-            inSameMonth={this.inSameThisMonthDate}
-            disabledDate={disabledDate}
-            weeks={getMonthView(thisMonthDate, isoWeek)}
-          />
-        </div>
+        <Table
+          selected={activeDate}
+          onSelect={onSelect}
+          inSameMonth={this.inSameThisMonthDate}
+          disabledDate={disabledDate}
+          isoWeek={isoWeek}
+          rows={getMonthView(thisMonthDate, isoWeek)}
+        />
       </div>
     );
   }

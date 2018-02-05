@@ -33,18 +33,7 @@
     text-decoration: none !important;
     cursor: pointer;
   }
-  &-pane {
-    position: absolute;
-    z-index: 999;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-    background-color: @container-bg;
-    &.hide {
-      visibility: hidden;
-      display: none;
-      opacity: 0;
-    }
-  }
-  &-date-menu{
+  &-date-menu {
     position: absolute;
     box-sizing: border-box;
     text-align: left;
@@ -83,7 +72,7 @@
       background: #fff;
       transition: all .15s
     }
-    &:hover &-clean{
+    &:hover &-clean {
       opacity: 1;
     }
     &-placeholder {
@@ -119,14 +108,11 @@
     overflow: hidden;
     padding-top: 36px;
     min-height: 260px;
-    &-month-view-weeks-wrapper {
-      left: 0;
-    }
     &-show-month-dropdown &-month-dropdown {
       opacity: 1;
       top: 32px;
     }
-    &-show-month-dropdown &-header{
+    &-show-month-dropdown &-header {
       box-shadow: 0 2px 3px rgba(0, 0, 0, 0.28);
       i {
         visibility: hidden;
@@ -141,8 +127,7 @@
       opacity: 1;
       top: 46px;
     }
-
-    &-show-time-dropdown &-header{
+    &-show-time-dropdown &-header {
       box-shadow: 0 2px 3px rgba(0, 0, 0, 0.28);
       i {
         visibility: hidden;
@@ -153,7 +138,6 @@
         background: #eee;
       }
     }
-
     &-header {
       position: absolute;
       width: 100%;
@@ -219,83 +203,79 @@
         }
       }
     }
-    &-month-view {
+    &-view {
       position: relative;
       overflow: hidden;
       width: @month-view-width;
-      height: ( @cell-height + @cell-spacing * 2) * 6 + 10;
-      padding: 4px;
-      &-weeks-wrapper {
-        position: absolute
-      }
+      height: ( @cell-height + @cell-spacing * 2) * 7 + 10;
     }
-    &-week-header {
+    &-table-header-row {
       @padding: 4px;
       border-bottom: 1px solid #DDD;
       padding: @padding 0;
       background: @header-bg;
       display: table-row;
-      &-day {
-        display: table-cell;
-        width: @month-view-width / 7;
-        line-height: 32px;
-        text-align: center;
-        text-transform: uppercase;
-        font-size: .8em;
-        &:first-child, &:last-child {
-          color: #999;
-        }
+    }
+    &-table-header-cell {
+      display: table-cell;
+      width: @month-view-width / 7;
+      line-height: 32px;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: .8em;
+      &:first-child, &:last-child {
+        color: #999;
       }
     }
-    &-weeks {
+    &-table {
       position: absolute;
       width: @month-view-width;
       display: table;
     }
-    &-week {
+    &-table-row {
       display: table-row;
-      &-day {
-        display: table-cell;
-        width: @month-view-width / 7 - @cell-spacing * 2;
-        padding: 6px;
-        margin: @cell-spacing;
-        text-align: center;
-        font-size: .9em;
-        cursor: pointer;
+    }
+    &-table-cell {
+      display: table-cell;
+      width: @month-view-width / 7 - @cell-spacing * 2;
+      padding: 6px;
+      margin: @cell-spacing;
+      text-align: center;
+      font-size: .9em;
+      cursor: pointer;
+      &:hover {
+        background-color: @cell-hover-bg;
+      }
+      &.disable {
+        opacity: .2;
+        cursor: default;
         &:hover {
-          background-color: @cell-hover-bg;
+          background-color: #eee;
         }
-        &.disable {
-          opacity: .2;
-          cursor: default;
-          &:hover {
-            background-color: #eee;
-          }
+      }
+      &-un-same-month {
+        opacity: .5;
+      }
+      &-disabled {
+        opacity: .4;
+        background: none;
+        color: @B500;
+        cursor: not-allowed;
+        border-left: 1px solid #eee;
+      }
+      &-is-today {
+        background: #fcf8e3;
+        border: 1px solid #faebcc;
+      }
+      &-selected {
+        background: @color-active;
+        color: #EFEFEF;
+        &:hover {
+          background-color: @color-active;
         }
-        &-un-same-month {
-          opacity: .5;
-        }
-        &-disabled {
-          opacity: .4;
-          background: none;
-          color: @B500;
-          cursor: not-allowed;
-          border-left: 1px solid #eee;
-        }
-        &-is-today {
-          background: #fcf8e3;
-          border: 1px solid #faebcc;
-        }
-        &-selected {
-          background: @color-active;
-          color: #EFEFEF;
-          &:hover {
-            background-color: @color-active;
-          }
-        }
-        &:first-child {
-          border-left: none;
-        }
+      }
+      &:first-child {
+        border-left: none;
       }
     }
     .dropdown() {

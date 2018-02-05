@@ -89,7 +89,7 @@ class DatePicker extends React.Component<Props, States> {
       value: activeValue,
       forceOpen: false,
       calendarState: undefined,
-      locale: _.merge({}, defaultLocale(props.isoWeek), props.locale),
+      locale: _.merge({}, defaultLocale, props.locale),
       pageDate: activeValue || calendarDefaultDate || moment()  // display calendar date
     };
   }

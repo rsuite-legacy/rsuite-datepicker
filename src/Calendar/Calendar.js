@@ -10,9 +10,8 @@ import { constants } from 'rsuite-utils/lib/Picker';
 
 import MonthDropdown from './MonthDropdown';
 import TimeDropdown from './TimeDropdown';
-import MonthView from './MonthView';
-import MonthHeader from './MonthHeader';
-import WeekHeader from './WeekHeader';
+import View from './View';
+import Header from './Header';
 import disabledTime, { calendarOnlyProps } from '../utils/disabledTime';
 
 const { namespace } = constants;
@@ -119,25 +118,13 @@ class Calendar extends React.Component<Props> {
 
     const unhandled = getUnhandledProps(Calendar, rest);
     const timeDropdownProps = _.pick(rest, calendarOnlyProps);
-
-    const calendar = [
-      <WeekHeader key="WeekHeader" />,
-      <MonthView
-        key="MonthView"
-        activeDate={pageDate}
-        onSelect={onSelect}
-        isoWeek={isoWeek}
-        disabledDate={this.disabledDate}
-      />
-    ];
-
     return (
       <div
         {...unhandled}
         className={calendarClasses}
         ref={calendarRef}
       >
-        <MonthHeader
+        <Header
           date={pageDate}
           format={format}
           showMonth={showMonth}
@@ -150,27 +137,34 @@ class Calendar extends React.Component<Props> {
           onToggleMonthDropdown={onToggleMonthDropdown}
           onToggleTimeDropdown={onToggleTimeDropdown}
         />
-        {showDate && calendar}
-        {
-          showMonth ? (
-            <MonthDropdown
-              date={pageDate}
-              onClick={onChangePageDate}
-              show={dropMonth}
-              yearCeiling={yearCeiling}
-            />
-          ) : null
+        {showDate &&
+          <View
+            key="MonthView"
+            activeDate={pageDate}
+            onSelect={onSelect}
+            isoWeek={isoWeek}
+            disabledDate={this.disabledDate}
+          />
         }
         {
-          showTime ? (
-            <TimeDropdown
-              {...timeDropdownProps}
-              date={pageDate}
-              format={format}
-              show={dropTime}
-              onClick={onChangePageTime}
-            />
-          ) : null
+          showMonth &&
+          <MonthDropdown
+            date={pageDate}
+            onClick={onChangePageDate}
+            show={dropMonth}
+            yearCeiling={yearCeiling}
+          />
+
+        }
+        {
+          showTime &&
+          <TimeDropdown
+            {...timeDropdownProps}
+            date={pageDate}
+            format={format}
+            show={dropTime}
+            onClick={onChangePageTime}
+          />
         }
 
       </div>

@@ -5,10 +5,12 @@ import type { Moment } from 'moment';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { constants } from 'rsuite-utils/lib/Picker';
-import Week from './Week';
+import TableRow from './TableRow';
+import TableHeaderRow from './TableHeaderRow';
 
 type Props = {
-  weeks: Array<any>,
+  rows: Array<any>,
+  isoWeek?: boolean,
   selected?: Moment,
   onSelect?: () => void,
   disabledDate?: (date: Moment) => boolean,
@@ -18,10 +20,10 @@ type Props = {
 };
 
 
-class Weeks extends React.Component<Props> {
+class Table extends React.Component<Props> {
   static defaultProps = {
-    classPrefix: `${constants.namespace}-calendar-weeks`,
-    weeks: []
+    classPrefix: `${constants.namespace}-calendar-table`,
+    rows: []
   };
 
 
@@ -31,13 +33,14 @@ class Weeks extends React.Component<Props> {
 
   render() {
     const {
-      weeks,
+      rows,
       selected,
       onSelect,
       disabledDate,
       inSameMonth,
       className,
       classPrefix,
+      isoWeek,
       ...rest
     } = this.props;
 
@@ -48,9 +51,12 @@ class Weeks extends React.Component<Props> {
         {...rest}
         className={classes}
       >
+
+        <TableHeaderRow isoWeek={isoWeek} />
+
         {
-          weeks.map((week, index) => (
-            <Week
+          rows.map((week, index) => (
+            <TableRow
               /* eslint-disable */
               key={index}
               weekendDate={week}
@@ -66,4 +72,4 @@ class Weeks extends React.Component<Props> {
   }
 }
 
-export default Weeks;
+export default Table;

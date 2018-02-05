@@ -18,10 +18,12 @@ type Props = {
   classPrefix?: string
 };
 
-class Week extends React.Component<Props> {
+const { namespace } = constants;
+
+class TableRow extends React.Component<Props> {
 
   static defaultProps = {
-    classPrefix: `${constants.namespace}-calendar-week`,
+    classPrefix: `${namespace}-calendar-table`,
     selected: moment()
   }
 
@@ -45,12 +47,11 @@ class Week extends React.Component<Props> {
       let thisDate = moment(weekendDate).add(i, 'd');
       let disabled = disabledDate && disabledDate(thisDate);
       let isToday = thisDate.isSame(moment(), 'date');
-      let classes = classNames(this.addPrefix('day'), {
-        [this.addPrefix('day-un-same-month')]: !(inSameMonth && inSameMonth(thisDate)),
-        [this.addPrefix('day-is-today')]: isToday,
-        [this.addPrefix('day-selected')]: thisDate.isSame(selected, 'date'),
-        [this.addPrefix('day-disabled')]: disabled
-
+      let classes = classNames(this.addPrefix('cell'), {
+        [this.addPrefix('cell-un-same-month')]: !(inSameMonth && inSameMonth(thisDate)),
+        [this.addPrefix('cell-is-today')]: isToday,
+        [this.addPrefix('cell-selected')]: thisDate.isSame(selected, 'date'),
+        [this.addPrefix('cell-disabled')]: disabled
       });
 
       days.push(
@@ -67,7 +68,7 @@ class Week extends React.Component<Props> {
           }}
           key={i}
         >
-          <span className={this.addPrefix('date-item')}>{thisDate.date()}</span>
+          <span className={this.addPrefix('cell-content')}>{thisDate.date()}</span>
         </div>
       );
     }
@@ -77,12 +78,11 @@ class Week extends React.Component<Props> {
   render() {
     const {
       className,
-      classPrefix,
       ...rest
     } = this.props;
 
-    const classes = classNames(classPrefix, className);
-    const unhandled = getUnhandledProps(Week, rest);
+    const classes = classNames(this.addPrefix('row'), className);
+    const unhandled = getUnhandledProps(TableRow, rest);
 
     return (
       <div
@@ -95,4 +95,4 @@ class Week extends React.Component<Props> {
   }
 }
 
-export default Week;
+export default TableRow;

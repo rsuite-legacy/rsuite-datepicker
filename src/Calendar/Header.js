@@ -20,7 +20,7 @@ type Props = {
   classPrefix?: string
 };
 
-class MonthHeader extends React.Component<Props> {
+class Header extends React.Component<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-header`,
     date: moment()
@@ -113,7 +113,7 @@ class MonthHeader extends React.Component<Props> {
     ];
 
     const classes = classNames(classPrefix, className);
-    const unhandled = getUnhandledProps(MonthHeader, rest);
+    const unhandled = getUnhandledProps(Header, rest);
 
     return (
       <div
@@ -138,4 +138,4 @@ class MonthHeader extends React.Component<Props> {
   }
 }
 
-export default MonthHeader;
+export default Header;
