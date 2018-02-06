@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react';
-import type { Moment } from 'moment';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
@@ -13,28 +12,30 @@ import TimeDropdown from './TimeDropdown';
 import View from './View';
 import Header from './Header';
 import disabledTime, { calendarOnlyProps } from '../utils/disabledTime';
+import { shouldTime, shouldDate, shouldMonth } from '../utils/formatUtils';
 
 const { namespace } = constants;
 
+
 type Props = {
-  pageDate: Moment,
-  disabledDate?: (date: Moment) => boolean,
-  disabledHours?: (hour: number, date: Moment) => boolean,
-  disabledMinutes?: (minute: number, date: Moment) => boolean,
-  disabledSeconds?: (second: number, date: Moment) => boolean,
-  hideHours?: (hour: number, date: Moment) => boolean,
-  hideMinutes?: (minute: number, date: Moment) => boolean,
-  hideSeconds?: (second: number, date: Moment) => boolean,
-  calendarState?: string,
-  onMoveForword?: (nextPageDate: Moment) => void,
-  onMoveBackward?: (nextPageDate: Moment) => void,
-  onSelect?: (date: Moment) => void,
+  pageDate: moment$Moment,
+  disabledDate?: (date: moment$Moment) => boolean,
+  disabledHours?: (hour: number, date: moment$Moment) => boolean,
+  disabledMinutes?: (minute: number, date: moment$Moment) => boolean,
+  disabledSeconds?: (second: number, date: moment$Moment) => boolean,
+  hideHours?: (hour: number, date: moment$Moment) => boolean,
+  hideMinutes?: (minute: number, date: moment$Moment) => boolean,
+  hideSeconds?: (second: number, date: moment$Moment) => boolean,
+  calendarState?: 'DROP_MONTH' | 'DROP_TIME',
+  onMoveForword?: (nextPageDate: moment$Moment) => void,
+  onMoveBackward?: (nextPageDate: moment$Moment) => void,
+  onSelect?: (date: moment$Moment) => void,
   onToggleMonthDropdown?: (toggle: boolean) => void,
   onToggleTimeDropdown?: (toggle: boolean) => void,
-  onChangePageDate?: (nextPageDate: Moment) => void,
-  onChangePageTime?: (nextPageTime: Moment) => void,
+  onChangePageDate?: (nextPageDate: moment$Moment, event: SyntheticEvent<*>) => void,
+  onChangePageTime?: (nextPageTime: moment$Moment, event: SyntheticEvent<*>) => void,
   calendarRef?: React.ElementRef<*>,
-  format: string,
+  format?: string,
   isoWeek?: boolean,
   yearCeiling?: number,
   className?: string,
@@ -46,7 +47,7 @@ class Calendar extends React.Component<Props> {
   static defaultProps = {
     classPrefix: `${namespace}-calendar`,
   };
-  disabledDate = (date: Moment) => {
+  disabledDate = (date: moment$Moment) => {
     const { disabledDate } = this.props;
     if (disabledDate && disabledDate(date)) {
       return true;
@@ -54,22 +55,7 @@ class Calendar extends React.Component<Props> {
     return false;
   }
 
-  disabledTime = (date: Moment) => disabledTime(this.props, date)
-
-  shouldMountTime(props?: Props) {
-    const { format } = props || this.props;
-    return /(H|h|m|s)/.test(format);
-  }
-
-  shouldMountMonth(props?: Props) {
-    const { format } = props || this.props;
-    return /Y/.test(format) && /M/.test(format);
-  }
-
-  shouldMountDate(props?: Props): boolean {
-    const { format } = props || this.props;
-    return /Y/.test(format) && /M/.test(format) && /D/.test(format);
-  }
+  disabledTime = (date: moment$Moment) => disabledTime(this.props, date)
 
   handleMoveForword = () => {
     const { onMoveForword, pageDate } = this.props;
@@ -101,9 +87,9 @@ class Calendar extends React.Component<Props> {
     } = this.props;
 
 
-    const showDate = this.shouldMountDate();
-    const showTime = this.shouldMountTime();
-    const showMonth = this.shouldMountMonth();
+    const showDate = shouldDate(format);
+    const showTime = shouldTime(format);
+    const showMonth = shouldMonth(format);
 
     const onlyShowTime = showTime && !showDate && !showMonth;
     const onlyShowMonth = showMonth && !showDate && !showTime;
@@ -150,7 +136,7 @@ class Calendar extends React.Component<Props> {
           showMonth &&
           <MonthDropdown
             date={pageDate}
-            onClick={onChangePageDate}
+            onSelect={onChangePageDate}
             show={dropMonth}
             yearCeiling={yearCeiling}
           />
@@ -163,7 +149,7 @@ class Calendar extends React.Component<Props> {
             date={pageDate}
             format={format}
             show={dropTime}
-            onClick={onChangePageTime}
+            onSelect={onChangePageTime}
           />
         }
 

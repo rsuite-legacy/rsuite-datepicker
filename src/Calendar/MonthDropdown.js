@@ -4,7 +4,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
 import moment from 'moment';
-import type { Moment } from 'moment';
 import _ from 'lodash';
 import { constants } from 'rsuite-utils/lib/Picker';
 import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
@@ -13,9 +12,9 @@ import MonthDropdownItem from './MonthDropdownItem';
 import scrollTopAnimation from '../utils/scrollTopAnimation';
 
 type Props = {
-  onClick?: (month: number, event: SyntheticEvent<*>) => void,
+  onSelect?: (month: moment$Moment, event: SyntheticEvent<*>) => void,
   show: boolean,
-  date: Moment,
+  date: moment$Moment,
   yearCeiling?: number,
   className?: string,
   classPrefix?: string
@@ -29,6 +28,7 @@ class MonthDropdown extends React.Component<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-month-dropdown`,
     show: false,
+    yearCeiling: 5,
     date: moment()
   };
 
@@ -36,12 +36,12 @@ class MonthDropdown extends React.Component<Props> {
     this.updatePosition();
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    this.updatePosition(nextProps);
-  }
-
   shouldComponentUpdate(nextProps: Props) {
     return nextProps.show && !_.isEqual(this.props, nextProps);
+  }
+
+  componentDidUpdate() {
+    this.updatePosition();
   }
 
   updatePosition(props?: Props) {
@@ -49,24 +49,24 @@ class MonthDropdown extends React.Component<Props> {
     date && this.scrollTo(date);
   }
 
-  scrollTo = (date: Moment) => {
+  scrollTo = (date: moment$Moment) => {
     const year = date.year();
     const top = ((year - startYear) * blockHeight);
 
-    scrollTopAnimation(this.content, top, scrollTop(this.content) !== 0);
+    scrollTopAnimation(this.scroll, top, scrollTop(this.scroll) !== 0);
   };
 
-  content = null;
+  scroll = null;
 
   addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
 
   renderBlock() {
 
-    const { date, onClick, yearCeiling } = this.props;
+    const { date, onSelect, yearCeiling } = this.props;
 
-    let ret = [];
-    let selectedMonth = date.month();
-    let selectedYear = date.year();
+    const ret = [];
+    const selectedMonth = date.month();
+    const selectedYear = date.year();
     let nextYear = 0;
 
     for (let i = 0; i < 100 && nextYear < selectedYear + yearCeiling; i += 1) {
@@ -74,25 +74,22 @@ class MonthDropdown extends React.Component<Props> {
       nextYear = startYear + i;
 
       let isSelectedYear = nextYear === selectedYear;
-      let titleClasses = classNames(this.addPrefix('year-title'), {
-        selected: isSelectedYear
+      let titleClasses = classNames(this.addPrefix('year'), {
+        [this.addPrefix('year-active')]: isSelectedYear
       });
 
       ret.push(
-        <div className={this.addPrefix('year-block')} key={i}>
+        <div className={this.addPrefix('row')} key={i}>
           <div className={titleClasses}>{nextYear}</div>
-          <div className={this.addPrefix('month-block')}>
+          <div className={this.addPrefix('list')}>
             {
               /* eslint-disable */
               [...Array(12)].map((i, month) => {
-                let cellCalsses = classNames(this.addPrefix('month-cell'), {
-                  selected: isSelectedYear && month === selectedMonth
-                });
                 return (
                   <MonthDropdownItem
                     date={date}
-                    className={cellCalsses}
-                    onClick={onClick}
+                    onSelect={onSelect}
+                    active={isSelectedYear && month === selectedMonth}
                     key={month}
                     month={month + 1}
                     year={nextYear}
@@ -118,13 +115,13 @@ class MonthDropdown extends React.Component<Props> {
         {...unhandled}
         className={classes}
       >
-        <div
-          className={this.addPrefix('content')}
-          ref={(ref) => {
-            this.content = ref;
-          }}
-        >
-          <div className={this.addPrefix('scroll')}>
+        <div className={this.addPrefix('content')}>
+          <div
+            className={this.addPrefix('scroll')}
+            ref={(ref) => {
+              this.scroll = ref;
+            }}
+          >
             {this.renderBlock()}
           </div>
         </div>

@@ -125,7 +125,7 @@
     }
     &-show-time-dropdown &-time-dropdown {
       opacity: 1;
-      top: 46px;
+      top: 45px;
     }
     &-show-time-dropdown &-header {
       box-shadow: 0 2px 3px rgba(0, 0, 0, 0.28);
@@ -150,6 +150,9 @@
       i {
         font-style: normal;
         transition: visibility .1s, opacity .1s linear;
+      }
+      &-month-toolbar, &-time-toolbar {
+        display: inline-block;
       }
       .icon() {
         position: relative;
@@ -291,15 +294,16 @@
     }
     &-month-dropdown {
       .dropdown();
-      &-content {
+
+      &-scroll{
+        overflow: auto;
         width: 120%;
         height: ( @cell-height + @cell-spacing * 2) * 8;
         padding: 10px 0;
         padding-right: 20%;
-        overflow: auto;
         border-top: 1px solid #eee;
       }
-      &-year-block {
+      &-row {
         @odd-bg: #f5f5f5;
         padding: 10px 0;
         width: @month-view-width;
@@ -307,23 +311,23 @@
           background-color: @odd-bg;
         }
       }
-      &-year-title {
+      &-year {
         float: left;
         height: 100%;
         width: 20%;
         margin-top: 22px;
         text-align: center;
         font-weight: bold;
-        &.selected {
+        &-active {
           color: @color-active;
         }
       }
-      &-month-block {
+      &-list {
         display: inline-block;
         height: 100%;
         width: 80%;
       }
-      &-month-cell {
+      &-cell {
         display: inline-block;
         width: calc(100% / 6.25);
         text-align: center;
@@ -332,7 +336,7 @@
         &:hover {
           background-color: @cell-hover-bg;
         }
-        &.selected {
+        &-active {
           color: #EFEFEF;
           background-color: @color-active;
         }
@@ -360,6 +364,7 @@
           border-top: 1px solid #eee;
           min-width: 80px;
         }
+
         ul {
           list-style: none;
           padding: 0;
@@ -372,23 +377,25 @@
             text-align: center;
             display: block;
             cursor: pointer;
-            color: @font-color;
             padding: 4px;
             &:hover {
               background: @cell-hover-bg;
               color: @font-color;
             }
-            &.disabled {
-              opacity: .4;
-              background: none;
-              color: @B500;
-              cursor: not-allowed;
-            }
-            &.active {
-              background: @color-active;
-              color: #fff;
-            }
           }
+        }
+      }
+
+      &-cell{
+        &-disabled {
+          opacity: .4;
+          background: none;
+          color: @B500;
+          cursor: not-allowed;
+        }
+        &-active {
+          background: @color-active;
+          color: #fff !important;
         }
       }
     }

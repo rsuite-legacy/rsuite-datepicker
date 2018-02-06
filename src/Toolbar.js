@@ -3,9 +3,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
-import type { Moment } from 'moment';
-
-import _ from 'lodash';
 import { FormattedMessage } from 'rsuite-intl';
 import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
 import { constants } from 'rsuite-utils/lib/Picker';
@@ -17,17 +14,17 @@ const { namespace } = constants;
 type Range = {
   label: React.Node,
   closeOverlay?: boolean,
-  value: Moment | (pageDate: Moment)=> Moment
+  value: moment$Moment | (pageDate?: moment$Moment)=> moment$Moment
 }
 
 type Props = {
   ranges: Array<Range>,
   className?: string,
   classPrefix?: string,
-  pageDate?: Moment,
-  onShortcut?: (value: Moment, closeOverlay?: boolean, event?: SyntheticEvent<*>) => void,
+  pageDate?: moment$Moment,
+  onShortcut?: (value: moment$Moment, closeOverlay?: boolean, event?: SyntheticEvent<*>) => void,
   onOk?: (event: SyntheticEvent<*>) => void,
-  disabledOkButton?: (pageDate: Moment) => boolean
+  disabledOkButton?: (pageDate?: moment$Moment) => boolean
 }
 
 class Toolbar extends React.Component<Props> {
@@ -95,10 +92,13 @@ class Toolbar extends React.Component<Props> {
       >
         <div className={this.addPrefix('ranges')}>
           {
-            ranges.map((item, index) => {
-              let value = _.isFunction(item.value) ? item.value(pageDate) : item.value;
+            ranges.map((item: Range, index: number) => {
+
+              let value: any = typeof item.value === 'function' ? item.value(pageDate) : item.value;
               let disabled = disabledOkButton && disabledOkButton(value);
-              let itemClassName = classNames({ disabled });
+              let itemClassName = classNames(this.addPrefix('option'), {
+                [this.addPrefix('option-disabled')]: disabled
+              });
               return (
                 <a
                   /* eslint-disable */

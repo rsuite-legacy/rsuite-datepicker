@@ -1,19 +1,7 @@
 // @flow
 
 export type Locale = {
-  sunday?: string,
-  monday?: string,
-  tuesday?: string,
-  wednesday?: string,
-  thursday?: string,
-  friday?: string,
-  saturday?: string,
-  ok?: string,
-  today?: string,
-  yesterday?: string,
-  hours?: string,
-  minutes?: string,
-  seconds?: string
+  [key: string]: string
 }
 
 export default {

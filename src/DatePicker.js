@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import moment from 'moment';
-import type { Moment } from 'moment';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { IntlProvider } from 'rsuite-intl';
@@ -14,6 +13,7 @@ import Calendar from './Calendar';
 import defaultLocale from './locale';
 import Toolbar from './Toolbar';
 import disabledTime, { calendarOnlyProps } from './utils/disabledTime';
+import { shouldOnlyTime } from './utils/formatUtils';
 
 const { namespace } = constants;
 
@@ -21,33 +21,33 @@ type PlacementEighPoints = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 type Range = {
   label: React.Node,
   closeOverlay?: boolean,
-  value: Moment | (pageDate: Moment)=> Moment,
+  value: moment$Moment | (pageDate: moment$Moment)=> moment$Moment,
 };
 
 type Props = {
-  disabledDate?: (date: Moment) => boolean,
-  disabledHours?: (hour: number, date: Moment) => boolean,
-  disabledMinutes?: (minute: number, date: Moment) => boolean,
-  disabledSeconds?: (second: number, date: Moment) => boolean,
-  hideHours?: (hour: number, date: Moment) => boolean,
-  hideMinutes?: (minute: number, date: Moment) => boolean,
-  hideSeconds?: (second: number, date: Moment) => boolean,
+  disabledDate?: (date: moment$Moment) => boolean,
+  disabledHours?: (hour: number, date: moment$Moment) => boolean,
+  disabledMinutes?: (minute: number, date: moment$Moment) => boolean,
+  disabledSeconds?: (second: number, date: moment$Moment) => boolean,
+  hideHours?: (hour: number, date: moment$Moment) => boolean,
+  hideMinutes?: (minute: number, date: moment$Moment) => boolean,
+  hideSeconds?: (second: number, date: moment$Moment) => boolean,
   ranges?: Array<Range>,
-  defaultValue?: Moment,
-  value?: Moment,
-  calendarDefaultDate?: Moment,
+  defaultValue?: moment$Moment,
+  value?: moment$Moment,
+  calendarDefaultDate?: moment$Moment,
   placeholder?: string,
   format: string,
   disabled?: boolean,
   locale?: Object,
   inline?: boolean,
-  onChange?: (value: Moment) => void,
+  onChange?: (value: moment$Moment | null) => void,
   onToggleMonthDropdown?: (toggle: boolean) => void,
   onToggleTimeDropdown?: (toggle: boolean) => void,
-  onSelect?: (date: Moment, event?: SyntheticEvent<*>) => void,
-  onPrevMonth?: (date: Moment) => void,
-  onNextMonth?: (date: Moment) => void,
-  onOk?: (date: Moment, event: SyntheticEvent<*>) => void,
+  onSelect?: (date: moment$Moment, event?: SyntheticEvent<*>) => void,
+  onPrevMonth?: (date: moment$Moment) => void,
+  onNextMonth?: (date: moment$Moment) => void,
+  onOk?: (date: moment$Moment, event: SyntheticEvent<*>) => void,
   cleanable?: boolean,
   isoWeek?: boolean,
   yearCeiling?: number,
@@ -61,11 +61,11 @@ type Props = {
 }
 
 type States = {
-  value?: Moment,
+  value?: moment$Moment,
   forceOpen?: boolean,
   calendarState?: 'DROP_MONTH' | 'DROP_TIME',
   locale?: Object,
-  pageDate: Moment
+  pageDate: moment$Moment
 }
 
 class DatePicker extends React.Component<Props, States> {
@@ -104,14 +104,13 @@ class DatePicker extends React.Component<Props, States> {
     if (_.isEqual(nextProps.locale, locale)) {
       this.setState({ locale: _.merge({}, this.state.locale, nextProps.locale) });
     }
-
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: States) {
     return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
   }
 
-  onMoveForword = (nextPageDate: Moment) => {
+  onMoveForword = (nextPageDate: moment$Moment) => {
     const { onNextMonth } = this.props;
     this.setState({
       pageDate: nextPageDate
@@ -119,7 +118,7 @@ class DatePicker extends React.Component<Props, States> {
     onNextMonth && onNextMonth(nextPageDate);
   }
 
-  onMoveBackward = (nextPageDate: Moment) => {
+  onMoveBackward = (nextPageDate: moment$Moment) => {
     const { onPrevMonth } = this.props;
     this.setState({
       pageDate: nextPageDate
@@ -142,7 +141,7 @@ class DatePicker extends React.Component<Props, States> {
   calendar = null;
 
 
-  handleChangePageDate = (nextPageDate: Moment) => {
+  handleChangePageDate = (nextPageDate: moment$Moment) => {
     const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageDate,
@@ -151,7 +150,7 @@ class DatePicker extends React.Component<Props, States> {
     onSelect && onSelect(nextPageDate);
   }
 
-  handleChangePageTime = (nextPageTime: Moment) => {
+  handleChangePageTime = (nextPageTime: moment$Moment) => {
     const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageTime
@@ -159,7 +158,11 @@ class DatePicker extends React.Component<Props, States> {
     onSelect && onSelect(nextPageTime);
   }
 
-  handleShortcutPageDate = (value: Moment, closeOverlay?: boolean, event?: SyntheticEvent<*>) => {
+  handleShortcutPageDate = (
+    value: moment$Moment,
+    closeOverlay?: boolean,
+    event?: SyntheticEvent<*>
+  ) => {
     const { onSelect } = this.props;
     this.updateValue(value, closeOverlay);
     onSelect && onSelect(value, event);
@@ -171,10 +174,10 @@ class DatePicker extends React.Component<Props, States> {
     onOk && onOk(this.state.pageDate, event);
   }
 
-  updateValue(nextPageDate?: Moment, closeOverlay?: boolean = true) {
+  updateValue(nextPageDate?: moment$Moment | null, closeOverlay?: boolean = true) {
     const { value, pageDate } = this.state;
     const { onChange } = this.props;
-    const nextValue: Moment = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
+    const nextValue: any = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
 
     this.setState({
       pageDate: nextValue || moment(),
@@ -263,7 +266,7 @@ class DatePicker extends React.Component<Props, States> {
     this.updateValue(null);
   }
 
-  handleSelect = (nextValue: Moment) => {
+  handleSelect = (nextValue: moment$Moment) => {
     const { pageDate } = this.state;
     const { onSelect } = this.props;
 
@@ -278,11 +281,12 @@ class DatePicker extends React.Component<Props, States> {
     onSelect && onSelect(nextValue);
   }
 
-  disabledOkButton = (date: Moment) => disabledTime(this.props, date)
+  disabledOkButton = (date: moment$Moment) => disabledTime(this.props, date)
 
   calendar = null;
   container = null;
   trigger = null;
+  menuContainer = null;
 
   addPrefix = (name: string) => prefix(this.props.classPrefix)(name);
 
@@ -334,14 +338,21 @@ class DatePicker extends React.Component<Props, States> {
       <MenuWrapper
         className={classes}
       >
-        {calendar}
-        <Toolbar
-          ranges={ranges}
-          pageDate={pageDate}
-          disabledOkButton={this.disabledOkButton}
-          onShortcut={this.handleShortcutPageDate}
-          onOk={this.handleOK}
-        />
+        <div
+          ref={(ref) => {
+            // for test
+            this.menuContainer = ref;
+          }}
+        >
+          {calendar}
+          <Toolbar
+            ranges={ranges}
+            pageDate={pageDate}
+            disabledOkButton={this.disabledOkButton}
+            onShortcut={this.handleShortcutPageDate}
+            onOk={this.handleOK}
+          />
+        </div>
       </MenuWrapper>
     );
   }
@@ -358,6 +369,7 @@ class DatePicker extends React.Component<Props, States> {
       onOpen,
       onClose,
       classPrefix,
+      format,
       ...rest
     } = this.props;
 
@@ -379,7 +391,9 @@ class DatePicker extends React.Component<Props, States> {
 
     const classes = classNames(classPrefix, {
       [this.addPrefix('has-value')]: hasValue,
-      [this.addPrefix('disabled')]: disabled
+      [this.addPrefix('disabled')]: disabled,
+      [this.addPrefix('only-time')]: shouldOnlyTime(format)
+
     }, `${namespace}-placement-${_.kebabCase(placement)}`, className);
 
     return (

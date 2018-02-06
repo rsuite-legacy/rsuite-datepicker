@@ -4,7 +4,6 @@ import * as React from 'react';
 import { getPosition, scrollTop } from 'dom-lib';
 import { FormattedMessage } from 'rsuite-intl';
 import moment from 'moment';
-import type { Moment } from 'moment';
 import _ from 'lodash';
 import classNames from 'classnames';
 import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
@@ -12,22 +11,23 @@ import { constants } from 'rsuite-utils/lib/Picker';
 
 import scrollTopAnimation from '../utils/scrollTopAnimation';
 
-
 type Props = {
-  disabledDate?: (date: Moment) => boolean,
-  disabledHours?: (hour: number, date: Moment) => boolean,
-  disabledMinutes?: (minute: number, date: Moment) => boolean,
-  disabledSeconds?: (second: number, date: Moment) => boolean,
-  hideHours?: (hour: number, date: Moment) => boolean,
-  hideMinutes?: (minute: number, date: Moment) => boolean,
-  hideSeconds?: (second: number, date: Moment) => boolean,
-  date?: Moment,
-  onClick?: (nextDate: Moment, event: SyntheticEvent<*>) => void,
+  disabledDate?: (date: moment$Moment) => boolean,
+  disabledHours?: (hour: number, date: moment$Moment) => boolean,
+  disabledMinutes?: (minute: number, date: moment$Moment) => boolean,
+  disabledSeconds?: (second: number, date: moment$Moment) => boolean,
+  hideHours?: (hour: number, date: moment$Moment) => boolean,
+  hideMinutes?: (minute: number, date: moment$Moment) => boolean,
+  hideSeconds?: (second: number, date: moment$Moment) => boolean,
+  date?: moment$Moment,
+  onSelect?: (nextDate: moment$Moment, event: SyntheticEvent<*>) => void,
   show: boolean,
-  format: string,
+  format?: string,
   className?: string,
   classPrefix?: string
 }
+
+type TimeType = 'hours' | 'minutes' | 'seconds';
 
 const ranges = {
   hours: { start: 0, end: 23 },
@@ -39,6 +39,7 @@ class TimeDropdown extends React.Component<Props> {
 
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-time-dropdown`,
+    show: false,
     ranges: [{
       label: 'today',
       value: moment(),
@@ -54,18 +55,23 @@ class TimeDropdown extends React.Component<Props> {
     this.updatePosition();
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    this.updatePosition(nextProps);
-  }
-
   shouldComponentUpdate(nextProps: Props) {
     return nextProps.show && !_.isEqual(this.props, nextProps);
+  }
+
+  componentDidUpdate() {
+    this.updatePosition();
   }
 
   getTime(props?: Props) {
     const { format, date } = props || this.props;
     let time = date || moment();
     let nextTime = {};
+
+    if (!format) {
+      return nextTime;
+    }
+
     if (/(H|h)/.test(format)) {
       nextTime.hours = time.hours();
     }
@@ -91,7 +97,7 @@ class TimeDropdown extends React.Component<Props> {
 
     Object.entries(time).forEach((item: any) => {
       let container = this.container[item[0]];
-      let node = container.querySelector(`.item-${item[0]}-${item[1]}`);
+      let node = container.querySelector(`[data-key="${item[0]}-${item[1]}"]`);
       if (node && container) {
         let { top } = getPosition(node, container);
         scrollTopAnimation(this.container[item[0]], top, scrollTop(this.container[item[0]]) !== 0);
@@ -99,13 +105,14 @@ class TimeDropdown extends React.Component<Props> {
     });
   }
 
-  handleClick = (type: string, d: Moment, event: SyntheticEvent<*>) => {
-    const { onClick, date } = this.props;
+  handleClick = (type: TimeType, d: number, event: SyntheticEvent<*>) => {
+    const { onSelect, date } = this.props;
+    // $FlowFixMe
     const nextDate = moment(date)[type](d);
-    onClick && onClick(nextDate, event);
+    onSelect && onSelect(nextDate, event);
   }
   addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
-  renderColumn(type: string, active: any) {
+  renderColumn(type: TimeType, active: any) {
 
     if (!_.isNumber(active)) {
       return null;
@@ -121,10 +128,10 @@ class TimeDropdown extends React.Component<Props> {
 
       if (!(hideFunc && hideFunc(i, date))) {
         let disabled = disabledFunc && disabledFunc(i, date);
-        let itemClasses = classNames({
-          active: active === i,
-          disabled
-        }, `item-${type}-${i}`);
+        let itemClasses = classNames(this.addPrefix('cell'), {
+          [this.addPrefix('cell-active')]: active === i,
+          [this.addPrefix('cell-disabled')]: disabled
+        });
 
         items.push(
           <li key={i}>
@@ -132,6 +139,7 @@ class TimeDropdown extends React.Component<Props> {
               role="menu"
               className={itemClasses}
               tabIndex="-1"
+              data-key={`${type}-${i}`}
               onClick={(event) => {
                 !disabled && this.handleClick(type, i, event);
               }}

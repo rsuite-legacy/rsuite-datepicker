@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react';
-import type { Moment } from 'moment';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { constants } from 'rsuite-utils/lib/Picker';
@@ -11,10 +10,10 @@ import TableHeaderRow from './TableHeaderRow';
 type Props = {
   rows: Array<any>,
   isoWeek?: boolean,
-  selected?: Moment,
-  onSelect?: () => void,
-  disabledDate?: (date: Moment) => boolean,
-  inSameMonth?: (date: Moment) => boolean,
+  selected?: moment$Moment,
+  onSelect?: (date: moment$Moment) => void,
+  disabledDate?: (date: moment$Moment) => boolean,
+  inSameMonth?: (date: moment$Moment) => boolean,
   className?: string,
   classPrefix?: string
 };

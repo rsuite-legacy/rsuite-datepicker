@@ -1,12 +1,11 @@
 import * as React from 'react';
 import moment from 'moment';
-import type { Moment } from 'moment';
 import classNames from 'classnames';
 import { constants } from 'rsuite-utils/lib/Picker';
 import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
 
 type Props = {
-  date?: Moment,
+  date?: moment$Moment,
   onMoveForword?: () => void,
   onMoveBackward?: () => void,
   onToggleMonthDropdown?: () => void,
@@ -15,8 +14,8 @@ type Props = {
   showDate?: boolean,
   showTime?: boolean,
   format?: string,
-  disabledDate?: (date: Moment) => boolean,
-  disabledTime?: (date: Moment) => boolean,
+  disabledDate?: (date: moment$Moment) => boolean,
+  disabledTime?: (date: moment$Moment) => boolean,
   classPrefix?: string
 };
 
@@ -86,33 +85,36 @@ class Header extends React.Component<Props> {
       error: disabledTime && disabledTime(date)
     }, addPrefix('title-time'));
 
-    const dateContainer = [
-      <i
-        key="btn-backward"
-        className={addPrefix('backward')}
-        role="button"
-        tabIndex="-1"
-        onClick={onMoveBackward && onMoveBackward}
-      />,
-      <span
-        key="title-date"
-        role="button"
-        tabIndex="-1"
-        className={dateTitleClasses}
-        onClick={onToggleMonthDropdown}
-      >
-        {date && date.format(this.getDateFormat())}
-      </span>,
-      <i
-        key="btn-forward"
-        className={addPrefix('forward')}
-        role="button"
-        tabIndex="-1"
-        onClick={onMoveForword && onMoveForword}
-      />
-    ];
+    const monthToolbar = (
+      <div className={addPrefix('month-toolbar')}>
+        <i
+          className={addPrefix('backward')}
+          role="button"
+          tabIndex="-1"
+          onClick={onMoveBackward && onMoveBackward}
+        />
+        <span
+          role="button"
+          tabIndex="-1"
+          className={dateTitleClasses}
+          onClick={onToggleMonthDropdown}
+        >
+          {date && date.format(this.getDateFormat())}
+        </span>
+        <i
+          className={addPrefix('forward')}
+          role="button"
+          tabIndex="-1"
+          onClick={onMoveForword && onMoveForword}
+        />
+      </div>
+    );
 
-    const classes = classNames(classPrefix, className);
+    const hasMonth = showDate || showMonth;
+    const classes = classNames(classPrefix, {
+      [addPrefix('has-month')]: hasMonth,
+      [addPrefix('has-time')]: showTime
+    }, className);
     const unhandled = getUnhandledProps(Header, rest);
 
     return (
@@ -120,18 +122,20 @@ class Header extends React.Component<Props> {
         {...unhandled}
         className={classes}
       >
-        {(showDate || showMonth) && dateContainer}
+        {hasMonth && monthToolbar}
         {
-          showTime ? (
-            <span
-              role="button"
-              tabIndex="-1"
-              className={timeTitleClasses}
-              onClick={onToggleTimeDropdown}
-            >
-              {date && date.format(this.getTimeFormat())}
-            </span>
-          ) : null
+          showTime && (
+            <div className={addPrefix('time-toolbar')}>
+              <span
+                role="button"
+                tabIndex="-1"
+                className={timeTitleClasses}
+                onClick={onToggleTimeDropdown}
+              >
+                {date && date.format(this.getTimeFormat())}
+              </span>
+            </div>
+          )
         }
       </div>
     );

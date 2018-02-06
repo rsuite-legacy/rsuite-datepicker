@@ -3,17 +3,17 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
-import type { Moment } from 'moment';
 import _ from 'lodash';
 import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
 import { constants } from 'rsuite-utils/lib/Picker';
 
+
 type Props = {
-  weekendDate?: Moment,
-  selected?: Moment,
-  onSelect?: (date: Moment) => void,
-  disabledDate?: (date: Moment) => boolean,
-  inSameMonth?: (date: Moment) => boolean,
+  weekendDate?: moment$Moment,
+  selected?: moment$Moment,
+  onSelect?: (date: moment$Moment) => void,
+  disabledDate?: (date: moment$Moment) => boolean,
+  inSameMonth?: (date: moment$Moment) => boolean,
   className?: string,
   classPrefix?: string
 };
