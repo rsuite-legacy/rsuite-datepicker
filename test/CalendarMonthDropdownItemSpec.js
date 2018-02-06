@@ -5,12 +5,12 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 import MonthDropdownItem from '../src/Calendar/MonthDropdownItem';
 
-describe('MonthDropdownItem', () => {
+describe('Calendar-MonthDropdownItem', () => {
 
   it('Should output a  `1` ', () => {
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthDropdownItem month={1} />
+      <MonthDropdownItem month={1} date={moment()} />
     );
 
     const instanceDOM = findDOMNode(instance);
@@ -19,7 +19,7 @@ describe('MonthDropdownItem', () => {
     assert.equal(instanceDOM.innerText, '1');
   });
 
-  it('Should call `onClick` callback', (done) => {
+  it('Should call `onSelect` callback', (done) => {
 
     const doneOp = (date) => {
       if (date.format('YYYY-MM') === '2017-01') {
@@ -32,7 +32,7 @@ describe('MonthDropdownItem', () => {
         date={moment()}
         month={1}
         year={2017}
-        onClick={doneOp}
+        onSelect={doneOp}
       />
     );
 
@@ -44,7 +44,7 @@ describe('MonthDropdownItem', () => {
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthDropdownItem className="custom" />
+      <MonthDropdownItem className="custom" date={moment()} />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -52,7 +52,7 @@ describe('MonthDropdownItem', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthDropdownItem style={{ fontSize }} />
+      <MonthDropdownItem style={{ fontSize }} date={moment()} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });

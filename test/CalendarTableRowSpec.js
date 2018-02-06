@@ -3,45 +3,45 @@ import { findDOMNode } from 'react-dom';
 import moment from 'moment';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import Week from '../src/Calendar/Week';
+import TableRow from '../src/Calendar/TableRow';
 
-describe('Week', () => {
+describe('Calendar-TableRow', () => {
 
-  it('Should render a div with `week` class', () => {
+  it('Should render a div with `table-row` class', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <Week />
+      <TableRow />
     );
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
-    assert.ok(findDOMNode(instance).className.match(/\bweek\b/));
+    assert.ok(findDOMNode(instance).className.match(/\btable-row\b/));
   });
 
 
   it('Should be active today', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <Week />
+      <TableRow />
     );
     const instanceDOM = findDOMNode(instance);
 
 
-    assert.equal(instanceDOM.querySelector('.is-today').innerText, moment().date() + '');
+    assert.equal(instanceDOM.querySelector('.rs-picker-calendar-table-cell-is-today').innerText, moment().date() + '');
   });
 
-  it('Should call `onClick` callback', (done) => {
+  it('Should call `onSelect` callback', (done) => {
 
     const doneOp = () => {
       done();
     };
     const instance = ReactTestUtils.renderIntoDocument(
-      <Week onClick={doneOp} />
+      <TableRow onSelect={doneOp} />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.week-day'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-table-cell'));
   });
 
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <Week className="custom" />
+      <TableRow className="custom" />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -49,7 +49,7 @@ describe('Week', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <Week style={{ fontSize }} />
+      <TableRow style={{ fontSize }} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });

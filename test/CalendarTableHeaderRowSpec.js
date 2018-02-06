@@ -2,23 +2,23 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import MonthView from '../src/Calendar/MonthView';
+import TableHeaderRow from '../src/Calendar/TableHeaderRow';
 
-describe('MonthView', () => {
+describe('Calendar-TableHeaderRow', () => {
 
-  it('Should render a div with "month-view" class', () => {
+  it('Should render a div with "table-header-row" class', () => {
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthView />
+      <TableHeaderRow />
     );
 
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
-    assert.ok(findDOMNode(instance).className.match(/\bmonth-view\b/));
+    assert.ok(findDOMNode(instance).className.match(/\btable-header-row\b/));
   });
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthView className="custom" />
+      <TableHeaderRow className="custom" />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -26,7 +26,7 @@ describe('MonthView', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthView style={{ fontSize }} />
+      <TableHeaderRow style={{ fontSize }} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });

@@ -4,7 +4,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 import TimeDropdown from '../src/Calendar/TimeDropdown';
 
-describe('TimeDropdown', () => {
+describe('Calendar-TimeDropdown', () => {
 
   it('Should render a div with `time-dropdown` class', () => {
 
@@ -22,7 +22,7 @@ describe('TimeDropdown', () => {
       <TimeDropdown format="HH:mm:ss" />
     );
     const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelectorAll('.column').length, 3);
+    assert.equal(instanceDOM.querySelectorAll('.rs-picker-calendar-time-dropdown-column').length, 3);
   });
 
   it('Should render 2 column', () => {
@@ -30,7 +30,7 @@ describe('TimeDropdown', () => {
       <TimeDropdown format="HH:mm" />
     );
     const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelectorAll('.column').length, 2);
+    assert.equal(instanceDOM.querySelectorAll('.rs-picker-calendar-time-dropdown-column').length, 2);
   });
 
   it('Should render 1 column', () => {
@@ -38,20 +38,20 @@ describe('TimeDropdown', () => {
       <TimeDropdown format="HH" />
     );
     const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelectorAll('.column').length, 1);
+    assert.equal(instanceDOM.querySelectorAll('.rs-picker-calendar-time-dropdown-column').length, 1);
   });
 
-  it('Should call `onClick` callback', (done) => {
+  it('Should call `onSelect` callback', (done) => {
 
     const doneOp = () => {
       done();
     };
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <TimeDropdown onClick={doneOp} format="HH" />
+      <TimeDropdown onSelect={doneOp} format="HH" />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.item-hours-1'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('[data-key="hours-1"]'));
   });
 
   it('Should be disabled', () => {
@@ -65,7 +65,7 @@ describe('TimeDropdown', () => {
       />
     );
     const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelectorAll('.disabled').length, 23 - 10);
+    assert.equal(instanceDOM.querySelectorAll('.rs-picker-calendar-time-dropdown-cell-disabled').length, 23 - 10);
   });
 
   it('Should be hide', () => {

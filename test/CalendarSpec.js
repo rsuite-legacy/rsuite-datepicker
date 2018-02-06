@@ -10,7 +10,7 @@ describe('Calendar', () => {
   it('Should render a div with `calendar` class', () => {
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <Calendar />
+      <Calendar pageDate={moment()} />
     );
 
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
@@ -26,18 +26,17 @@ describe('Calendar', () => {
     const instance = ReactTestUtils.renderIntoDocument(
       <Calendar
         format="YYYY-MM-DD"
-        calendarState="SHOW"
         pageDate={moment()}
         onSelect={doneOp}
       />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.is-today'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-table-cell-is-today'));
   });
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <Calendar className="custom" />
+      <Calendar className="custom" pageDate={moment()} />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -45,7 +44,7 @@ describe('Calendar', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <Calendar style={{ fontSize }} />
+      <Calendar style={{ fontSize }} pageDate={moment()} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });

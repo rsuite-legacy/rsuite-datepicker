@@ -5,21 +5,22 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 import MonthDropdown from '../src/Calendar/MonthDropdown';
 
-describe('MonthDropdown', () => {
+describe('Calendar-MonthDropdown', () => {
 
   it('Should output year and month ', () => {
 
     const date = moment();
     const size = (date.year() - 1950) + 6;
+
     const instance = ReactTestUtils.renderIntoDocument(
       <MonthDropdown date={date} />
     );
 
-    const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelectorAll('.month-dropdown-year-title').length, size);
+    const node = findDOMNode(instance);
+    assert.equal(node.querySelectorAll('.rs-picker-calendar-month-dropdown-year').length, size);
   });
 
-  it('Should call `onClick` callback ', (done) => {
+  it('Should call `onSelect` callback ', (done) => {
 
     const date = moment();
     const doneOp = () => {
@@ -27,11 +28,11 @@ describe('MonthDropdown', () => {
     };
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthDropdown date={date} onClick={doneOp} />
+      <MonthDropdown date={date} onSelect={doneOp} />
     );
 
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.month-dropdown-month-cell'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-month-dropdown-cell'));
   });
 
   it('Should have a custom className', () => {

@@ -1,20 +1,19 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
-import moment from 'moment';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import Toolbar from '../src/Toolbar';
 
 describe('Toolbar', () => {
 
-  it('Should render a div with `rsuite-datepicker-toolbar` class', () => {
+  it('Should render a div with `rs-picker-toolbar` class', () => {
     const instance = ReactTestUtils.renderIntoDocument(
       <Toolbar />
     );
 
     const instanceDOM = findDOMNode(instance);
     assert.equal(instanceDOM.nodeName, 'DIV');
-    assert.ok(instanceDOM.className.match(/\brsuite-datepicker-toolbar\b/));
+    assert.ok(instanceDOM.className.match(/\brs-picker-toolbar\b/));
   });
 
 
@@ -28,7 +27,7 @@ describe('Toolbar', () => {
       <Toolbar onOk={doneOp} />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rsuite-datepicker-toolbar-right-btn-ok'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-toolbar-right-btn-ok'));
   });
 
   it('Should call `onShortcut` callback', (done) => {
@@ -41,7 +40,7 @@ describe('Toolbar', () => {
       <Toolbar onShortcut={doneOp} />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rsuite-datepicker-toolbar-ranges a'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-toolbar-ranges a'));
   });
 
 

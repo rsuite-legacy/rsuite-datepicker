@@ -1,23 +1,24 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
-import moment from 'moment';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import Weeks from '../src/Calendar/Weeks';
+import View from '../src/Calendar/View';
 
-describe('Weeks', () => {
+describe('Calendar-View', () => {
 
-  it('Should render a div with `weeks` class', () => {
+  it('Should render a div with "view" class', () => {
+
     const instance = ReactTestUtils.renderIntoDocument(
-      <Weeks />
+      <View />
     );
+
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
-    assert.ok(findDOMNode(instance).className.match(/\bweeks\b/));
+    assert.ok(findDOMNode(instance).className.match(/\bview\b/));
   });
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <Weeks className="custom" />
+      <View className="custom" />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -25,7 +26,7 @@ describe('Weeks', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <Weeks style={{ fontSize }} />
+      <View style={{ fontSize }} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });

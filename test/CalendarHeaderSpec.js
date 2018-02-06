@@ -3,15 +3,15 @@ import { findDOMNode } from 'react-dom';
 import moment from 'moment';
 import ReactTestUtils from 'react-dom/test-utils';
 
-import MonthHeader from '../src/Calendar/MonthHeader';
+import Header from '../src/Calendar/Header';
 
 
-describe('MonthHeader', () => {
+describe('Calendar-Header', () => {
 
   it('Should render a div with "calendar-header" class', () => {
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         date={moment()}
       />
     );
@@ -26,7 +26,7 @@ describe('MonthHeader', () => {
     const date = moment();
     const format = 'HH:ss';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         showTime
         date={date}
         format={format}
@@ -34,7 +34,7 @@ describe('MonthHeader', () => {
     );
 
     const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelector('.title-time').innerText, date.format(format));
+    assert.equal(instanceDOM.querySelector('.rs-picker-calendar-header-title-time').innerText, date.format(format));
   });
 
   it('Should output a date for `YYYY-MM-DD`', () => {
@@ -42,7 +42,7 @@ describe('MonthHeader', () => {
     const date = moment();
     const format = 'YYYY-MM-DD';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         showDate
         date={date}
         format={format}
@@ -50,7 +50,7 @@ describe('MonthHeader', () => {
     );
 
     const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelector('.title-date').innerText, date.format(format));
+    assert.equal(instanceDOM.querySelector('.rs-picker-calendar-header-title-date').innerText, date.format(format));
   });
 
   it('Should output a date for `YYYY-MM`', () => {
@@ -58,7 +58,7 @@ describe('MonthHeader', () => {
     const date = moment();
     const format = 'YYYY-MM';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         showMonth
         date={date}
         format={format}
@@ -66,7 +66,7 @@ describe('MonthHeader', () => {
     );
 
     const instanceDOM = findDOMNode(instance);
-    assert.equal(instanceDOM.querySelector('.title-date').innerText, date.format(format));
+    assert.equal(instanceDOM.querySelector('.rs-picker-calendar-header-title-date').innerText, date.format(format));
   });
 
   it('Should call `onMoveForword` callback', (done) => {
@@ -78,7 +78,7 @@ describe('MonthHeader', () => {
     const date = moment();
     const format = 'YYYY-MM';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         showMonth
         date={date}
         format={format}
@@ -86,7 +86,7 @@ describe('MonthHeader', () => {
       />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.calendar-header-forward'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-header-forward'));
   });
 
   it('Should call `onMoveBackward` callback', (done) => {
@@ -98,7 +98,7 @@ describe('MonthHeader', () => {
     const date = moment();
     const format = 'YYYY-MM';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         showMonth
         date={date}
         format={format}
@@ -106,7 +106,7 @@ describe('MonthHeader', () => {
       />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.calendar-header-backward'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-header-backward'));
   });
 
   it('Should call `onToggleMonthDropdown` callback', (done) => {
@@ -118,7 +118,7 @@ describe('MonthHeader', () => {
     const date = moment();
     const format = 'YYYY-MM';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         showMonth
         date={date}
         format={format}
@@ -126,7 +126,7 @@ describe('MonthHeader', () => {
       />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.title-date'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-header-title-date'));
   });
 
   it('Should call `onToggleTimeDropdown` callback', (done) => {
@@ -138,7 +138,7 @@ describe('MonthHeader', () => {
     const date = moment();
     const format = 'HH:mm:ss';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader
+      <Header
         showTime
         date={date}
         format={format}
@@ -146,12 +146,12 @@ describe('MonthHeader', () => {
       />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.title-time'));
+    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-header-title-time'));
   });
 
   it('Should have a custom className', () => {
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader className="custom" />
+      <Header className="custom" />
     );
     assert.ok(findDOMNode(instance).className.match(/\bcustom\b/));
   });
@@ -159,7 +159,7 @@ describe('MonthHeader', () => {
   it('Should have a custom style', () => {
     const fontSize = '12px';
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthHeader style={{ fontSize }} />
+      <Header style={{ fontSize }} />
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });
