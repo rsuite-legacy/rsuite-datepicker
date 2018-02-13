@@ -1,3 +1,5 @@
+// @flow
+
 import * as React from 'react';
 import moment from 'moment';
 import classNames from 'classnames';
@@ -5,18 +7,19 @@ import { constants } from 'rsuite-utils/lib/Picker';
 import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
 
 type Props = {
-  date?: moment$Moment,
+  date: moment$Moment,
   onMoveForword?: () => void,
   onMoveBackward?: () => void,
-  onToggleMonthDropdown?: () => void,
-  onToggleTimeDropdown?: () => void,
+  onToggleMonthDropdown?: (event: SyntheticEvent<*>) => void,
+  onToggleTimeDropdown?: (event: SyntheticEvent<*>) => void,
   showMonth?: boolean,
   showDate?: boolean,
   showTime?: boolean,
   format?: string,
   disabledDate?: (date: moment$Moment) => boolean,
   disabledTime?: (date: moment$Moment) => boolean,
-  classPrefix?: string
+  classPrefix?: string,
+  className?: string
 };
 
 class Header extends React.Component<Props> {
@@ -57,7 +60,7 @@ class Header extends React.Component<Props> {
 
     return 'YYYY';
   }
-
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
   render() {
     const {
       date,
@@ -75,23 +78,22 @@ class Header extends React.Component<Props> {
       ...rest
     } = this.props;
 
-    const addPrefix = prefix(classPrefix);
 
-    const dateTitleClasses = classNames(addPrefix('title'), {
-      error: disabledDate && disabledDate(date)
-    }, addPrefix('title-date'));
+    const dateTitleClasses = classNames(this.addPrefix('title'), {
+      [this.addPrefix('error')]: disabledDate && disabledDate(date)
+    }, this.addPrefix('title-date'));
 
-    const timeTitleClasses = classNames(addPrefix('title'), {
-      error: disabledTime && disabledTime(date)
-    }, addPrefix('title-time'));
+    const timeTitleClasses = classNames(this.addPrefix('title'), {
+      [this.addPrefix('error')]: disabledTime && disabledTime(date)
+    }, this.addPrefix('title-time'));
 
     const monthToolbar = (
-      <div className={addPrefix('month-toolbar')}>
+      <div className={this.addPrefix('month-toolbar')}>
         <i
-          className={addPrefix('backward')}
+          className={this.addPrefix('backward')}
           role="button"
           tabIndex="-1"
-          onClick={onMoveBackward && onMoveBackward}
+          onClick={onMoveBackward}
         />
         <span
           role="button"
@@ -102,18 +104,18 @@ class Header extends React.Component<Props> {
           {date && date.format(this.getDateFormat())}
         </span>
         <i
-          className={addPrefix('forward')}
+          className={this.addPrefix('forward')}
           role="button"
           tabIndex="-1"
-          onClick={onMoveForword && onMoveForword}
+          onClick={onMoveForword}
         />
       </div>
     );
 
     const hasMonth = showDate || showMonth;
     const classes = classNames(classPrefix, {
-      [addPrefix('has-month')]: hasMonth,
-      [addPrefix('has-time')]: showTime
+      [this.addPrefix('has-month')]: hasMonth,
+      [this.addPrefix('has-time')]: showTime
     }, className);
     const unhandled = getUnhandledProps(Header, rest);
 
@@ -125,7 +127,7 @@ class Header extends React.Component<Props> {
         {hasMonth && monthToolbar}
         {
           showTime && (
-            <div className={addPrefix('time-toolbar')}>
+            <div className={this.addPrefix('time-toolbar')}>
               <span
                 role="button"
                 tabIndex="-1"

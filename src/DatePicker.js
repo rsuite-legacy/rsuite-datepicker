@@ -21,11 +21,11 @@ type PlacementEighPoints = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 type Range = {
   label: React.Node,
   closeOverlay?: boolean,
-  value: moment$Moment | (pageDate: moment$Moment)=> moment$Moment,
+  value: moment$Moment | (pageDate?: moment$Moment)=> moment$Moment,
 };
 
 type Props = {
-  disabledDate?: (date: moment$Moment) => boolean,
+  disabledDate?: (date?: moment$Moment) => boolean,
   disabledHours?: (hour: number, date: moment$Moment) => boolean,
   disabledMinutes?: (minute: number, date: moment$Moment) => boolean,
   disabledSeconds?: (second: number, date: moment$Moment) => boolean,
@@ -50,7 +50,8 @@ type Props = {
   onOk?: (date: moment$Moment, event: SyntheticEvent<*>) => void,
   cleanable?: boolean,
   isoWeek?: boolean,
-  yearCeiling?: number,
+  limitStartYear?: number,
+  limitEndYear?: number,
   className?: string,
   classPrefix?: string,
   open?: boolean,
@@ -64,7 +65,6 @@ type States = {
   value?: moment$Moment,
   forceOpen?: boolean,
   calendarState?: 'DROP_MONTH' | 'DROP_TIME',
-  locale?: Object,
   pageDate: moment$Moment
 }
 
@@ -73,9 +73,11 @@ class DatePicker extends React.Component<Props, States> {
   static defaultProps = {
     classPrefix: `${namespace}-date`,
     placement: 'bottomLeft',
-    yearCeiling: 5,
+    limitStartYear: 5,
+    limitEndYear: 5,
     format: 'YYYY-MM-DD',
     placeholder: '',
+    locale: defaultLocale,
     cleanable: true
   };
 
@@ -89,20 +91,15 @@ class DatePicker extends React.Component<Props, States> {
       value: activeValue,
       forceOpen: false,
       calendarState: undefined,
-      locale: _.merge({}, defaultLocale, props.locale),
       pageDate: activeValue || calendarDefaultDate || moment()  // display calendar date
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { value, locale } = this.props;
+    const { value } = this.props;
 
     if (nextProps.value && !nextProps.value.isSame(value, 'day')) {
       this.setState({ value: nextProps.value });
-    }
-
-    if (_.isEqual(nextProps.locale, locale)) {
-      this.setState({ locale: _.merge({}, this.state.locale, nextProps.locale) });
     }
   }
 
@@ -281,7 +278,13 @@ class DatePicker extends React.Component<Props, States> {
     onSelect && onSelect(nextValue);
   }
 
-  disabledOkButton = (date: moment$Moment) => disabledTime(this.props, date)
+  disabledToolbarHandle = (date?: moment$Moment): boolean => {
+    const { disabledDate } = this.props;
+    const allowDate = disabledDate ? disabledDate(date) : false;
+    const allowTime = disabledTime(this.props, date);
+
+    return allowDate || allowTime;
+  };
 
   calendar = null;
   container = null;
@@ -294,7 +297,8 @@ class DatePicker extends React.Component<Props, States> {
     const {
       format,
       isoWeek,
-      yearCeiling,
+      limitStartYear,
+      limitEndYear,
       disabledDate
     } = this.props;
 
@@ -309,7 +313,8 @@ class DatePicker extends React.Component<Props, States> {
       <Calendar
         {...calendarProps}
         disabledDate={disabledDate}
-        yearCeiling={yearCeiling}
+        limitStartYear={limitStartYear}
+        limitEndYear={limitEndYear}
         format={format}
         isoWeek={isoWeek}
         calendarState={calendarState}
@@ -348,7 +353,7 @@ class DatePicker extends React.Component<Props, States> {
           <Toolbar
             ranges={ranges}
             pageDate={pageDate}
-            disabledOkButton={this.disabledOkButton}
+            disabledHandle={this.disabledToolbarHandle}
             onShortcut={this.handleShortcutPageDate}
             onOk={this.handleOK}
           />
@@ -370,10 +375,10 @@ class DatePicker extends React.Component<Props, States> {
       onClose,
       classPrefix,
       format,
+      locale,
       ...rest
     } = this.props;
 
-    const { locale } = this.state;
     const value = this.getValue();
     const unhandled = getUnhandledProps(DatePicker, rest);
     const hasValue = !!value;

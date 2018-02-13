@@ -30,14 +30,15 @@ type Props = {
   onMoveForword?: (nextPageDate: moment$Moment) => void,
   onMoveBackward?: (nextPageDate: moment$Moment) => void,
   onSelect?: (date: moment$Moment) => void,
-  onToggleMonthDropdown?: (toggle: boolean) => void,
-  onToggleTimeDropdown?: (toggle: boolean) => void,
+  onToggleMonthDropdown?: (event: SyntheticEvent<*>) => void,
+  onToggleTimeDropdown?: (event: SyntheticEvent<*>) => void,
   onChangePageDate?: (nextPageDate: moment$Moment, event: SyntheticEvent<*>) => void,
   onChangePageTime?: (nextPageTime: moment$Moment, event: SyntheticEvent<*>) => void,
   calendarRef?: React.ElementRef<*>,
   format?: string,
   isoWeek?: boolean,
-  yearCeiling?: number,
+  limitStartYear?: number,
+  limitEndYear?: number,
   className?: string,
   classPrefix?: string
 }
@@ -81,7 +82,8 @@ class Calendar extends React.Component<Props> {
       calendarRef,
       className,
       isoWeek,
-      yearCeiling,
+      limitStartYear,
+      limitEndYear,
       classPrefix,
       ...rest
     } = this.props;
@@ -138,7 +140,8 @@ class Calendar extends React.Component<Props> {
             date={pageDate}
             onSelect={onChangePageDate}
             show={dropMonth}
-            yearCeiling={yearCeiling}
+            limitStartYear={limitStartYear}
+            limitEndYear={limitEndYear}
           />
 
         }

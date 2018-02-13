@@ -15,12 +15,13 @@ type Props = {
   onSelect?: (month: moment$Moment, event: SyntheticEvent<*>) => void,
   show: boolean,
   date: moment$Moment,
-  yearCeiling?: number,
+  limitStartYear?: number,
+  limitEndYear?: number,
   className?: string,
   classPrefix?: string
 };
 
-const startYear = 1950;
+const minYear = 1950;
 const blockHeight = 84;
 
 class MonthDropdown extends React.Component<Props> {
@@ -28,7 +29,8 @@ class MonthDropdown extends React.Component<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-month-dropdown`,
     show: false,
-    yearCeiling: 5,
+    limitStartYear: 5,
+    limitEndYear: 5,
     date: moment()
   };
 
@@ -44,6 +46,12 @@ class MonthDropdown extends React.Component<Props> {
     this.updatePosition();
   }
 
+  getStartYear() {
+    const { date, limitStartYear = 5 } = this.props;
+    const startYear = date.year() - limitStartYear;
+    return Math.max(startYear, minYear);
+  }
+
   updatePosition(props?: Props) {
     const { date } = props || this.props;
     date && this.scrollTo(date);
@@ -51,7 +59,7 @@ class MonthDropdown extends React.Component<Props> {
 
   scrollTo = (date: moment$Moment) => {
     const year = date.year();
-    const top = ((year - startYear) * blockHeight);
+    const top = ((year - this.getStartYear()) * blockHeight);
 
     scrollTopAnimation(this.scroll, top, scrollTop(this.scroll) !== 0);
   };
@@ -62,14 +70,15 @@ class MonthDropdown extends React.Component<Props> {
 
   renderBlock() {
 
-    const { date, onSelect, yearCeiling } = this.props;
+    const { date, onSelect, limitEndYear } = this.props;
 
     const ret = [];
     const selectedMonth = date.month();
     const selectedYear = date.year();
+    const startYear = this.getStartYear();
     let nextYear = 0;
 
-    for (let i = 0; i < 100 && nextYear < selectedYear + yearCeiling; i += 1) {
+    for (let i = 0; i < 100 && nextYear < selectedYear + limitEndYear; i += 1) {
 
       nextYear = startYear + i;
 

@@ -14,8 +14,8 @@ const { namespace } = constants;
 type Range = {
   label: React.Node,
   closeOverlay?: boolean,
-  value: moment$Moment | (pageDate?: moment$Moment)=> moment$Moment
-}
+  value: moment$Moment | (pageDate?: moment$Moment)=> moment$Moment,
+};
 
 type Props = {
   ranges: Array<Range>,
@@ -24,7 +24,7 @@ type Props = {
   pageDate?: moment$Moment,
   onShortcut?: (value: moment$Moment, closeOverlay?: boolean, event?: SyntheticEvent<*>) => void,
   onOk?: (event: SyntheticEvent<*>) => void,
-  disabledOkButton?: (pageDate?: moment$Moment) => boolean
+  disabledHandle?: (date?: moment$Moment) => boolean
 }
 
 class Toolbar extends React.Component<Props> {
@@ -52,18 +52,20 @@ class Toolbar extends React.Component<Props> {
 
   renderOkButton() {
     const {
-      disabledOkButton,
+      disabledHandle,
       pageDate,
       onOk
     } = this.props;
 
-    const disabled = disabledOkButton && disabledOkButton(pageDate);
-    const classes = classNames(this.addPrefix('right-btn-ok'), { disabled });
+    const disabled = disabledHandle && disabledHandle(pageDate);
+    const classes = classNames(this.addPrefix('right-btn-ok'), {
+      [this.addPrefix('btn-disabled')]: disabled
+    });
     return (
       <div className={this.addPrefix('right')}>
         <button
           className={classes}
-          onClick={!disabled && onOk}
+          onClick={disabled ? undefined : onOk}
         >
           <FormattedMessage id="ok" />
         </button>
@@ -75,7 +77,7 @@ class Toolbar extends React.Component<Props> {
     const {
       ranges,
       onShortcut,
-      disabledOkButton,
+      disabledHandle,
       className,
       pageDate,
       classPrefix,
@@ -95,7 +97,7 @@ class Toolbar extends React.Component<Props> {
             ranges.map((item: Range, index: number) => {
 
               let value: any = typeof item.value === 'function' ? item.value(pageDate) : item.value;
-              let disabled = disabledOkButton && disabledOkButton(value);
+              let disabled = disabledHandle && disabledHandle(value);
               let itemClassName = classNames(this.addPrefix('option'), {
                 [this.addPrefix('option-disabled')]: disabled
               });

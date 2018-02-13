@@ -200,10 +200,10 @@
         &:hover {
           background: #eee;
         }
-        &.error {
-          background: #c40707;
-          color: #fff;
-        }
+      }
+      &-error {
+        background: #c40707;
+        color: #fff;
       }
     }
     &-view {
@@ -294,8 +294,7 @@
     }
     &-month-dropdown {
       .dropdown();
-
-      &-scroll{
+      &-scroll {
         overflow: auto;
         width: 120%;
         height: ( @cell-height + @cell-spacing * 2) * 8;
@@ -364,7 +363,6 @@
           border-top: 1px solid #eee;
           min-width: 80px;
         }
-
         ul {
           list-style: none;
           padding: 0;
@@ -385,8 +383,7 @@
           }
         }
       }
-
-      &-cell{
+      &-cell {
         &-disabled {
           opacity: .4;
           background: none;
@@ -419,12 +416,18 @@
             margin-left: 0;
           }
         }
-        &.disabled {
-          opacity: .4;
-          color: @B500;
-          cursor: not-allowed;
-        }
+
       }
+    }
+    &-option-disabled{
+      opacity: .4;
+      cursor: not-allowed;
+      outline: none;
+    }
+    &-btn-disabled {
+      opacity: .4;
+      color: @B500;
+      cursor: not-allowed;
     }
     &-right {
       float: right;
@@ -433,11 +436,6 @@
         background: @color-active;
         padding: 4px 10px;
         color: #fff;
-        &.disabled {
-          opacity: .4;
-          cursor: not-allowed;
-          outline: none;
-        }
       }
     }
   }

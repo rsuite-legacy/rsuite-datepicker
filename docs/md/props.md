@@ -28,6 +28,8 @@
 | open                | boolean                               | 打开 (受控)                                             |
 | defaultOpen         | boolean                               | 默认打开                                                |
 | placement           | enum: Placement `(bottomLeft)`        | 显示位置                                                |
+| limitStartYear      | number `(5)`                          | 相对当前选择的日期，限制可以选择上限年份                |
+| limitEndYear        | number `(5)`                          | 相对当前选择的日期，限制可以选择下限年份                |
 
 ## Types
 
@@ -53,6 +55,8 @@ type Range = {
 type Placement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight' | 'leftTop' | 'rightTop' | 'leftBottom' | 'rightBottom';
 
 ```
+
+## Default
 
 ### Locale
 

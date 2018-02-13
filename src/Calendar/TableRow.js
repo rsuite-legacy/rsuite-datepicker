@@ -45,7 +45,7 @@ class TableRow extends React.Component<Props> {
     for (let i = 0; i < 7; i += 1) {
 
       let thisDate = moment(weekendDate).add(i, 'd');
-      let disabled = disabledDate && disabledDate(thisDate);
+      let disabled = disabledDate && disabledDate(thisDate.clone());
       let isToday = thisDate.isSame(moment(), 'date');
       let classes = classNames(this.addPrefix('cell'), {
         [this.addPrefix('cell-un-same-month')]: !(inSameMonth && inSameMonth(thisDate)),

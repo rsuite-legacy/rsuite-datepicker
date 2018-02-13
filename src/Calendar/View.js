@@ -21,7 +21,7 @@ type Props = {
 const inSameMonth = (dateA: moment$Moment, dateB: moment$Moment) => dateA.month() === dateB.month();
 const getThisMonthDate = (date: moment$Moment) => date.clone().date(1);
 
-class MonthView extends React.Component<Props> {
+class View extends React.Component<Props> {
 
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-view`,
@@ -67,4 +67,4 @@ class MonthView extends React.Component<Props> {
 }
 
 
-export default MonthView;
+export default View;
