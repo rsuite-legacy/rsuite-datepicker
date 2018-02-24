@@ -43,7 +43,7 @@
     "moment": "^2.20.1",
     "prop-types": "^15.5.10",
     "rsuite-intl": "^1.0.4",
-    "rsuite-utils": "1.0.0-next.4"
+    "rsuite-utils": "^1.0.0-next.8"
   },
   "peerDependencies": {
     "react": "^0.14.9 || >=15.3.0",
