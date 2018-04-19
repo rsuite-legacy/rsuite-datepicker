@@ -1,6 +1,6 @@
 {
   "name": "rsuite-datepicker",
-  "version": "3.0.0-next",
+  "version": "3.0.0",
   "description": "React Datepicker Component",
   "main": "lib/index.js",
   "scripts": {
@@ -38,14 +38,14 @@
   ],
   "dependencies": {
     "classnames": ">=2.0.0",
-    "dom-lib": "0.2.5",
+    "dom-lib": "^1.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "prop-types": "^15.5.10",
-    "rsuite-intl": "^1.0.4",
-    "rsuite-utils": "^1.0.0-next.8"
+    "rsuite-intl": "^1.0.4"
   },
   "peerDependencies": {
+    "rsuite-utils": "^1.0.0",
     "react": "^0.14.9 || >=15.3.0",
     "react-dom": "^0.14.9 || >=15.3.0"
   },
@@ -108,6 +108,7 @@
     "rsuite-affix": "^1.1.2",
     "rsuite-docs": "^0.1.11",
     "rsuite-theme": "^2.0.16",
+    "rsuite-utils": "^1.0.0",
     "sinon": "^4.1.1",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
