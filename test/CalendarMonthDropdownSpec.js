@@ -10,14 +10,13 @@ describe('Calendar-MonthDropdown', () => {
   it('Should output year and month ', () => {
 
     const date = moment();
-    const size = (date.year() - 1950) + 6;
 
     const instance = ReactTestUtils.renderIntoDocument(
       <MonthDropdown date={date} />
     );
 
     const node = findDOMNode(instance);
-    assert.equal(node.querySelectorAll('.rs-picker-calendar-month-dropdown-year').length, size);
+    assert.equal(node.querySelectorAll('.rs-picker-calendar-month-dropdown-year').length, 11);
   });
 
   it('Should call `onSelect` callback ', (done) => {
