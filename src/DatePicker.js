@@ -61,6 +61,7 @@ type Props = {
   limitStartYear?: number,
   limitEndYear?: number,
   className?: string,
+  menuClassName?: string,
   classPrefix?: string,
   open?: boolean,
   defaultOpen?: boolean,
@@ -333,10 +334,11 @@ class DatePicker extends React.Component<Props, States> {
     );
   }
   renderDropdownMenu(calendar: React.Node) {
-    const { placement, ranges } = this.props;
+    const { placement, ranges, menuClassName } = this.props;
     const { pageDate } = this.state;
     const classes = classNames(
       this.addPrefix('menu'),
+      menuClassName,
       `${namespace}-placement-${_.kebabCase(placement)}`
     );
     return (
