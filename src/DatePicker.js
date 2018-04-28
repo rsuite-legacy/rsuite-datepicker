@@ -17,11 +17,19 @@ import { shouldOnlyTime } from './utils/formatUtils';
 
 const { namespace } = constants;
 
-type PlacementEighPoints = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight' | 'leftTop' | 'rightTop' | 'leftBottom' | 'rightBottom';
+type PlacementEighPoints =
+  | 'bottomLeft'
+  | 'bottomRight'
+  | 'topLeft'
+  | 'topRight'
+  | 'leftTop'
+  | 'rightTop'
+  | 'leftBottom'
+  | 'rightBottom';
 type Range = {
   label: React.Node,
   closeOverlay?: boolean,
-  value: moment$Moment | (pageDate?: moment$Moment)=> moment$Moment,
+  value: moment$Moment | ((pageDate?: moment$Moment) => moment$Moment)
 };
 
 type Props = {
@@ -59,17 +67,16 @@ type Props = {
   placement?: PlacementEighPoints,
   onOpen?: () => void,
   onClose?: () => void
-}
+};
 
 type States = {
   value?: moment$Moment,
   forceOpen?: boolean,
   calendarState?: 'DROP_MONTH' | 'DROP_TIME',
   pageDate: moment$Moment
-}
+};
 
 class DatePicker extends React.Component<Props, States> {
-
   static defaultProps = {
     classPrefix: `${namespace}-date`,
     placement: 'bottomLeft',
@@ -91,7 +98,7 @@ class DatePicker extends React.Component<Props, States> {
       value: activeValue,
       forceOpen: false,
       calendarState: undefined,
-      pageDate: activeValue || calendarDefaultDate || moment()  // display calendar date
+      pageDate: activeValue || calendarDefaultDate || moment() // display calendar date
     };
   }
 
@@ -99,7 +106,10 @@ class DatePicker extends React.Component<Props, States> {
     const { value } = this.props;
 
     if (nextProps.value && !nextProps.value.isSame(value, 'day')) {
-      this.setState({ value: nextProps.value });
+      this.setState({
+        value: nextProps.value,
+        pageDate: nextProps.value
+      });
     }
   }
 
@@ -113,7 +123,7 @@ class DatePicker extends React.Component<Props, States> {
       pageDate: nextPageDate
     });
     onNextMonth && onNextMonth(nextPageDate);
-  }
+  };
 
   onMoveBackward = (nextPageDate: moment$Moment) => {
     const { onPrevMonth } = this.props;
@@ -121,12 +131,12 @@ class DatePicker extends React.Component<Props, States> {
       pageDate: nextPageDate
     });
     onPrevMonth && onPrevMonth(nextPageDate);
-  }
+  };
 
   getValue = () => {
     const value = this.props.value || this.state.value;
     return value ? value.clone() : null;
-  }
+  };
 
   getDateString() {
     const { placeholder, format } = this.props;
@@ -137,7 +147,6 @@ class DatePicker extends React.Component<Props, States> {
 
   calendar = null;
 
-
   handleChangePageDate = (nextPageDate: moment$Moment) => {
     const { onSelect } = this.props;
     this.setState({
@@ -145,7 +154,7 @@ class DatePicker extends React.Component<Props, States> {
       calendarState: undefined
     });
     onSelect && onSelect(nextPageDate);
-  }
+  };
 
   handleChangePageTime = (nextPageTime: moment$Moment) => {
     const { onSelect } = this.props;
@@ -153,7 +162,7 @@ class DatePicker extends React.Component<Props, States> {
       pageDate: nextPageTime
     });
     onSelect && onSelect(nextPageTime);
-  }
+  };
 
   handleShortcutPageDate = (
     value: moment$Moment,
@@ -163,13 +172,13 @@ class DatePicker extends React.Component<Props, States> {
     const { onSelect } = this.props;
     this.updateValue(value, closeOverlay);
     onSelect && onSelect(value, event);
-  }
+  };
 
   handleOK = (event: SyntheticEvent<*>) => {
     const { onOk } = this.props;
     this.updateValue();
     onOk && onOk(this.state.pageDate, event);
-  }
+  };
 
   updateValue(nextPageDate?: moment$Moment | null, closeOverlay?: boolean = true) {
     const { value, pageDate } = this.state;
@@ -189,7 +198,6 @@ class DatePicker extends React.Component<Props, States> {
     if (closeOverlay !== false) {
       this.close();
     }
-
   }
 
   resetPageDate() {
@@ -241,7 +249,7 @@ class DatePicker extends React.Component<Props, States> {
       toggle = true;
     }
     onToggleMonthDropdown && onToggleMonthDropdown(toggle);
-  }
+  };
 
   toggleTimeDropdown = () => {
     const { calendarState } = this.state;
@@ -256,18 +264,19 @@ class DatePicker extends React.Component<Props, States> {
     }
 
     onToggleTimeDropdown && onToggleTimeDropdown(toggle);
-  }
+  };
 
   handleClean = () => {
     this.setState({ pageDate: moment() });
     this.updateValue(null);
-  }
+  };
 
   handleSelect = (nextValue: moment$Moment) => {
     const { pageDate } = this.state;
     const { onSelect } = this.props;
 
-    nextValue.hours(pageDate.hours())
+    nextValue
+      .hours(pageDate.hours())
       .minutes(pageDate.minutes())
       .seconds(pageDate.seconds());
 
@@ -276,7 +285,7 @@ class DatePicker extends React.Component<Props, States> {
     });
 
     onSelect && onSelect(nextValue);
-  }
+  };
 
   disabledToolbarHandle = (date?: moment$Moment): boolean => {
     const { disabledDate } = this.props;
@@ -294,18 +303,9 @@ class DatePicker extends React.Component<Props, States> {
   addPrefix = (name: string) => prefix(this.props.classPrefix)(name);
 
   renderCalendar() {
-    const {
-      format,
-      isoWeek,
-      limitStartYear,
-      limitEndYear,
-      disabledDate
-    } = this.props;
+    const { format, isoWeek, limitStartYear, limitEndYear, disabledDate } = this.props;
 
-    const {
-      calendarState,
-      pageDate
-    } = this.state;
+    const { calendarState, pageDate } = this.state;
 
     const calendarProps = _.pick(this.props, calendarOnlyProps);
 
@@ -326,7 +326,7 @@ class DatePicker extends React.Component<Props, States> {
         onToggleTimeDropdown={this.toggleTimeDropdown}
         onChangePageDate={this.handleChangePageDate}
         onChangePageTime={this.handleChangePageTime}
-        calendarRef={(ref) => {
+        calendarRef={ref => {
           this.calendar = ref;
         }}
       />
@@ -340,11 +340,9 @@ class DatePicker extends React.Component<Props, States> {
       `${namespace}-placement-${_.kebabCase(placement)}`
     );
     return (
-      <MenuWrapper
-        className={classes}
-      >
+      <MenuWrapper className={classes}>
         <div
-          ref={(ref) => {
+          ref={ref => {
             // for test
             this.menuContainer = ref;
           }}
@@ -394,25 +392,28 @@ class DatePicker extends React.Component<Props, States> {
       );
     }
 
-    const classes = classNames(classPrefix, {
-      [this.addPrefix('has-value')]: hasValue,
-      [this.addPrefix('disabled')]: disabled,
-      [this.addPrefix('only-time')]: shouldOnlyTime(format)
-
-    }, `${namespace}-placement-${_.kebabCase(placement)}`, className);
+    const classes = classNames(
+      classPrefix,
+      {
+        [this.addPrefix('has-value')]: hasValue,
+        [this.addPrefix('disabled')]: disabled,
+        [this.addPrefix('only-time')]: shouldOnlyTime(format)
+      },
+      `${namespace}-placement-${_.kebabCase(placement)}`,
+      className
+    );
 
     return (
       <IntlProvider locale={locale}>
         <div
           {...unhandled}
           className={classes}
-          ref={(ref) => {
+          ref={ref => {
             this.container = ref;
           }}
         >
-
           <OverlayTrigger
-            ref={(ref) => {
+            ref={ref => {
               this.trigger = ref;
             }}
             open={open}
@@ -424,7 +425,6 @@ class DatePicker extends React.Component<Props, States> {
             onExited={onClose}
             speaker={this.renderDropdownMenu(calendar)}
           >
-
             <Toggle
               onClean={this.handleClean}
               cleanable={cleanable && !disabled}
@@ -433,7 +433,6 @@ class DatePicker extends React.Component<Props, States> {
               {this.getDateString()}
             </Toggle>
           </OverlayTrigger>
-
         </div>
       </IntlProvider>
     );
