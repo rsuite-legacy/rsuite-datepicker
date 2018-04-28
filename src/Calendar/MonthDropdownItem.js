@@ -7,7 +7,6 @@ import _ from 'lodash';
 import { constants } from 'rsuite-utils/lib/Picker';
 import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
 
-
 type Props = {
   date?: moment$Moment,
   month?: number,
@@ -18,9 +17,7 @@ type Props = {
   classPrefix?: string
 };
 
-
 class MonthDropdownItem extends React.Component<Props> {
-
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-month-dropdown-cell`,
     month: 0
@@ -33,25 +30,25 @@ class MonthDropdownItem extends React.Component<Props> {
   handleClick = (event: SyntheticEvent<*>) => {
     const { onSelect, month, year, date } = this.props;
     if (year && month && date) {
-      const nextMonth = moment(date).year(year).month(month - 1);
+      const nextMonth = moment(date)
+        .year(year)
+        .month(month - 1);
       onSelect && onSelect(nextMonth, event);
     }
-  }
+  };
 
   render() {
-    const {
-      className,
-      classPrefix,
-      month,
-      active,
-      ...rest
-    } = this.props;
+    const { className, classPrefix, month, active, ...rest } = this.props;
 
     const addPrefix = prefix(classPrefix);
     const unhandled = getUnhandledProps(MonthDropdownItem, rest);
-    const classes = classNames(classPrefix, {
-      [addPrefix('active')]: active
-    }, className);
+    const classes = classNames(
+      classPrefix,
+      {
+        [addPrefix('active')]: active
+      },
+      className
+    );
 
     return (
       <div

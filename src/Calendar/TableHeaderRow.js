@@ -7,28 +7,18 @@ import { prefix } from 'rsuite-utils/lib/utils';
 import { constants } from 'rsuite-utils/lib/Picker';
 import { FormattedMessage } from 'rsuite-intl';
 
-
 type Props = {
   isoWeek?: boolean,
   className?: string,
   classPrefix?: string
-}
+};
 
-const weekKeys = [
-  'sunday',
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday'
-];
+const weekKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 class TableHeaderRow extends React.Component<Props> {
-
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-table`
-  }
+  };
   shouldComponentUpdate(nextProps: Props) {
     return !_.isEqual(this.props, nextProps);
   }
@@ -44,19 +34,14 @@ class TableHeaderRow extends React.Component<Props> {
     }
 
     return (
-      <div
-        {...props}
-        className={classes}
-      >
-        {
-          items.map(key => (
-            <div key={key} className={addPrefix('cell')}>
-              <span className={addPrefix('cell-content')}>
-                <FormattedMessage id={key} />
-              </span>
-            </div>
-          ))
-        }
+      <div {...props} className={classes}>
+        {items.map(key => (
+          <div key={key} className={addPrefix('cell')}>
+            <span className={addPrefix('cell-content')}>
+              <FormattedMessage id={key} />
+            </span>
+          </div>
+        ))}
       </div>
     );
   }

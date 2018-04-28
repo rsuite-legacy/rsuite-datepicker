@@ -49,7 +49,6 @@ class Header extends React.Component<Props> {
   }
 
   getDateFormat() {
-
     const { showDate, showMonth } = this.props;
 
     if (showDate) {
@@ -60,7 +59,7 @@ class Header extends React.Component<Props> {
 
     return 'YYYY';
   }
-  addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name);
   render() {
     const {
       date,
@@ -78,14 +77,21 @@ class Header extends React.Component<Props> {
       ...rest
     } = this.props;
 
+    const dateTitleClasses = classNames(
+      this.addPrefix('title'),
+      {
+        [this.addPrefix('error')]: disabledDate && disabledDate(date)
+      },
+      this.addPrefix('title-date')
+    );
 
-    const dateTitleClasses = classNames(this.addPrefix('title'), {
-      [this.addPrefix('error')]: disabledDate && disabledDate(date)
-    }, this.addPrefix('title-date'));
-
-    const timeTitleClasses = classNames(this.addPrefix('title'), {
-      [this.addPrefix('error')]: disabledTime && disabledTime(date)
-    }, this.addPrefix('title-time'));
+    const timeTitleClasses = classNames(
+      this.addPrefix('title'),
+      {
+        [this.addPrefix('error')]: disabledTime && disabledTime(date)
+      },
+      this.addPrefix('title-time')
+    );
 
     const monthToolbar = (
       <div className={this.addPrefix('month-toolbar')}>
@@ -113,32 +119,31 @@ class Header extends React.Component<Props> {
     );
 
     const hasMonth = showDate || showMonth;
-    const classes = classNames(classPrefix, {
-      [this.addPrefix('has-month')]: hasMonth,
-      [this.addPrefix('has-time')]: showTime
-    }, className);
+    const classes = classNames(
+      classPrefix,
+      {
+        [this.addPrefix('has-month')]: hasMonth,
+        [this.addPrefix('has-time')]: showTime
+      },
+      className
+    );
     const unhandled = getUnhandledProps(Header, rest);
 
     return (
-      <div
-        {...unhandled}
-        className={classes}
-      >
+      <div {...unhandled} className={classes}>
         {hasMonth && monthToolbar}
-        {
-          showTime && (
-            <div className={this.addPrefix('time-toolbar')}>
-              <span
-                role="button"
-                tabIndex="-1"
-                className={timeTitleClasses}
-                onClick={onToggleTimeDropdown}
-              >
-                {date && date.format(this.getTimeFormat())}
-              </span>
-            </div>
-          )
-        }
+        {showTime && (
+          <div className={this.addPrefix('time-toolbar')}>
+            <span
+              role="button"
+              tabIndex="-1"
+              className={timeTitleClasses}
+              onClick={onToggleTimeDropdown}
+            >
+              {date && date.format(this.getTimeFormat())}
+            </span>
+          </div>
+        )}
       </div>
     );
   }

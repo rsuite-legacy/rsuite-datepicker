@@ -6,9 +6,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import MonthDropdownItem from '../src/Calendar/MonthDropdownItem';
 
 describe('Calendar-MonthDropdownItem', () => {
-
   it('Should output a  `1` ', () => {
-
     const instance = ReactTestUtils.renderIntoDocument(
       <MonthDropdownItem month={1} date={moment()} />
     );
@@ -19,27 +17,20 @@ describe('Calendar-MonthDropdownItem', () => {
     assert.equal(instanceDOM.innerText, '1');
   });
 
-  it('Should call `onSelect` callback', (done) => {
-
-    const doneOp = (date) => {
+  it('Should call `onSelect` callback', done => {
+    const doneOp = date => {
       if (date.format('YYYY-MM') === '2017-01') {
         done();
       }
     };
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <MonthDropdownItem
-        date={moment()}
-        month={1}
-        year={2017}
-        onSelect={doneOp}
-      />
+      <MonthDropdownItem date={moment()} month={1} year={2017} onSelect={doneOp} />
     );
 
     const instanceDOM = findDOMNode(instance);
 
     ReactTestUtils.Simulate.click(instanceDOM);
-
   });
 
   it('Should have a custom className', () => {
@@ -56,6 +47,4 @@ describe('Calendar-MonthDropdownItem', () => {
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });
-
-
 });

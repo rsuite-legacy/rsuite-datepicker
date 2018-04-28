@@ -25,30 +25,32 @@ type Props = {
   format?: string,
   className?: string,
   classPrefix?: string
-}
+};
 
 type TimeType = 'hours' | 'minutes' | 'seconds';
 
 const ranges = {
   hours: { start: 0, end: 23 },
   minutes: { start: 0, end: 59 },
-  seconds: { start: 0, end: 59 },
+  seconds: { start: 0, end: 59 }
 };
 
 class TimeDropdown extends React.Component<Props> {
-
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-time-dropdown`,
     show: false,
-    ranges: [{
-      label: 'today',
-      value: moment(),
-      closeOverlay: true
-    }, {
-      label: 'yesterday',
-      value: moment().add(-1, 'd'),
-      closeOverlay: true,
-    }]
+    ranges: [
+      {
+        label: 'today',
+        value: moment(),
+        closeOverlay: true
+      },
+      {
+        label: 'yesterday',
+        value: moment().add(-1, 'd'),
+        closeOverlay: true
+      }
+    ]
   };
 
   componentDidMount() {
@@ -84,8 +86,8 @@ class TimeDropdown extends React.Component<Props> {
     return nextTime;
   }
 
-  container = {}
-  content = {}
+  container = {};
+  content = {};
 
   updatePosition(props?: Props) {
     const { show } = props || this.props;
@@ -94,7 +96,6 @@ class TimeDropdown extends React.Component<Props> {
   }
 
   scrollTo = (time: Object) => {
-
     Object.entries(time).forEach((item: any) => {
       let container = this.container[item[0]];
       let node = container.querySelector(`[data-key="${item[0]}-${item[1]}"]`);
@@ -103,17 +104,16 @@ class TimeDropdown extends React.Component<Props> {
         scrollTopAnimation(this.container[item[0]], top, scrollTop(this.container[item[0]]) !== 0);
       }
     });
-  }
+  };
 
   handleClick = (type: TimeType, d: number, event: SyntheticEvent<*>) => {
     const { onSelect, date } = this.props;
     // $FlowFixMe
     const nextDate = moment(date)[type](d);
     onSelect && onSelect(nextDate, event);
-  }
-  addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
+  };
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name);
   renderColumn(type: TimeType, active: any) {
-
     if (!_.isNumber(active)) {
       return null;
     }
@@ -125,7 +125,6 @@ class TimeDropdown extends React.Component<Props> {
     const disabledFunc = this.props[_.camelCase(`disabled_${type}`)];
 
     for (let i = start; i <= end; i += 1) {
-
       if (!(hideFunc && hideFunc(i, date))) {
         let disabled = disabledFunc && disabledFunc(i, date);
         let itemClasses = classNames(this.addPrefix('cell'), {
@@ -140,7 +139,7 @@ class TimeDropdown extends React.Component<Props> {
               className={itemClasses}
               tabIndex="-1"
               data-key={`${type}-${i}`}
-              onClick={(event) => {
+              onClick={event => {
                 !disabled && this.handleClick(type, i, event);
               }}
             >
@@ -157,7 +156,7 @@ class TimeDropdown extends React.Component<Props> {
           <FormattedMessage id={type} />
         </div>
         <ul
-          ref={(ref) => {
+          ref={ref => {
             this.container[type] = ref;
           }}
         >
@@ -168,24 +167,16 @@ class TimeDropdown extends React.Component<Props> {
   }
 
   render() {
-
-    const {
-      className,
-      classPrefix,
-      ...rest
-    } = this.props;
+    const { className, classPrefix, ...rest } = this.props;
     const time = this.getTime();
     const classes = classNames(classPrefix, className);
     const unhandled = getUnhandledProps(TimeDropdown, rest);
 
     return (
-      <div
-        {...unhandled}
-        className={classes}
-      >
+      <div {...unhandled} className={classes}>
         <div
           className={this.addPrefix('content')}
-          ref={(ref) => {
+          ref={ref => {
             this.content = ref;
           }}
         >
@@ -199,6 +190,5 @@ class TimeDropdown extends React.Component<Props> {
     );
   }
 }
-
 
 export default TimeDropdown;

@@ -22,7 +22,6 @@ const inSameMonth = (dateA: moment$Moment, dateB: moment$Moment) => dateA.month(
 const getThisMonthDate = (date: moment$Moment) => date.clone().date(1);
 
 class View extends React.Component<Props> {
-
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-view`,
     activeDate: moment()
@@ -31,10 +30,9 @@ class View extends React.Component<Props> {
   inSameThisMonthDate = (date: moment$Moment) => {
     const thisMonthDate = getThisMonthDate(this.props.activeDate);
     return inSameMonth(date, thisMonthDate);
-  }
+  };
 
   render() {
-
     const {
       activeDate,
       onSelect,
@@ -49,10 +47,7 @@ class View extends React.Component<Props> {
     const classes = classNames(classPrefix, className);
 
     return (
-      <div
-        {...rest}
-        className={classes}
-      >
+      <div {...rest} className={classes}>
         <Table
           selected={activeDate}
           onSelect={onSelect}
@@ -65,6 +60,5 @@ class View extends React.Component<Props> {
     );
   }
 }
-
 
 export default View;

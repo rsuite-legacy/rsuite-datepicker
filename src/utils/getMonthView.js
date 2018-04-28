@@ -4,7 +4,6 @@
  * @return date[]
  */
 export default function getMonthView(monthDate, isoWeek) {
-
   let firstDayOfMonth = monthDate.day();
   let distance = isoWeek ? 1 - firstDayOfMonth : 0 - firstDayOfMonth;
   let firstWeekendDate = monthDate.clone().add(distance, 'days');

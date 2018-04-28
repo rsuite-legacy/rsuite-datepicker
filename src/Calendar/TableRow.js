@@ -7,7 +7,6 @@ import _ from 'lodash';
 import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
 import { constants } from 'rsuite-utils/lib/Picker';
 
-
 type Props = {
   weekendDate?: moment$Moment,
   selected?: moment$Moment,
@@ -21,29 +20,21 @@ type Props = {
 const { namespace } = constants;
 
 class TableRow extends React.Component<Props> {
-
   static defaultProps = {
     classPrefix: `${namespace}-calendar-table`,
     selected: moment()
-  }
+  };
 
   shouldComponentUpdate(nextProps: Props) {
     return !_.isEqual(this.props, nextProps);
   }
-  addPrefix = (name: string) => prefix(this.props.classPrefix)(name)
+  addPrefix = (name: string) => prefix(this.props.classPrefix)(name);
 
   renderDays() {
-    const {
-      weekendDate,
-      disabledDate,
-      inSameMonth,
-      selected,
-      onSelect
-    } = this.props;
+    const { weekendDate, disabledDate, inSameMonth, selected, onSelect } = this.props;
 
     let days = [];
     for (let i = 0; i < 7; i += 1) {
-
       let thisDate = moment(weekendDate).add(i, 'd');
       let disabled = disabledDate && disabledDate(thisDate.clone());
       let isToday = thisDate.isSame(moment(), 'date');
@@ -76,19 +67,13 @@ class TableRow extends React.Component<Props> {
   }
 
   render() {
-    const {
-      className,
-      ...rest
-    } = this.props;
+    const { className, ...rest } = this.props;
 
     const classes = classNames(this.addPrefix('row'), className);
     const unhandled = getUnhandledProps(TableRow, rest);
 
     return (
-      <div
-        {...unhandled}
-        className={classes}
-      >
+      <div {...unhandled} className={classes}>
         {this.renderDays()}
       </div>
     );

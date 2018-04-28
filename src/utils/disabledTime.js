@@ -1,4 +1,3 @@
-
 import _ from 'lodash';
 
 export const calendarOnlyProps = [
@@ -11,7 +10,6 @@ export const calendarOnlyProps = [
   'hideSeconds'
 ];
 
-
 export default function disabledTime(props, date) {
   if (!date) {
     return false;
@@ -19,7 +17,7 @@ export default function disabledTime(props, date) {
 
   const calendarProps = _.pick(props, calendarOnlyProps);
 
-  return Object.keys(calendarProps).some((key) => {
+  return Object.keys(calendarProps).some(key => {
     if (/(Hours)/.test(key)) {
       return calendarProps[key](date.hours(), date);
     }

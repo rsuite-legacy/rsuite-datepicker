@@ -2,7 +2,7 @@
 
 export type Locale = {
   [key: string]: string
-}
+};
 
 export default {
   sunday: 'Su',

@@ -6,32 +6,25 @@ import moment from 'moment';
 import Calendar from '../src/Calendar';
 
 describe('Calendar', () => {
-
   it('Should render a div with `calendar` class', () => {
-
-    const instance = ReactTestUtils.renderIntoDocument(
-      <Calendar pageDate={moment()} />
-    );
+    const instance = ReactTestUtils.renderIntoDocument(<Calendar pageDate={moment()} />);
 
     assert.equal(findDOMNode(instance).nodeName, 'DIV');
     assert.ok(findDOMNode(instance).className.match(/\bcalendar\b/));
   });
 
-  it('Should call `onSelect` callback', (done) => {
-
+  it('Should call `onSelect` callback', done => {
     const doneOp = () => {
       done();
     };
 
     const instance = ReactTestUtils.renderIntoDocument(
-      <Calendar
-        format="YYYY-MM-DD"
-        pageDate={moment()}
-        onSelect={doneOp}
-      />
+      <Calendar format="YYYY-MM-DD" pageDate={moment()} onSelect={doneOp} />
     );
     const instanceDOM = findDOMNode(instance);
-    ReactTestUtils.Simulate.click(instanceDOM.querySelector('.rs-picker-calendar-table-cell-is-today'));
+    ReactTestUtils.Simulate.click(
+      instanceDOM.querySelector('.rs-picker-calendar-table-cell-is-today')
+    );
   });
 
   it('Should have a custom className', () => {
@@ -48,6 +41,4 @@ describe('Calendar', () => {
     );
     assert.equal(findDOMNode(instance).style.fontSize, fontSize);
   });
-
-
 });

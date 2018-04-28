@@ -6,7 +6,6 @@ import _ from 'lodash';
 import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
 import { constants } from 'rsuite-utils/lib/Picker';
 
-
 import MonthDropdown from './MonthDropdown';
 import TimeDropdown from './TimeDropdown';
 import View from './View';
@@ -15,7 +14,6 @@ import disabledTime, { calendarOnlyProps } from '../utils/disabledTime';
 import { shouldTime, shouldDate, shouldMonth } from '../utils/formatUtils';
 
 const { namespace } = constants;
-
 
 type Props = {
   pageDate: moment$Moment,
@@ -41,12 +39,11 @@ type Props = {
   limitEndYear?: number,
   className?: string,
   classPrefix?: string
-}
+};
 
 class Calendar extends React.Component<Props> {
-
   static defaultProps = {
-    classPrefix: `${namespace}-calendar`,
+    classPrefix: `${namespace}-calendar`
   };
   disabledDate = (date: moment$Moment) => {
     const { disabledDate } = this.props;
@@ -54,22 +51,21 @@ class Calendar extends React.Component<Props> {
       return true;
     }
     return false;
-  }
+  };
 
-  disabledTime = (date: moment$Moment) => disabledTime(this.props, date)
+  disabledTime = (date: moment$Moment) => disabledTime(this.props, date);
 
   handleMoveForword = () => {
     const { onMoveForword, pageDate } = this.props;
     onMoveForword && onMoveForword(pageDate.clone().add(1, 'month'));
-  }
+  };
 
   handleMoveBackward = () => {
     const { onMoveBackward, pageDate } = this.props;
     onMoveBackward && onMoveBackward(pageDate.clone().add(-1, 'month'));
-  }
+  };
 
   render() {
-
     const {
       calendarState,
       pageDate,
@@ -88,7 +84,6 @@ class Calendar extends React.Component<Props> {
       ...rest
     } = this.props;
 
-
     const showDate = shouldDate(format);
     const showTime = shouldTime(format);
     const showMonth = shouldMonth(format);
@@ -99,19 +94,19 @@ class Calendar extends React.Component<Props> {
     const dropMonth = calendarState === 'DROP_MONTH' || onlyShowMonth;
     const addPrefix = prefix(classPrefix);
 
-    const calendarClasses = classNames(classPrefix, {
-      [addPrefix('show-time-dropdown')]: dropTime,
-      [addPrefix('show-month-dropdown')]: dropMonth
-    }, className);
+    const calendarClasses = classNames(
+      classPrefix,
+      {
+        [addPrefix('show-time-dropdown')]: dropTime,
+        [addPrefix('show-month-dropdown')]: dropMonth
+      },
+      className
+    );
 
     const unhandled = getUnhandledProps(Calendar, rest);
     const timeDropdownProps = _.pick(rest, calendarOnlyProps);
     return (
-      <div
-        {...unhandled}
-        className={calendarClasses}
-        ref={calendarRef}
-      >
+      <div {...unhandled} className={calendarClasses} ref={calendarRef}>
         <Header
           date={pageDate}
           format={format}
@@ -125,7 +120,7 @@ class Calendar extends React.Component<Props> {
           onToggleMonthDropdown={onToggleMonthDropdown}
           onToggleTimeDropdown={onToggleTimeDropdown}
         />
-        {showDate &&
+        {showDate && (
           <View
             key="MonthView"
             activeDate={pageDate}
@@ -133,9 +128,8 @@ class Calendar extends React.Component<Props> {
             isoWeek={isoWeek}
             disabledDate={this.disabledDate}
           />
-        }
-        {
-          showMonth &&
+        )}
+        {showMonth && (
           <MonthDropdown
             date={pageDate}
             onSelect={onChangePageDate}
@@ -143,10 +137,8 @@ class Calendar extends React.Component<Props> {
             limitStartYear={limitStartYear}
             limitEndYear={limitEndYear}
           />
-
-        }
-        {
-          showTime &&
+        )}
+        {showTime && (
           <TimeDropdown
             {...timeDropdownProps}
             date={pageDate}
@@ -154,12 +146,10 @@ class Calendar extends React.Component<Props> {
             show={dropTime}
             onSelect={onChangePageTime}
           />
-        }
-
+        )}
       </div>
     );
   }
 }
-
 
 export default Calendar;

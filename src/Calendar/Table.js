@@ -18,13 +18,11 @@ type Props = {
   classPrefix?: string
 };
 
-
 class Table extends React.Component<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-table`,
     rows: []
   };
-
 
   shouldComponentUpdate(nextProps: Props) {
     return !_.isEqual(this.props, nextProps);
@@ -46,26 +44,20 @@ class Table extends React.Component<Props> {
     const classes = classNames(classPrefix, className);
 
     return (
-      <div
-        {...rest}
-        className={classes}
-      >
-
+      <div {...rest} className={classes}>
         <TableHeaderRow isoWeek={isoWeek} />
 
-        {
-          rows.map((week, index) => (
-            <TableRow
-              /* eslint-disable */
-              key={index}
-              weekendDate={week}
-              selected={selected}
-              onSelect={onSelect}
-              inSameMonth={inSameMonth}
-              disabledDate={disabledDate}
-            />
-          ))
-        }
+        {rows.map((week, index) => (
+          <TableRow
+            /* eslint-disable */
+            key={index}
+            weekendDate={week}
+            selected={selected}
+            onSelect={onSelect}
+            inSameMonth={inSameMonth}
+            disabledDate={disabledDate}
+          />
+        ))}
       </div>
     );
   }

@@ -1,12 +1,14 @@
 {
   "name": "rsuite-datepicker",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "React Datepicker Component",
   "main": "lib/index.js",
   "scripts": {
+    "format": "prettier --write \"{src,test}/**/*.js\"",
+    "format:check": "prettier --list-different \"{src,test}/**/*.js\"",
     "lint": "eslint src  *.js",
     "tdd": "karma start",
-    "test": "npm run lint && NODE_ENV=test  karma start --single-run",
+    "test": "npm run format:check && npm run lint && NODE_ENV=test  karma start --single-run",
     "build": "rm -rf ./lib && babel ./src --out-dir ./lib && cp -R src/less lib",
     "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3100 --host 0.0.0.0 --devtool source-map",
     "docs": "rm -rf assets &&  NODE_ENV=production webpack",
@@ -45,9 +47,9 @@
     "rsuite-intl": "^1.0.4"
   },
   "peerDependencies": {
-    "rsuite-utils": "^1.0.0",
     "react": "^0.14.9 || >=15.3.0",
-    "react-dom": "^0.14.9 || >=15.3.0"
+    "react-dom": "^0.14.9 || >=15.3.0",
+    "rsuite-utils": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -98,6 +100,7 @@
     "markdown-loader": "2.0.0",
     "markdownloader": "^1.0.6",
     "mocha": "^3.1.0",
+    "prettier": "^1.12.1",
     "react": "15.6.2",
     "react-code-view": "^1.0.12",
     "react-dom": "^15.6.2",
