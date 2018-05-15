@@ -50,6 +50,7 @@ type Props = {
   locale?: Object,
   inline?: boolean,
   onChange?: (value: moment$Moment | null) => void,
+  onChangeCalendarDate?: (date: moment$Moment, event?: SyntheticEvent<*>) => void,
   onToggleMonthDropdown?: (toggle: boolean) => void,
   onToggleTimeDropdown?: (toggle: boolean) => void,
   onSelect?: (date: moment$Moment, event?: SyntheticEvent<*>) => void,
@@ -119,19 +120,21 @@ class DatePicker extends React.Component<Props, States> {
   }
 
   onMoveForword = (nextPageDate: moment$Moment) => {
-    const { onNextMonth } = this.props;
+    const { onNextMonth, onChangeCalendarDate } = this.props;
     this.setState({
       pageDate: nextPageDate
     });
     onNextMonth && onNextMonth(nextPageDate);
+    onChangeCalendarDate && onChangeCalendarDate(nextPageDate);
   };
 
   onMoveBackward = (nextPageDate: moment$Moment) => {
-    const { onPrevMonth } = this.props;
+    const { onPrevMonth, onChangeCalendarDate } = this.props;
     this.setState({
       pageDate: nextPageDate
     });
     onPrevMonth && onPrevMonth(nextPageDate);
+    onChangeCalendarDate && onChangeCalendarDate(nextPageDate);
   };
 
   getValue = () => {
@@ -149,20 +152,18 @@ class DatePicker extends React.Component<Props, States> {
   calendar = null;
 
   handleChangePageDate = (nextPageDate: moment$Moment) => {
-    const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageDate,
       calendarState: undefined
     });
-    onSelect && onSelect(nextPageDate);
+    this.handleAllSelect(nextPageDate);
   };
 
   handleChangePageTime = (nextPageTime: moment$Moment) => {
-    const { onSelect } = this.props;
     this.setState({
       pageDate: nextPageTime
     });
-    onSelect && onSelect(nextPageTime);
+    this.handleAllSelect(nextPageTime);
   };
 
   handleShortcutPageDate = (
@@ -170,9 +171,8 @@ class DatePicker extends React.Component<Props, States> {
     closeOverlay?: boolean,
     event?: SyntheticEvent<*>
   ) => {
-    const { onSelect } = this.props;
     this.updateValue(value, closeOverlay);
-    onSelect && onSelect(value, event);
+    this.handleAllSelect(value, event);
   };
 
   handleOK = (event: SyntheticEvent<*>) => {
@@ -271,11 +271,13 @@ class DatePicker extends React.Component<Props, States> {
     this.setState({ pageDate: moment() });
     this.updateValue(null);
   };
-
+  handleAllSelect = (nextValue: moment$Moment, event?: SyntheticEvent<*>) => {
+    const { onSelect, onChangeCalendarDate } = this.props;
+    onSelect && onSelect(nextValue, event);
+    onChangeCalendarDate && onChangeCalendarDate(nextValue, event);
+  };
   handleSelect = (nextValue: moment$Moment) => {
     const { pageDate } = this.state;
-    const { onSelect } = this.props;
-
     nextValue
       .hours(pageDate.hours())
       .minutes(pageDate.minutes())
@@ -285,7 +287,7 @@ class DatePicker extends React.Component<Props, States> {
       pageDate: nextValue
     });
 
-    onSelect && onSelect(nextValue);
+    this.handleAllSelect(nextValue);
   };
 
   disabledToolbarHandle = (date?: moment$Moment): boolean => {

@@ -197,4 +197,51 @@ describe('DatePicker', () => {
     wrapper.unmount();
     expect(willUnmount.callCount).to.equal(1);
   });
+
+  it('Should call `onChangeCalendarDate` callback when click backward', done => {
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onChangeCalendarDate={doneOp} defaultOpen />
+    );
+    const node = instance.menuContainer;
+    ReactTestUtils.Simulate.click(node.querySelector('.rs-picker-calendar-header-backward'));
+  });
+
+  it('Should call `onChangeCalendarDate` callback when click backward', done => {
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onChangeCalendarDate={doneOp} defaultOpen />
+    );
+    const node = instance.menuContainer;
+    ReactTestUtils.Simulate.click(node.querySelector('.rs-picker-calendar-header-backward'));
+  });
+
+  it('Should call `onChangeCalendarDate` callback when click forward', done => {
+    const doneOp = () => {
+      done();
+    };
+
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onChangeCalendarDate={doneOp} defaultOpen />
+    );
+    const node = instance.menuContainer;
+    ReactTestUtils.Simulate.click(node.querySelector('.rs-picker-calendar-header-forward'));
+  });
+
+  it('Should call `onChangeCalendarDate` callback when click today ', done => {
+    const doneOp = () => {
+      done();
+    };
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker onChangeCalendarDate={doneOp} defaultOpen />
+    );
+    const node = instance.menuContainer;
+    ReactTestUtils.Simulate.click(node.querySelector('.rs-picker-calendar-table-cell-is-today'));
+  });
 });
