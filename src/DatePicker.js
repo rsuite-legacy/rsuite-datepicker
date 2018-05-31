@@ -64,11 +64,14 @@ type Props = {
   className?: string,
   menuClassName?: string,
   classPrefix?: string,
+  block?: boolean,
+  toggleComponentClass?: React.ElementType,
   open?: boolean,
   defaultOpen?: boolean,
   placement?: PlacementEighPoints,
   onOpen?: () => void,
-  onClose?: () => void
+  onClose?: () => void,
+  style?: Object
 };
 
 type States = {
@@ -378,6 +381,9 @@ class DatePicker extends React.Component<Props, States> {
       classPrefix,
       format,
       locale,
+      toggleComponentClass,
+      block,
+      style,
       ...rest
     } = this.props;
 
@@ -399,6 +405,7 @@ class DatePicker extends React.Component<Props, States> {
     const classes = classNames(
       classPrefix,
       {
+        [this.addPrefix('block')]: block,
         [this.addPrefix('has-value')]: hasValue,
         [this.addPrefix('disabled')]: disabled,
         [this.addPrefix('only-time')]: shouldOnlyTime(format)
@@ -410,8 +417,8 @@ class DatePicker extends React.Component<Props, States> {
     return (
       <IntlProvider locale={locale}>
         <div
-          {...unhandled}
           className={classes}
+          style={style}
           ref={ref => {
             this.container = ref;
           }}
@@ -430,9 +437,11 @@ class DatePicker extends React.Component<Props, States> {
             speaker={this.renderDropdownMenu(calendar)}
           >
             <Toggle
+              {...unhandled}
+              componentClass={toggleComponentClass}
               onClean={this.handleClean}
               cleanable={cleanable && !disabled}
-              hasValue={!!value}
+              hasValue={hasValue}
             >
               {this.getDateString()}
             </Toggle>

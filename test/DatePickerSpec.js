@@ -30,6 +30,19 @@ describe('DatePicker', () => {
     assert.ok(!findDOMNode(instance).querySelector('.rs-picker-toggle-clean'));
   });
 
+  it('Should output a button', () => {
+    const instance = ReactTestUtils.renderIntoDocument(
+      <DatePicker toggleComponentClass="button" />
+    );
+    assert.ok(ReactTestUtils.findRenderedDOMComponentWithTag(instance, 'button'));
+  });
+
+  it('Should be block', () => {
+    const instance = ReactTestUtils.renderIntoDocument(<DatePicker block />);
+    const instanceDom = findDOMNode(instance);
+    assert.ok(instanceDom.className.match(/\bblock\b/));
+  });
+
   it('Should be inline', () => {
     const instance = ReactTestUtils.renderIntoDocument(<DatePicker inline />);
 
