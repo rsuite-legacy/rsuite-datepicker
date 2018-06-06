@@ -111,7 +111,7 @@
     "rsuite-affix": "^1.1.2",
     "rsuite-docs": "^0.1.11",
     "rsuite-theme": "^2.0.16",
-    "rsuite-utils": "^1.0.2",
+    "rsuite-utils": "^1.0.7",
     "sinon": "^4.1.1",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
