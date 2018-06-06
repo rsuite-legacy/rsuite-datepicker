@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { IntlProvider } from 'rsuite-intl';
 import OverlayTrigger from 'rsuite-utils/lib/Overlay/OverlayTrigger';
-import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
+import { getUnhandledProps, prefix, createChainedFunction } from 'rsuite-utils/lib/utils';
 import { MenuWrapper, Toggle, constants } from 'rsuite-utils/lib/Picker';
 
 import Calendar from './Calendar';
@@ -17,7 +17,7 @@ import { shouldOnlyTime } from './utils/formatUtils';
 
 const { namespace } = constants;
 
-type PlacementEighPoints =
+type Placement =
   | 'bottomLeft'
   | 'bottomRight'
   | 'topLeft'
@@ -25,7 +25,13 @@ type PlacementEighPoints =
   | 'leftTop'
   | 'rightTop'
   | 'leftBottom'
-  | 'rightBottom';
+  | 'rightBottom'
+  | 'auto'
+  | 'autoVerticalLeft'
+  | 'autoVerticalRight'
+  | 'autoHorizontalTop'
+  | 'autoHorizontalBottom';
+
 type Range = {
   label: React.Node,
   closeOverlay?: boolean,
@@ -57,6 +63,12 @@ type Props = {
   onPrevMonth?: (date: moment$Moment) => void,
   onNextMonth?: (date: moment$Moment) => void,
   onOk?: (date: moment$Moment, event: SyntheticEvent<*>) => void,
+  onEnter?: Function,
+  onEntering?: Function,
+  onEntered?: Function,
+  onExit?: Function,
+  onExiting?: Function,
+  onExited?: Function,
   cleanable?: boolean,
   isoWeek?: boolean,
   limitStartYear?: number,
@@ -64,11 +76,13 @@ type Props = {
   className?: string,
   menuClassName?: string,
   classPrefix?: string,
+  container?: HTMLElement | (() => HTMLElement),
+  containerPadding?: number,
   block?: boolean,
   toggleComponentClass?: React.ElementType,
   open?: boolean,
   defaultOpen?: boolean,
-  placement?: PlacementEighPoints,
+  placement?: Placement,
   onOpen?: () => void,
   onClose?: () => void,
   style?: Object
@@ -293,6 +307,16 @@ class DatePicker extends React.Component<Props, States> {
     this.handleAllSelect(nextValue);
   };
 
+  handleEntered = () => {
+    const { onOpen } = this.props;
+    onOpen && onOpen();
+  };
+
+  handleExited = () => {
+    const { onClose } = this.props;
+    onClose && onClose();
+  };
+
   disabledToolbarHandle = (date?: moment$Moment): boolean => {
     const { disabledDate } = this.props;
     const allowDate = disabledDate ? disabledDate(date) : false;
@@ -376,14 +400,20 @@ class DatePicker extends React.Component<Props, States> {
       open,
       defaultOpen,
       placement,
-      onOpen,
-      onClose,
       classPrefix,
       format,
       locale,
       toggleComponentClass,
       block,
       style,
+      container,
+      containerPadding,
+      onEnter,
+      onEntering,
+      onEntered,
+      onExit,
+      onExiting,
+      onExited,
       ...rest
     } = this.props;
 
@@ -432,9 +462,15 @@ class DatePicker extends React.Component<Props, States> {
             disabled={disabled}
             trigger="click"
             placement={placement}
-            onEntered={onOpen}
-            onExited={onClose}
+            onEnter={onEnter}
+            onEntering={onEntering}
+            onEntered={createChainedFunction(this.handleEntered, onEntered)}
+            onExit={onExit}
+            onExiting={onExiting}
+            onExited={createChainedFunction(this.handleExited, onExited)}
             speaker={this.renderDropdownMenu(calendar)}
+            container={container}
+            containerPadding={containerPadding}
           >
             <Toggle
               {...unhandled}
