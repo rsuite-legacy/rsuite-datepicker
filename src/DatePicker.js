@@ -123,19 +123,12 @@ class DatePicker extends React.Component<Props, States> {
 
   componentWillReceiveProps(nextProps: Props) {
     const { value } = this.props;
-
     if (nextProps.value && !nextProps.value.isSame(value, 'day')) {
       this.setState({
-        value: nextProps.value,
         pageDate: nextProps.value
       });
     }
   }
-
-  shouldComponentUpdate(nextProps: Props, nextState: States) {
-    return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
-  }
-
   onMoveForword = (nextPageDate: moment$Moment) => {
     const { onNextMonth, onChangeCalendarDate } = this.props;
     this.setState({
@@ -163,7 +156,7 @@ class DatePicker extends React.Component<Props, States> {
     const { placeholder, format } = this.props;
     const value = this.getValue();
 
-    return value ? moment(value).format(this.props.format) : placeholder || format;
+    return value ? value.format(this.props.format) : placeholder || format;
   }
 
   calendar = null;
@@ -199,8 +192,9 @@ class DatePicker extends React.Component<Props, States> {
   };
 
   updateValue(nextPageDate?: moment$Moment | null, closeOverlay?: boolean = true) {
-    const { value, pageDate } = this.state;
+    const { pageDate } = this.state;
     const { onChange } = this.props;
+    const value = this.getValue();
     const nextValue: any = !_.isUndefined(nextPageDate) ? nextPageDate : pageDate;
 
     this.setState({
@@ -434,14 +428,14 @@ class DatePicker extends React.Component<Props, States> {
 
     const classes = classNames(
       classPrefix,
+      className,
+      `${namespace}-placement-${_.kebabCase(placement)}`,
       {
         [this.addPrefix('block')]: block,
         [this.addPrefix('has-value')]: hasValue,
         [this.addPrefix('disabled')]: disabled,
         [this.addPrefix('only-time')]: shouldOnlyTime(format)
-      },
-      `${namespace}-placement-${_.kebabCase(placement)}`,
-      className
+      }
     );
 
     return (

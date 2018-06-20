@@ -22,7 +22,7 @@ type Props = {
   className?: string
 };
 
-class Header extends React.Component<Props> {
+class Header extends React.PureComponent<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-header`,
     date: moment()

@@ -27,7 +27,7 @@ type Props = {
   disabledHandle?: (date?: moment$Moment) => boolean
 };
 
-class Toolbar extends React.Component<Props> {
+class Toolbar extends React.PureComponent<Props> {
   static defaultProps = {
     classPrefix: `${namespace}-toolbar`,
     ranges: [

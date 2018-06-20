@@ -41,7 +41,7 @@ type Props = {
   classPrefix?: string
 };
 
-class Calendar extends React.Component<Props> {
+class Calendar extends React.PureComponent<Props> {
   static defaultProps = {
     classPrefix: `${namespace}-calendar`
   };
@@ -94,14 +94,10 @@ class Calendar extends React.Component<Props> {
     const dropMonth = calendarState === 'DROP_MONTH' || onlyShowMonth;
     const addPrefix = prefix(classPrefix);
 
-    const calendarClasses = classNames(
-      classPrefix,
-      {
-        [addPrefix('show-time-dropdown')]: dropTime,
-        [addPrefix('show-month-dropdown')]: dropMonth
-      },
-      className
-    );
+    const calendarClasses = classNames(classPrefix, className, {
+      [addPrefix('show-time-dropdown')]: dropTime,
+      [addPrefix('show-month-dropdown')]: dropMonth
+    });
 
     const unhandled = getUnhandledProps(Calendar, rest);
     const timeDropdownProps = _.pick(rest, calendarOnlyProps);

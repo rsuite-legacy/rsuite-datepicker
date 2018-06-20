@@ -4,7 +4,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { scrollTop } from 'dom-lib';
 import moment from 'moment';
-import _ from 'lodash';
 import { constants } from 'rsuite-utils/lib/Picker';
 import { prefix, getUnhandledProps } from 'rsuite-utils/lib/utils';
 
@@ -24,7 +23,7 @@ type Props = {
 const minYear = 1950;
 const blockHeight = 84;
 
-class MonthDropdown extends React.Component<Props> {
+class MonthDropdown extends React.PureComponent<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-month-dropdown`,
     show: false,
@@ -38,7 +37,7 @@ class MonthDropdown extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    return nextProps.show && !_.isEqual(this.props, nextProps);
+    return nextProps.show;
   }
 
   componentDidUpdate() {

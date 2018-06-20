@@ -3,7 +3,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
-import _ from 'lodash';
 import { getUnhandledProps, prefix } from 'rsuite-utils/lib/utils';
 import { constants } from 'rsuite-utils/lib/Picker';
 
@@ -19,15 +18,12 @@ type Props = {
 
 const { namespace } = constants;
 
-class TableRow extends React.Component<Props> {
+class TableRow extends React.PureComponent<Props> {
   static defaultProps = {
     classPrefix: `${namespace}-calendar-table`,
     selected: moment()
   };
 
-  shouldComponentUpdate(nextProps: Props) {
-    return !_.isEqual(this.props, nextProps);
-  }
   addPrefix = (name: string) => prefix(this.props.classPrefix)(name);
 
   renderDays() {
