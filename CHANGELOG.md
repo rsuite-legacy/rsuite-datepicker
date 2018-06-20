@@ -1,3 +1,7 @@
+# 3.0.5
+
+- **Chore**: Change the `depth equal` to the `shallow equal`
+
 # 3.0.4
 
 * **Feature**: Added support `placement` value of related `auto*`
