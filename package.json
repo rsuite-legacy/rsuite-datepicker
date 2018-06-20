@@ -111,12 +111,13 @@
     "rsuite-affix": "^1.1.2",
     "rsuite-docs": "^0.1.11",
     "rsuite-theme": "^2.0.16",
-    "rsuite-utils": "^1.0.7",
+    "rsuite-utils": "^1.2.0",
     "sinon": "^4.1.1",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.3.0"
+    "webpack-dev-server": "^2.3.0",
+    "why-did-you-update": "^0.1.1"
   }
 }

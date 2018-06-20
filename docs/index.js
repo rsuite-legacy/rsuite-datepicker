@@ -13,14 +13,8 @@ import DatePicker from '../src';
 class App extends React.Component {
   render() {
     return (
-      <PageContainer
-        activeKey="DatePicker"
-        githubURL="https://github.com/rsuite/rsuite-datepicker"
-      >
-
-        <Markdown>
-          {require('../README.md')}
-        </Markdown>
+      <PageContainer activeKey="DatePicker" githubURL="https://github.com/rsuite/rsuite-datepicker">
+        <Markdown>{require('../README.md')}</Markdown>
 
         <h2>示例</h2>
 
@@ -41,16 +35,16 @@ class App extends React.Component {
           ]}
         />
 
-        <Markdown>
-          {require('./md/props.md')}
-        </Markdown>
-
+        <Markdown>{require('./md/props.md')}</Markdown>
       </PageContainer>
-
     );
   }
 }
 
-ReactDOM.render(<App />,
-  document.getElementById('app')
-);
+ReactDOM.render(<App />, document.getElementById('app'));
+/*
+if (process.env.NODE_ENV !== 'production') {
+  const { whyDidYouUpdate } = require('why-did-you-update');
+  whyDidYouUpdate(React);
+}
+*/

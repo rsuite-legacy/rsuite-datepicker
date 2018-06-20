@@ -14,14 +14,16 @@ class DatePickerValue extends React.Component {
       <div className="field">
         <DatePicker
           defaultValue={moment()}
+          format="YYYY-MM-DD HH:mm:ss"
           onChange={(value) => {
-            console.log('1', value && value.format('YYYY-MM-DD'));
+            console.log('1', value && value.format('YYYY-MM-DD HH:mm:ss'));
           }}
         />
         <DatePicker
           value={this.state.value}
+          format="YYYY-MM-DD HH:mm:ss"
           onChange={(value) => {
-            console.log('2', value && value.format('YYYY-MM-DD'));
+            console.log('2', value && value.format('YYYY-MM-DD HH:mm:ss'));
             this.setState({ value });
           }}
         />

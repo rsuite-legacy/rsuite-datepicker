@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import _ from 'lodash';
 import { prefix } from 'rsuite-utils/lib/utils';
 import { constants } from 'rsuite-utils/lib/Picker';
 import { FormattedMessage } from 'rsuite-intl';
@@ -15,14 +14,10 @@ type Props = {
 
 const weekKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-class TableHeaderRow extends React.Component<Props> {
+class TableHeaderRow extends React.PureComponent<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-table`
   };
-  shouldComponentUpdate(nextProps: Props) {
-    return !_.isEqual(this.props, nextProps);
-  }
-
   render() {
     const { className, classPrefix, isoWeek, ...props } = this.props;
     const addPrefix = prefix(classPrefix);

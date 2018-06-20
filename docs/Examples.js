@@ -14,10 +14,7 @@ const Examples = ({ list, dependencies }) => {
   return (
     <div>
       {list.map((item, index) => (
-        <CustomCodeView
-          key={index}
-          dependencies={dependencies}
-        >
+        <CustomCodeView key={index} dependencies={dependencies}>
           {item}
         </CustomCodeView>
       ))}

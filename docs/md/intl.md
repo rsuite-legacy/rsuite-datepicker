@@ -1,6 +1,7 @@
 ### 本地化
 
 <!--start-code-->
+
 ```js
 const DatePickerIntl = props => (
   <div className="field only-date">
@@ -26,6 +27,6 @@ const DatePickerIntl = props => (
 );
 
 ReactDOM.render(<DatePickerIntl />);
-
 ```
+
 <!--end-code-->

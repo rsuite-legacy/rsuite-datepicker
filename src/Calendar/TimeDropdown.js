@@ -35,7 +35,7 @@ const ranges = {
   seconds: { start: 0, end: 59 }
 };
 
-class TimeDropdown extends React.Component<Props> {
+class TimeDropdown extends React.PureComponent<Props> {
   static defaultProps = {
     classPrefix: `${constants.namespace}-calendar-time-dropdown`,
     show: false,
@@ -58,7 +58,7 @@ class TimeDropdown extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    return nextProps.show && !_.isEqual(this.props, nextProps);
+    return nextProps.show;
   }
 
   componentDidUpdate() {
