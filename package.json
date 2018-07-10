@@ -1,6 +1,6 @@
 {
   "name": "rsuite-datepicker",
-  "version": "2.0.7",
+  "version": "2.1.0",
   "description": "React Datepicker Component",
   "main": "lib/index.js",
   "scripts": {
